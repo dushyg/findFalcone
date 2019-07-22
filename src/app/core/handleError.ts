@@ -6,14 +6,14 @@ export function handleError(err) {
     console.log(err);
     if(err){
 
-        if(err.error instanceof ErrorEvent){
+        if(err instanceof ErrorEvent){
 
-            errorMessage = `Error occurred - ${err.error.message}`;
+            errorMessage = `Error occurred - ${err.message}`;
         }
         else {
             // Network errors
 
-            errorMessage = `Backend returned status ${err.error.status} - Error Message : ${err.error.message}`;
+            errorMessage = `Backend returned status ${err.status} - Error Message : ${err.message}`;
         } 
     }
     return throwError(errorMessage);

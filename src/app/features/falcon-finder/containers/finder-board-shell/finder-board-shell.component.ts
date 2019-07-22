@@ -17,15 +17,16 @@ export class FinderBoardShellComponent implements OnInit {
   public error$ : Observable<string>;
   public planets$ : Observable<Planet[]>;
   public vehicles$ : Observable<Vehicle[]>;
-
+  
   ngOnInit() {
 
     this.error$ = this.finderFacadeService.error$;
     this.planets$ = this.finderFacadeService.planetList$;
     this.vehicles$ = this.finderFacadeService.vehicleList$;
 
-    this.finderFacadeService.loadAllPlanets();
-    this.finderFacadeService.loadAllVehicles();
+    //this.finderFacadeService.loadAllPlanets();
+    //this.finderFacadeService.loadAllVehicles();
+    this.finderFacadeService.initializeAppData();
   }
 
 }
