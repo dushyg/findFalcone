@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, map } from 'rxjs/operators';
 import { handleError } from './handleError';
 import { Observable } from 'rxjs';
@@ -15,21 +15,33 @@ export class FalconFinderService {
 
   private readonly tokenApiUrl = 'https://findfalcone.herokuapp.com/token';
 
-  public getFalconFinderApiToken() : Observable<string>{
+  public getFalconFinderApiToken() : Observable<{token: string}>{
 
-    return this.http.post<string>(this.tokenApiUrl, {})
+    const httpOptions = {
+      headers : new HttpHeaders({
+        'Accept' : 'application/json'
+      })
+    };
+    return this.http.post<{token: string}>(this.tokenApiUrl, null, httpOptions)
               .pipe(catchError(handleError));
   }
 
   private readonly falconFinderApiUrl = 'https://findfalcone.herokuapp.com/find';
 
   public findFalcon(request : IFindFalconRequest) : Observable<IFindFalconResponse> {
-    return this.http.post<IFindFalconResponse>(this.falconFinderApiUrl, request)
+
+    const httpOptions = {
+      headers : new HttpHeaders({
+        'Accept' : 'application/json',
+        'Content-Type' : 'application/json'
+      })
+    };
+    return this.http.post<IFindFalconResponse>(this.falconFinderApiUrl, request, httpOptions)
               .pipe(
                 map( (response: any) => {
                   return <IFindFalconResponse>{
                     planetName : response.planet_name,
-                    status,
+                    status : response.status,
                     error : response.error
                   };
                 },

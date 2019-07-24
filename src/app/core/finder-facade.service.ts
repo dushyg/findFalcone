@@ -71,7 +71,9 @@ export class FinderFacadeService {
   private finderApiToken : string;
 
   public findFalcon(request : IFindFalconRequest) {
-    this.finderService.findFalcon(request)
+
+     request.token = this.finderApiToken; 
+     this.finderService.findFalcon(request)
         .subscribe( (response: IFindFalconResponse) => {
             this.setFalconResponse(response);
         },
@@ -92,7 +94,7 @@ export class FinderFacadeService {
     .subscribe( response => {
         this.setVehicles(response[0]);
         this.setPlanets(response[1]);
-        this.finderApiToken = response[2];
+        this.finderApiToken = response[2].token;
     },
       (error) => {
         this.setErrorHandler(error);
