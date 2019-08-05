@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Vehicle } from './models/vehicle';
-import { map, catchError } from 'rxjs/operators';
+import { IVehicle, RawVehicle } from './models/vehicle';
+import { map, catchError, tap } from 'rxjs/operators';
 import { handleError } from './handleError';
 
 @Injectable({
@@ -14,22 +14,27 @@ export class VehiclesService {
 
   readonly vehicleApiUrl = 'https://findfalcone.herokuapp.com/vehicles';
 
-  public getAllVehicles() : Observable<Vehicle[]> {
+  public getAllVehicles() : Observable<IVehicle[]> {
 
-    return this.http.get<Vehicle[]>(this.vehicleApiUrl)
+    return this.http.get<RawVehicle[]>(this.vehicleApiUrl)
                     .pipe(
-                      map( (vehicles : any[], index) => {
-
-                           vehicles[index] = <Vehicle>{ 
-                            name : vehicles[index].name,
-                            maxDistance : vehicles[index].max_distance,
-                            totalNumUnits : vehicles[index].total_no,
-                            availNumUnits : vehicles[index].total_no,
-                            speed : vehicles[index].speed
-                          };
-
-                          return vehicles;
+                      map( (vehicles : RawVehicle[]) => {
+                                                      
+                           return vehicles.map( (v: RawVehicle) => {
+                              return <IVehicle>{
+                                name : v.name,
+                                availNumUnits : v.total_no,
+                                maxDistance : v.max_distance,
+                                speed : v.speed,
+                                totalNumUnits : v.total_no
+                              };
+                           }) 
+                        
                       }),
+                      tap(r => {
+                        console.log('getAllVehicles',r)
+                      })
+                      ,
                       catchError(handleError)
                     );
 

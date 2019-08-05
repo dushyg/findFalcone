@@ -1,1 +1,11 @@
-<p>destination-widget-list works!</p>
+     <div class="container-fluid">
+        <div class="row">
+            <div class="col" *ngFor="let index of widgetCountIterator">
+                <app-destination-widget 
+                    [planetList]="planetList"
+                    [vehicleList]="vehicleList"
+                    (onPlanetSelected)="planetSelected($event)"
+                    (onVehicleSelected)="vehicleSelected($event)">                    
+                </app-destination-widget>
+            </div>
+        </div>

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Planet } from './models/planet';
+import { IPlanet } from './models/planet';
 import { handleError } from './handleError';
 import { catchError } from 'rxjs/operators';
 
@@ -14,9 +14,9 @@ export class PlanetsService {
 
   readonly planetsApiUrl = 'https://findfalcone.herokuapp.com/planets';
 
-  public getAllPlanets() : Observable<Planet[]>{
+  public getAllPlanets() : Observable<IPlanet[]>{
 
-    return this.http.get<Planet[]>(this.planetsApiUrl)    
+    return this.http.get<IPlanet[]>(this.planetsApiUrl)    
                     .pipe(                        
                       catchError(handleError)
                     );

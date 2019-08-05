@@ -1,1 +1,14 @@
-<p>vehicle-list works!</p>
+
+
+<div *ngFor="let vehicle of vehicleList; let i=index">        
+        <label for="vehicle_{{widgetId}}_{{i}}" >
+                <input type="radio" 
+                       name="radio_{{widgetId}}"                       
+                       [disabled]="vehicle.maxDistance < destinationDistance"
+                       id="vehicle_{{widgetId}}_{{i}}" 
+                       (change)="vehicleSelected(vehicle)"/>                
+                {{vehicle.name +" ("+ vehicle.availNumUnits+")"}}
+        </label>
+        
+        <br>
+</div>

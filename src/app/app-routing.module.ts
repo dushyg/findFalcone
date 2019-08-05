@@ -4,16 +4,16 @@ import { FalconFinderModule } from './features/falcon-finder/falcon-finder.modul
 
 const routes: Routes = [
   {
-    path : '', redirectTo : '/finderboard', pathMatch : 'full'    
+    path : '', redirectTo : 'finderboard', pathMatch : 'full'    
   },
   {
-    path : '**', redirectTo : '/finderboard'
+    path : '**', redirectTo : 'finderboard'
   }
 ];
 
 @NgModule({
   imports: [
-    RouterModule.forRoot(routes),
+    RouterModule.forRoot(routes, {enableTracing : true}),
     FalconFinderModule
   ],
   exports: [RouterModule]

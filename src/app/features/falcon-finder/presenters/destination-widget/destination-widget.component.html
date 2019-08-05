@@ -1,1 +1,19 @@
-<p>destination-widget works!</p>
+<div>
+        <select      
+            name="selectPlanet"
+            [ngModel]="selectedPlanet"                        
+            (ngModelChange)="planetSelected($event)">                
+                <option *ngFor="let planet of planetListWithSelect" [ngValue]="planet">
+                    {{planet.name}}
+                </option>
+        </select> 
+        <br>
+        <app-vehicle-list
+            [vehicleList]="vehicleList"
+            (onVehicleSelected)="onVehicleSelected"
+            [destinationDistance]="destinationDistance"
+            (onVehicleSelected)="vehicleSelected($event)"
+            [widgetId]="widgetId">
+        </app-vehicle-list>
+        
+</div>

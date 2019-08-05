@@ -2,16 +2,15 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { FinderBoardShellComponent } from './containers/finder-board-shell/finder-board-shell.component';
-import { FinderBoardComponent } from './presenters/finder-board/finder-board.component';
+import { FinderBoardComponent } from './containers/finder-board/finder-board.component';
 import { DestinationWidgetListComponent } from './presenters/destination-widget-list/destination-widget-list.component';
 import { DestinationWidgetComponent } from './presenters/destination-widget/destination-widget.component';
 import { VehicleListComponent } from './presenters/vehicle-list/vehicle-list.component';
 import { FalconFinderRoutingModule } from '../falcon-finder-routing.module';
-
-
-
-
-
+import { FalconHeaderComponent } from './presenters/falcon-header/falcon-header.component';
+import { FalconFooterComponent } from './presenters/falcon-footer/falcon-footer.component';
+import { FalconeResultComponent } from './presenters/falcone-result/falcone-result.component';
+import { FormsModule } from "@angular/forms";
 
 @NgModule({
   declarations: [
@@ -19,11 +18,15 @@ import { FalconFinderRoutingModule } from '../falcon-finder-routing.module';
     FinderBoardShellComponent, 
     DestinationWidgetListComponent, 
     DestinationWidgetComponent, 
-    VehicleListComponent
+    VehicleListComponent,
+    FalconHeaderComponent, 
+    FalconFooterComponent, 
+    FalconeResultComponent
   ],
   imports: [
     CommonModule,
-    FalconFinderRoutingModule
+    FalconFinderRoutingModule,
+    FormsModule    
   ]
 })
 export class FalconFinderModule { }
