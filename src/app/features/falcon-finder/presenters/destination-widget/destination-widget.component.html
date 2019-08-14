@@ -1,14 +1,14 @@
 <div>
         <select      
             name="selectPlanet"
-            [ngModel]="selectedPlanet"                        
-            (ngModelChange)="planetSelected($event)">                
-                <option *ngFor="let planet of planetListWithSelect" [ngValue]="planet">
+            [(ngModel)] = "selectedPlanet.name"                                                
+            (change)="planetSelected($event.target.value)" >                
+                <option *ngFor="let planet of planetListWithSelect"  [value]="planet.name">
                     {{planet.name}}
                 </option>
         </select> 
         <br>
-        <app-vehicle-list
+        <app-vehicle-list *ngIf="selectedPlanet!=dummyPlanet"
             [vehicleList]="vehicleList"
             (onVehicleSelected)="onVehicleSelected"
             [destinationDistance]="destinationDistance"

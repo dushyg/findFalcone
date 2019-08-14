@@ -1,40 +1,43 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FinderFacadeService } from 'src/app/core/finder-facade.service';
 import { Observable } from 'rxjs';
 import { IFindFalconResponse } from 'src/app/core/models/find-falcon-response';
-import { takeWhile } from 'rxjs/operators';
+import { takeWhile, takeUntil, subscribeOn } from 'rxjs/operators';
 
 @Component({
   selector: 'app-falcone-result',
   templateUrl: './falcone-result.component.html',
   styleUrls: ['./falcone-result.component.css']
 })
-export class FalconeResultComponent implements OnInit {
-
-  constructor(private finderFacadeService : FinderFacadeService) { }
-  public findResponse$ : Observable<IFindFalconResponse>;
-  public error$ : Observable<string>;
-  public timeTaken$ : Observable<number>;   
-  private isComponentActive: boolean = true;
+export class FalconeResultComponent implements OnInit, OnDestroy {
+    
   
-  public planetNameFalconFoundOn : string;
+  constructor(private finderFacadeService : FinderFacadeService) { }  
+  
+  public error$ : Observable<string>;
+  public timeTaken$ : Observable<number>;     
+  public planetNameFalconFoundOn : string = "";
+  private isComponentActive: boolean = true;
+  public errorMsg: string;
+
   ngOnInit() {
 
-    this.findResponse$ = this.finderFacadeService.finderResponse$;
+    
     this.error$ = this.finderFacadeService.error$;
-    this.timeTaken$ = this.finderFacadeService.timeTaken$;
-    this.findResponse$.pipe( takeWhile( () => this.isComponentActive))
-    .subscribe( r => {
+    this.timeTaken$ = this.finderFacadeService.totalTimeTaken$;
+    
+    this.finderFacadeService.planetFoundOn$.pipe( takeWhile( () => this.isComponentActive))
+            .subscribe(
+              planetName => this.planetNameFalconFoundOn = planetName
+            );
 
-      if(r.error) {
-        this.finderFacadeService.setError(r.error);
-      }
-      else {
-        this.planetNameFalconFoundOn = r.planetName;
-      }
-      
-    });
+    this.finderFacadeService.error$.pipe( takeWhile( () => this.isComponentActive) )
+              .subscribe( errorMsg => this.errorMsg = errorMsg);
 
+  }
+
+  ngOnDestroy(): void {
+    this.isComponentActive = false;
   }
 
 }

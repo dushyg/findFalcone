@@ -1,6 +1,12 @@
 <p>falcone-result works!</p>
 
-Success! Congratulations on Finding Falcone. King Shan is mighty pleased.
+<div *ngIf="!errorMsg && planetNameFalconFoundOn">
+        Success! Congratulations on Finding Falcone. King Shan is mighty pleased.
+</div>
+
+<div *ngIf="errorMsg">
+        {{errorMsg}}
+</div>
 
 <div>
         Time Taken: {{timeTaken$ | async}}

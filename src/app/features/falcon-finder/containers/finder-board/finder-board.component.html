@@ -3,7 +3,7 @@
         Select planets you want to search in:
     </div>        
     
-    <div class="card-body">
+    <div class="card-body">        
         <div>
             Time Taken : {{timeTaken$ | async}}
         </div>
@@ -11,11 +11,11 @@
         <app-destination-widget-list
             [vehicleList]="vehicleList$ | async"
             [planetList]="planetList$ | async"
-            [countPlanetsToBeSearched] = "countPlanetsToBeSearched$ | async"
+            [countPlanetsToBeSearched] = "countPlanetsToBeSearched"
             (onPlanetSelected)="planetSelected($event)"
             (onVehicleSelected)="vehicleSelected($event)">
         </app-destination-widget-list>
 
-        <input type="button" value="Find Falcone!" (click)="findFalcone()">
+        <input [disabled]=" !(readyToSearch$ | async)" type="button" value="Find Falcone!" (click)="findFalcone()">
     </div>
 </div>
