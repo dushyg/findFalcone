@@ -65,8 +65,8 @@ export class FinderBoardComponent implements OnInit, OnDestroy {
                   const widgetId = searchAttemptEntry[0];
                   const searchAttempt = searchAttemptEntry[1];
 
-                  request.planet_names[widgetId] = searchAttempt.searchedPlanet;
-                  request.vehicle_names[widgetId] = searchAttempt.vehicleUsed;
+                  request.planet_names[+widgetId] = searchAttempt.searchedPlanet.name;
+                  request.vehicle_names[+widgetId] = searchAttempt.vehicleUsed.name;
                 }  
 
                 this.findFalconRequest = request;
@@ -89,8 +89,8 @@ export class FinderBoardComponent implements OnInit, OnDestroy {
   vehicleSelected(vehicleSelectionParam : IVehicleSelectionParam){
     console.log('finder board - vehicle selected', vehicleSelectionParam);
 
-    this.finderFacadeService.markVehicleUsed(vehicleSelectionParam);
-    this.finderFacadeService.updateSearchData(vehicleSelectionParam.componentId, <ISearchAttempt>{vehicleUsed : vehicleSelectionParam.selectedVehicle});
+    this.finderFacadeService.updateVehicleAvailability(vehicleSelectionParam);
+    this.finderFacadeService.updateSearchData(vehicleSelectionParam.widgetId, <ISearchAttempt>{vehicleUsed : vehicleSelectionParam.selectedVehicle});
   }
 
 

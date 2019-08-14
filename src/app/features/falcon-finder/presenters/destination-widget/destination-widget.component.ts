@@ -16,7 +16,7 @@ export class DestinationWidgetComponent implements OnInit { //, OnChanges
   constructor() { 
     
     this.widgetId = ""+DestinationWidgetComponent.createdWidgetCount++;
-    this.selectedPlanet = this.dummyPlanet = <IPlanet>{
+    this.selectedPlanet = <IPlanet>{
       name : 'Select',
       distance : 0
     };
@@ -47,7 +47,7 @@ export class DestinationWidgetComponent implements OnInit { //, OnChanges
     const planetListChange : SimpleChange = changes['planetList'];
     // bind only one time so that planets available to select the first time are also available irrespective of other planet drop downs making any selections
     if(planetListChange && planetListChange.currentValue.length > 0){
-      this.planetListWithSelect = [].concat([this.dummyPlanet], this.planetList.filter( p => !p.includedInSearch || p.name === this.selectedPlanet.name));
+      this.planetListWithSelect = this.planetList.filter( p => !p.includedInSearch || p.name === this.selectedPlanet.name);
       console.log("this.planetListWithSelect", this.planetListWithSelect);
       //this.planetsPopulated = true;
     }
@@ -69,7 +69,7 @@ export class DestinationWidgetComponent implements OnInit { //, OnChanges
   public vehicleSelected(vehicle : IVehicle) {
     console.log(JSON.stringify(vehicle));
     this.onVehicleSelected.emit(<IVehicleSelectionParam>{
-      componentId : this.widgetId,
+      widgetId : this.widgetId,
       selectedVehicle : vehicle
     });
   }

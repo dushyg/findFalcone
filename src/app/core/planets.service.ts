@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { IPlanet } from './models/planet';
 import { handleError } from './handleError';
-import { catchError } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +17,14 @@ export class PlanetsService {
   public getAllPlanets() : Observable<IPlanet[]>{
 
     return this.http.get<IPlanet[]>(this.planetsApiUrl)    
-                    .pipe(                        
+                    .pipe(        
+                      map(
+                        planets => {
+                          return planets.map( planet => {
+                                  planet.includedInSearch = false;
+                                  return planet;
+                                });
+                      }),                
                       catchError(handleError)
                     );
   }

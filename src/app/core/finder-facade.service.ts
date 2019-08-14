@@ -83,14 +83,7 @@ export class FinderFacadeService {
     console.log('setError', error);
     const errorMsg = error;
     this.setAppState({ ..._state, errorMsg});
-  }  
-    
-  private unselectedPlanetsSelector = function getUnselectedPlanets(state : IFalconAppState) : IPlanet[]{
-
-      return state.planetList.filter(
-        p => !p.includedInSearch
-      );
-  }
+  }      
   
   private getReadyWidgetState(searchAttemptMap : Map<string, ISearchAttempt>) : { readyWidgetCount : number, totalTimeTaken : number} {
 
@@ -111,6 +104,49 @@ export class FinderFacadeService {
       };
   }
 
+  // selector methods
+
+  private getVehicleList() : IVehicle[] {
+
+    return _state.vehicleList;
+  }
+
+  private getPlanetList() : IPlanet[] {
+
+    return _state.planetList;
+  }
+
+  
+
+  private unselectedPlanetsSelector = function getUnselectedPlanets(state : IFalconAppState) : IPlanet[]{
+
+    return state.planetList.filter(
+      p => !p.includedInSearch
+    );
+  }
+
+  private getVehicleByName(vehicleName : string) : IVehicle {
+
+    if(vehicleName) {
+      return this.getVehicleList().find( v => v.name === vehicleName);
+    }
+    return null;
+  }
+
+  private getPlanetByName(planetName : string) : IPlanet {
+
+    if(planetName) {
+      return this.getPlanetList().find( p => p.name === planetName);
+    }
+    return null;
+  }
+
+  private getSearchMap() : Map<string, ISearchAttempt> {
+
+    return _state.searchMap;
+  }
+
+
   // public methods
 
   public initializeAppData() {
@@ -126,7 +162,7 @@ export class FinderFacadeService {
         const vehicleList : IVehicle[] = response[0];
         const planetList : IPlanet[] = response[1];
         // todo handle error scenarios
-        this.setAppState(<IFalconAppState>{
+        this.setAppState({..._state,
             planetList,
             vehicleList
         });          
@@ -137,7 +173,7 @@ export class FinderFacadeService {
     );
   }
 
-
+  
   public updatePlanetList(planetList : IPlanet[]) : void {
     
     this.setAppState({ ..._state, planetList})
@@ -145,7 +181,7 @@ export class FinderFacadeService {
 
   public markPlanetForSearch(planet : IPlanet) {    
     
-    const updatedPlanetList : IPlanet[] = _state.planetList.map(
+    const updatedPlanetList : IPlanet[] = this.getPlanetList().map(
       p => {
         const planetCopy = {...p};
         
@@ -161,27 +197,28 @@ export class FinderFacadeService {
 
   }  
   
-  public markVehicleUsed(vehicleSelectionParam : IVehicleSelectionParam) : void {
+  public updateVehicleAvailability(vehicleSelectionParam : IVehicleSelectionParam) : void {
             
-      const existingSearchAttempt = _state.searchMap.get(vehicleSelectionParam.componentId);
+      const existingSearchAttempt = this.getSearchMap().get(vehicleSelectionParam.widgetId);
+      
       let existingVehicle = null;
 
       if(existingSearchAttempt) {
         existingVehicle = existingSearchAttempt.vehicleUsed;         
       }
       
-      const updatedVehicleList = _state.vehicleList.map(
+      const updatedVehicleList = this.getVehicleList().map(
         vehicle => {
-          const newVehicle = {...vehicle};
-          if(existingVehicle && existingVehicle.name === newVehicle.name) {
+          const vehicleCopy = {...vehicle};
+          if(existingVehicle && existingVehicle.name === vehicleCopy.name) {
             //free any existing vehicle was earlier in use for the same destination widget
-            ++newVehicle.availNumUnits;
+            ++vehicleCopy.availNumUnits;
           }
-          else if(newVehicle.name === vehicleSelectionParam.selectedVehicle.name){
+          else if(vehicleCopy.name === vehicleSelectionParam.selectedVehicle.name){
             // reduce available count of this vehicle by 1
-            --newVehicle.availNumUnits;
+            --vehicleCopy.availNumUnits;
           }
-          return newVehicle;
+          return vehicleCopy;
         }
     );                      
     this.updateVehicleList(updatedVehicleList);
@@ -192,28 +229,42 @@ export class FinderFacadeService {
     this.setAppState({ ..._state, vehicleList});    
   }  
 
-  public updateSearchData(widgetId : string, searchAttempt : ISearchAttempt) {
+  public updateSearchData(widgetId : string, searchAttempt : ISearchAttempt) : void {
     
+    if(!searchAttempt)
+    {
+      return;
+    }
+
     // step 1 : update the search attempt map to reflect latest UI selections
-    const searchMap =  new Map<string, ISearchAttempt>(_state.searchMap);
+    const searchMap =  new Map<string, ISearchAttempt>(this.getSearchMap());    
+    
+    const existingSearchAttempt = searchMap.get(widgetId);
 
-    const foundSearchAttempt = searchMap.get(widgetId);
-
-    if(foundSearchAttempt) {
+    // initialize searchAttemptToBeUpdated with existing data if any
+    const searchAttemptToBeUpdated = <ISearchAttempt>{ ...existingSearchAttempt };
+    
+    // if(existingSearchAttempt) {
       
-      if(!foundSearchAttempt.searchedPlanet && searchAttempt.searchedPlanet) {
-        foundSearchAttempt.searchedPlanet = searchAttempt.searchedPlanet;
-      }
+    //   if(existingSearchAttempt.searchedPlanet) {
+    //     searchAttemptToBeUpdated.searchedPlanet = existingSearchAttempt.searchedPlanet;
+    //   }
 
-      if(!foundSearchAttempt.vehicleUsed && searchAttempt.vehicleUsed){
-        foundSearchAttempt.vehicleUsed = searchAttempt.vehicleUsed;
-      }
+    //   if(existingSearchAttempt.vehicleUsed) {
+    //     searchAttemptToBeUpdated.vehicleUsed = existingSearchAttempt.vehicleUsed;
+    //   }
+    // }
 
+    if(searchAttempt.searchedPlanet) {
+      searchAttemptToBeUpdated.searchedPlanet = this.getPlanetByName(searchAttempt.searchedPlanet.name);
     }
-    else {
-      searchMap.set(widgetId, searchAttempt);
+
+    if(searchAttempt.vehicleUsed) {
+      searchAttemptToBeUpdated.vehicleUsed = this.getVehicleByName(searchAttempt.vehicleUsed.name);  
     }
-        
+    
+    searchMap.set(widgetId,  searchAttemptToBeUpdated);
+            
     // step 2 : Identify if we have required search criteria to be able to call findFalcone api method
     const readyState = this.getReadyWidgetState(searchMap);
     
