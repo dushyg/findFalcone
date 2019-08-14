@@ -11,19 +11,7 @@ import { ISearchAttempt } from './models/searchAttempt';
 import { IFalconAppState } from './models/falconApp.state';
 import { map, distinctUntilChanged } from 'rxjs/operators';
 import { IVehicleSelectionParam } from './models/vehicleSelectionParam';
-
-let _state : IFalconAppState = {
-  errorMsg : "",
-  isLoading : false,
-  maxSearchAttemptAllowed : 4,
-  planetList : [],
-  searchMap : new Map<string, ISearchAttempt>(),
-  totalTimeTaken : 0,
-  vehicleList : [],
-  planetFoundOn : null,
-  isReadyToSearch : false
-};            
-
+import { FalconeAppStateService } from './falconeAppState.service';
 
 @Injectable({
   providedIn: 'root'
@@ -32,13 +20,14 @@ export class FinderFacadeService {
 
   constructor(private planetService : PlanetsService,
               private vehicleService : VehiclesService,
-              private finderService : FalconFinderService) { }
+              private finderService : FalconFinderService,
+              private appStateService : FalconeAppStateService) { }
 
 
   private finderApiToken : string;            
 
-  private store = new BehaviorSubject<IFalconAppState>(_state);
-  public store$ = this.store.asObservable();  
+  
+  public store$ = this.appStateService.getStore();  
 
   public maxSearchAttemptAllowed$ = this.store$.pipe( map(state => state.maxSearchAttemptAllowed), distinctUntilChanged());    
   
@@ -58,66 +47,11 @@ export class FinderFacadeService {
 
   public readyToSearch$ = this.store$.pipe(map( state => state.isReadyToSearch), distinctUntilChanged());
   
-  // private methods
-
-  private setAppState(state : IFalconAppState) {
-
-    // update the _state variable to reflect latest state
-    _state = state;
-
-    // update the store observable with lastest state value
-    this.store.next(_state);    
-  }
-  
-  private updatePlanetFoundOn(planetFoundOn : string) : void {
+  public setAppState(state : IFalconAppState) {
     
-    this.setAppState({ ..._state, planetFoundOn});    
-  }
+    this.appStateService.setAppState(state);    
+  }  
   
-  private setMaxSearchAttemptAllowed(maxSearchAttemptAllowed : number) : void {
-
-    this.setAppState({..._state, maxSearchAttemptAllowed});
-  }
-    
-  private updateError(error : any) : void { 
-    console.log('setError', error);
-    const errorMsg = error;
-    this.setAppState({ ..._state, errorMsg});
-  }      
-  
-  private getReadyWidgetState(searchAttemptMap : Map<string, ISearchAttempt>) : { readyWidgetCount : number, totalTimeTaken : number} {
-
-    let readyWidgetCount = 0;
-    let totalTimeTaken = 0;
-
-      for(let searchAttempt of searchAttemptMap.values()) {
-
-          if(searchAttempt.vehicleUsed && searchAttempt.searchedPlanet) {
-            readyWidgetCount++;
-            totalTimeTaken += (searchAttempt.searchedPlanet.distance / searchAttempt.vehicleUsed.speed);
-          }          
-      }
-
-      return {
-        readyWidgetCount ,
-        totalTimeTaken
-      };
-  }
-
-  // selector methods
-
-  private getVehicleList() : IVehicle[] {
-
-    return _state.vehicleList;
-  }
-
-  private getPlanetList() : IPlanet[] {
-
-    return _state.planetList;
-  }
-
-  
-
   private unselectedPlanetsSelector = function getUnselectedPlanets(state : IFalconAppState) : IPlanet[]{
 
     return state.planetList.filter(
@@ -125,28 +59,7 @@ export class FinderFacadeService {
     );
   }
 
-  private getVehicleByName(vehicleName : string) : IVehicle {
-
-    if(vehicleName) {
-      return this.getVehicleList().find( v => v.name === vehicleName);
-    }
-    return null;
-  }
-
-  private getPlanetByName(planetName : string) : IPlanet {
-
-    if(planetName) {
-      return this.getPlanetList().find( p => p.name === planetName);
-    }
-    return null;
-  }
-
-  private getSearchMap() : Map<string, ISearchAttempt> {
-
-    return _state.searchMap;
-  }
-
-
+  
   // public methods
 
   public initializeAppData() {
@@ -162,13 +75,13 @@ export class FinderFacadeService {
         const vehicleList : IVehicle[] = response[0];
         const planetList : IPlanet[] = response[1];
         // todo handle error scenarios
-        this.setAppState({..._state,
+        this.setAppState({...this.appStateService.getAppState(),
             planetList,
             vehicleList
         });          
     },
       (error) => {
-        this.updateError(error);
+        this.appStateService.updateError(error);
       }
     );
   }
@@ -176,12 +89,12 @@ export class FinderFacadeService {
   
   public updatePlanetList(planetList : IPlanet[]) : void {
     
-    this.setAppState({ ..._state, planetList})
+    this.setAppState({ ...this.appStateService.getAppState(), planetList})
   } 
 
   public markPlanetForSearch(planet : IPlanet) {    
     
-    const updatedPlanetList : IPlanet[] = this.getPlanetList().map(
+    const updatedPlanetList : IPlanet[] = this.appStateService.getPlanetList().map(
       p => {
         const planetCopy = {...p};
         
@@ -199,7 +112,7 @@ export class FinderFacadeService {
   
   public updateVehicleAvailability(vehicleSelectionParam : IVehicleSelectionParam) : void {
             
-      const existingSearchAttempt = this.getSearchMap().get(vehicleSelectionParam.widgetId);
+      const existingSearchAttempt = this.appStateService.getSearchMap().get(vehicleSelectionParam.widgetId);
       
       let existingVehicle = null;
 
@@ -207,7 +120,7 @@ export class FinderFacadeService {
         existingVehicle = existingSearchAttempt.vehicleUsed;         
       }
       
-      const updatedVehicleList = this.getVehicleList().map(
+      const updatedVehicleList = this.appStateService.getVehicleList().map(
         vehicle => {
           const vehicleCopy = {...vehicle};
           if(existingVehicle && existingVehicle.name === vehicleCopy.name) {
@@ -226,7 +139,7 @@ export class FinderFacadeService {
 
   public updateVehicleList(vehicleList : IVehicle[]) : void {
 
-    this.setAppState({ ..._state, vehicleList});    
+    this.setAppState({ ...this.appStateService.getAppState(), vehicleList});    
   }  
 
   public updateSearchData(widgetId : string, searchAttempt : ISearchAttempt) : void {
@@ -237,44 +150,34 @@ export class FinderFacadeService {
     }
 
     // step 1 : update the search attempt map to reflect latest UI selections
-    const searchMap =  new Map<string, ISearchAttempt>(this.getSearchMap());    
+    const searchMap =  new Map<string, ISearchAttempt>(this.appStateService.getSearchMap());    
     
     const existingSearchAttempt = searchMap.get(widgetId);
 
     // initialize searchAttemptToBeUpdated with existing data if any
     const searchAttemptToBeUpdated = <ISearchAttempt>{ ...existingSearchAttempt };
-    
-    // if(existingSearchAttempt) {
-      
-    //   if(existingSearchAttempt.searchedPlanet) {
-    //     searchAttemptToBeUpdated.searchedPlanet = existingSearchAttempt.searchedPlanet;
-    //   }
-
-    //   if(existingSearchAttempt.vehicleUsed) {
-    //     searchAttemptToBeUpdated.vehicleUsed = existingSearchAttempt.vehicleUsed;
-    //   }
-    // }
-
+  
     if(searchAttempt.searchedPlanet) {
-      searchAttemptToBeUpdated.searchedPlanet = this.getPlanetByName(searchAttempt.searchedPlanet.name);
+      searchAttemptToBeUpdated.searchedPlanet = this.appStateService.getPlanetByName(searchAttempt.searchedPlanet.name);
     }
 
     if(searchAttempt.vehicleUsed) {
-      searchAttemptToBeUpdated.vehicleUsed = this.getVehicleByName(searchAttempt.vehicleUsed.name);  
+      searchAttemptToBeUpdated.vehicleUsed = this.appStateService.getVehicleByName(searchAttempt.vehicleUsed.name);  
     }
     
     searchMap.set(widgetId,  searchAttemptToBeUpdated);
             
     // step 2 : Identify if we have required search criteria to be able to call findFalcone api method
-    const readyState = this.getReadyWidgetState(searchMap);
+    const readyState = this.appStateService.getReadyWidgetState(searchMap);
     
     let isReadyToSearch = false;
     
-    if(searchMap.size === _state.maxSearchAttemptAllowed){
+    const maxSearchAttemptAllowed = this.appStateService.getMaxSearchAttemptAllowed(); 
+    if(searchMap.size === maxSearchAttemptAllowed){
       
       let countReadyWidgets = readyState.readyWidgetCount;
 
-      if(countReadyWidgets === _state.maxSearchAttemptAllowed)
+      if(countReadyWidgets === maxSearchAttemptAllowed)
       {
         isReadyToSearch = true;
       }
@@ -284,12 +187,12 @@ export class FinderFacadeService {
     // update total time taken in the state
     const totalTimeTaken = readyState.totalTimeTaken;
 
-    this.setAppState({..._state, searchMap, isReadyToSearch, totalTimeTaken});
+    this.setAppState({...this.appStateService.getAppState(), searchMap, isReadyToSearch, totalTimeTaken});
   }  
 
   public updateTotalTimeTaken(totalTimeTaken : number) {
 
-    this.setAppState({ ..._state, totalTimeTaken});    
+    this.setAppState({ ...this.appStateService.getAppState(), totalTimeTaken});    
   }          
 
   public findFalcon(request : IFindFalconRequest) {
@@ -302,37 +205,37 @@ export class FinderFacadeService {
 
             if(response.error) {
               errorMsg = response.error;
-              this.updateError(errorMsg);
+              this.appStateService.updateError(errorMsg);
             }
             else if(response.status) {
 
               if(response.status.trim().toLowerCase() === "success") {
 
                 if(response.planetName) {
-                  this.updatePlanetFoundOn(response.planetName);
+                  this.appStateService.updatePlanetFoundOn(response.planetName);
                 }
                 else {
                   errorMsg = "Search api returned empty planet name";
-                  this.updateError(errorMsg);
+                  this.appStateService.updateError(errorMsg);
                 }
               }
               else if(response.status.trim().toLocaleLowerCase() === "false") {
                 errorMsg = "Failure! You were unable to find Falcone. Better luck next time.";
-                this.updateError(errorMsg);
+                this.appStateService.updateError(errorMsg);
               }
               else {
                 errorMsg = "Search api did not return a response status value."
-                this.updateError(errorMsg);
+                this.appStateService.updateError(errorMsg);
               }
             }
           }
           else {
             errorMsg = "Search api returned invalid response."
-            this.updateError(errorMsg);
+            this.appStateService.updateError(errorMsg);
           }
         },
         (error) => {
-          this.updateError(error);
+          this.appStateService.updateError(error);
         }
         );
   }  
