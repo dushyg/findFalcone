@@ -22,7 +22,7 @@ const routes : Routes = [
             },
             {
                 path : 'reset',
-                component: ResetComponent
+                component: FalconeResetComponent
             }
         ]
     }
