@@ -4,9 +4,10 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve --aot",
-    "build": "npm run buildForGithubPages && npm run create404Page",
+    "build": "npm run buildForGithubPages && npm run create404PageLinux",
     "buildForGithubPages":"ng build --prod --output-path docs --base-href /findFalcone/",
-    "create404Page":"copy docs\\index.html docs\\404.html",
+    "create404PageLinux":"cp docs/index.html docs/404.html",
+    "create404PageWindows":"copy docs\\index.html docs\\404.html",
     "test-headless": "ng test --watch=false --browsers=ChromeHeadless",
     "lint": "ng lint",
     "e2e": "ng e2e"
