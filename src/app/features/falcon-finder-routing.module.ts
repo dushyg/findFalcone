@@ -4,7 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { FinderBoardComponent } from './falcon-finder/containers/finder-board/finder-board.component';
 import { FalconeResultComponent } from './falcon-finder/presenters/falcone-result/falcone-result.component';
 import { FinderBoardShellComponent } from './falcon-finder/containers/finder-board-shell/finder-board-shell.component';
-import { ResetComponent } from './falcon-finder/presenters/falcone-reset/falcone-reset.component';
+import { FalconeResetComponent } from './falcon-finder/presenters/falcone-reset/falcone-reset.component';
 
 
 const routes : Routes = [    
