@@ -29,7 +29,7 @@ export class FinderBoardComponent implements OnInit, OnDestroy {
   public timeTaken$ : Observable<number>;  
   public readyToSearch$: Observable<boolean>;
 
-  private countPlanetsToBeSearched : number;
+  public countPlanetsToBeSearched : number;
   private findFalconRequest : IFindFalconRequest ; 
   private isComponentActive =  true;
 
