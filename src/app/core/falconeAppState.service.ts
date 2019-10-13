@@ -5,6 +5,7 @@ import { IVehicle } from './models/vehicle';
 import { IFalconAppState } from './models/falconApp.state';
 import { CoreModule } from './core.module';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { HttpResponse } from '@angular/common/http';
 
 @Injectable({providedIn : CoreModule})
 export class FalconeAppStateService
@@ -53,9 +54,26 @@ export class FalconeAppStateService
     this.setAppState({...this.getAppState(), maxSearchAttemptAllowed});
   }
     
-  public updateError(error : any) : void { 
-    console.log('setError', error);
-    const errorMsg = error;
+  public updateError(err : any) : void { 
+    console.log('setError', err);
+    let errorMsg = 'Some error occurred!';
+    if(err && typeof(err) !== 'string') {
+      if(err.message) {
+        errorMsg = err.message;
+      }
+      else if(err.error){
+        if(typeof(err.error) === 'string'){
+          errorMsg = err.error;
+        }
+        else if(err.error.error && typeof(err.error.error) === 'string') {
+          errorMsg = err.error.error;
+        }          
+      }      
+    }
+    else {
+      errorMsg = err; 
+    }
+    
     this.setAppState({ ...this.getAppState(), errorMsg});
   }      
   
