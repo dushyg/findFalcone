@@ -7,7 +7,7 @@
     "build": "npm run buildForGithubPages && npm run create404Page",
     "buildForGithubPages":"ng build --prod --output-path docs --base-href /findFalcone/",
     "create404Page":"copy docs\\index.html docs\\404.html",
-    "test": "ng test",
+    "test-headless": "ng test --watch=false --browsers=ChromeHeadless",
     "lint": "ng lint",
     "e2e": "ng e2e"
   },
