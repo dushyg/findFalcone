@@ -6,4 +6,13 @@
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
+.hyperlink {    
+    cursor: pointer; 
+    text-decoration: underline;
+}
+
+.float-left {
+    float: left;
+}
+
 
