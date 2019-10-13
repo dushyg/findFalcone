@@ -36,6 +36,10 @@ export class FalconeResultComponent implements OnInit, OnDestroy {
 
   }
 
+  reset() {
+    this.finderFacadeService.resetApp();
+  }
+
   ngOnDestroy(): void {
     this.isComponentActive = false;
   }

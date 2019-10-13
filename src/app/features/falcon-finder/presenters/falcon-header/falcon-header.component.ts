@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FinderFacadeService } from 'src/app/core/finder-facade.service';
 
 @Component({
   selector: 'app-falcon-header',
@@ -7,9 +8,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class FalconHeaderComponent implements OnInit {
 
-  constructor() { }
+  constructor(private finderFacadeService: FinderFacadeService) { }
 
   ngOnInit() {
+  }
+
+  reset(){
+    this.finderFacadeService.resetApp();
   }
 
 }

@@ -12,6 +12,7 @@ import { IFalconAppState } from './models/falconApp.state';
 import { map, distinctUntilChanged } from 'rxjs/operators';
 import { IVehicleSelectionParam } from './models/vehicleSelectionParam';
 import { FalconeAppStateService } from './falconeAppState.service';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -21,7 +22,8 @@ export class FinderFacadeService {
   constructor(private planetService : PlanetsService,
               private vehicleService : VehiclesService,
               private finderService : FalconFinderService,
-              private appStateService : FalconeAppStateService) { }
+              private appStateService : FalconeAppStateService,
+              private router : Router) { }
 
 
   private finderApiToken : string;            
@@ -238,6 +240,10 @@ export class FinderFacadeService {
           this.appStateService.updateError(error);
         }
         );
-  }  
+  }
+  
+  resetApp(){
+    this.router.navigate(['/finderboard/reset']);
+  }
 
 }
