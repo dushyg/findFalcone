@@ -4,74 +4,68 @@ import { IPlanet } from 'src/app/core/models/planet';
 import { IVehicleSelectionParam } from 'src/app/core/models/vehicleSelectionParam';
 import { IVehicle } from 'src/app/core/models/vehicle';
 import { IPlanetSelectionParam } from 'src/app/core/models/planetSelectionParam';
+import PlanetChange from 'src/app/core/models/planetChange';
+import VehicleChange from 'src/app/core/models/vehicleChange';
 
 @Component({
   selector: 'app-destination-widget',
-  templateUrl: './destination-widget.component.html',
-  styleUrls: ['./destination-widget.component.css']
+  templateUrl: './destination-widget.component.html'
 })
-export class DestinationWidgetComponent implements OnInit { //, OnChanges
-  
-
-  constructor() { 
+export class DestinationWidgetComponent implements OnInit {
     
-    this.widgetId = ""+DestinationWidgetComponent.createdWidgetCount++;
-    this.selectedPlanet = <IPlanet>{
-      name : 'Select',
-      distance : 0
-    };
-
-    console.log(this.widgetId);
-  }
-
   @Input() public vehicleList : IVehicle[];
   @Input() public planetList : IPlanet[];
-  public planetListWithSelect : IPlanet[];
 
-  @Output() public onPlanetSelected  = new EventEmitter<IPlanetSelectionParam>();
-  @Output() public onVehicleSelected = new EventEmitter<IVehicleSelectionParam>();
+  private initialPlanetList : IPlanet[];
+
+  @Output() public onPlanetSelected  = new EventEmitter<PlanetChange>();
+  @Output() public onVehicleSelected = new EventEmitter<VehicleChange>();
   
   private static createdWidgetCount : number = 0;
   public destinationDistance : number = 0 ;  
-  public widgetId : string; 
-  public selectedPlanet : IPlanet;
+  public widgetId : number; 
+  public lastSelectedPlanet : IPlanet = null;
   public dummyPlanet : IPlanet ;
-  //private planetsPopulated = false;
-  ngOnInit() {
-    
-    // console.log("planetlist", this.planetList);
-    // this.planetListWithSelect = [].concat([this.dummyPlanet], this.planetList);
-  }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    const planetListChange : SimpleChange = changes['planetList'];
-    // bind only one time so that planets available to select the first time are also available irrespective of other planet drop downs making any selections
-    if(planetListChange && planetListChange.currentValue.length > 0){
-      this.planetListWithSelect = this.planetList.filter( p => !p.includedInSearch || p.name === this.selectedPlanet.name);
-      console.log("this.planetListWithSelect", this.planetListWithSelect);
-      //this.planetsPopulated = true;
-    }
+  constructor() { 
+    
+    this.widgetId = DestinationWidgetComponent.createdWidgetCount++;
+    // this.lastSelectedPlanet = <IPlanet>{
+    //   name : 'Select',
+    //   distance : 0
+    // };
+
+    console.log(this.widgetId);
+  }
+  
+  // ngOnChanges(changes: SimpleChanges): void {
+  //   const planetListChange : SimpleChange = changes['planetList'];    
+  //   if(planetListChange && planetListChange.currentValue.length > 0){
+  //     this.planetListWithSelect = this.planetList;
+  //     console.log("this.planetListWithSelect", this.planetListWithSelect);     
+  //   }
+  // }
+  ngOnInit(): void {
+    this.initialPlanetList = [...this.planetList];
   }
 
   public planetSelected(planetName: string) {
+
     console.log(planetName);
-    let planet : IPlanet = this.planetListWithSelect.find( p => p.name === planetName);
-    
-    this.selectedPlanet = planet;
 
+    let planet : IPlanet = this.initialPlanetList.find( p => p.name === planetName);
+        
     this.destinationDistance = planet.distance;
-    this.onPlanetSelected.emit(<IPlanetSelectionParam>{
-      widgetId : this.widgetId,
-      selectedPlanet : planet
-    });
+
+    this.onPlanetSelected.emit(new PlanetChange(this.widgetId, this.lastSelectedPlanet, planet));
+
+    this.lastSelectedPlanet = planet;
   }
 
-  public vehicleSelected(vehicle : IVehicle) {
-    console.log(JSON.stringify(vehicle));
-    this.onVehicleSelected.emit(<IVehicleSelectionParam>{
-      widgetId : this.widgetId,
-      selectedVehicle : vehicle
-    });
+  public vehicleSelected(vehicleChange : VehicleChange) {
+    console.log(JSON.stringify(vehicleChange));
+    this.onVehicleSelected.emit(vehicleChange);
   }
+
 
 }

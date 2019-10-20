@@ -27,40 +27,40 @@ export default class FalconeFacade {
     private finderApiToken : string;   
 
     private searchMapSubject = new Subject<Map<string, string>>();
-    private searchMap$ : Observable<Map<string, string>> = this.searchMapSubject.asObservable();
+    public searchMap$ : Observable<Map<string, string>> = this.searchMapSubject.asObservable();
 
     private readonly MAX_SEARCH_ATTEMPTS_ALLOWED = 4; 
     private maxSearchAttemptAllowedSubject = new BehaviorSubject<number>(this.MAX_SEARCH_ATTEMPTS_ALLOWED);    
-    private maxSearchAttemptAllowed$ : Observable<number> = this.maxSearchAttemptAllowedSubject.asObservable();
+    public maxSearchAttemptAllowed$ : Observable<number> = this.maxSearchAttemptAllowedSubject.asObservable();
 
     private errorMessageSubject = new Subject<string>();
-    private errorMessage$ : Observable<string> = this.errorMessageSubject.asObservable();
+    public errorMessage$ : Observable<string> = this.errorMessageSubject.asObservable();
 
     private vehiclesSubject = new Subject<IVehicle[]>();
-    private vehicles$ : Observable<IVehicle[]> = this.vehiclesSubject.asObservable();
+    public vehicles$ : Observable<IVehicle[]> = this.vehiclesSubject.asObservable();
 
     private planetsSubject = new Subject<IPlanet[]>();
-    private planets$ : Observable<IPlanet[]> = this.planetsSubject.asObservable();
+    public planets$ : Observable<IPlanet[]> = this.planetsSubject.asObservable();
 
     private totalTimeTakenSubject = new BehaviorSubject<number>(0);    
-    private totalTimeTaken$ : Observable<number> = this.totalTimeTakenSubject.asObservable();
+    public totalTimeTaken$ : Observable<number> = this.totalTimeTakenSubject.asObservable();
 
     private planetFoundOnSubject = new BehaviorSubject<string>('');
-    private planetFoundOn$ : Observable<string> = this.planetFoundOnSubject.asObservable();
+    public planetFoundOn$ : Observable<string> = this.planetFoundOnSubject.asObservable();
     
     private planetChangedSubject = new Subject<PlanetChange>(); 
-    private planetChangedAction$ : Observable<PlanetChange> = this.planetChangedSubject.asObservable();
+    public planetChangedAction$ : Observable<PlanetChange> = this.planetChangedSubject.asObservable();
     public planetChanged(planetChange : PlanetChange) {
         this.planetChangedSubject.next(planetChange);
     }
     
     private vehicleChangedSubject = new Subject<VehicleChange>(); 
-    private vehicleChangedAction$ : Observable<VehicleChange> = this.vehicleChangedSubject.asObservable();
+    public vehicleChangedAction$ : Observable<VehicleChange> = this.vehicleChangedSubject.asObservable();
     public vehicleChanged(vehicleChange : VehicleChange) {
         this.vehicleChangedSubject.next(vehicleChange);
     }
 
-    private planetListChanges$ = this.planetChangedAction$.pipe(withLatestFrom(this.planets$))
+    public planetListChanges$ = this.planetChangedAction$.pipe(withLatestFrom(this.planets$))
         .pipe(
             map(([planetChange, planets]) => {
                 console.log('planetChangedAction$.pipe(withLatestFrom(this.planets$)',planetChange, planets);
@@ -73,7 +73,7 @@ export default class FalconeFacade {
         );
 
     // todo remove, just for testing
-    private some$ = combineLatest([this.planets$, this.planetChangedAction$])
+    public some$ = combineLatest([this.planets$, this.planetChangedAction$])
     .pipe(
         map(([planets, planetChange]) => {
             
@@ -117,7 +117,7 @@ export default class FalconeFacade {
         return planets.filter( currentPlanet => !currentPlanet.includedInSearch );        
     }
 
-    private vehicleListChanges$ = combineLatest([this.vehicles$, this.vehicleChangedAction$]).pipe(
+    public vehicleListChanges$ = combineLatest([this.vehicles$, this.vehicleChangedAction$]).pipe(
         map(([vehicles, vehicleChange]) => {
            
             const updatedVehicles = this.getVehicleListWithUpdatedAvailableUnits(vehicleChange, vehicles);                            
@@ -155,7 +155,7 @@ export default class FalconeFacade {
         this.vehiclesSubject.next(updatedVehicles);
     }
 
-    private isReadyForSearch$ = this.searchMapSubject.pipe(
+    public isReadyForSearch$ = this.searchMap$.pipe(
         map(searchMap => {
             // if searchMap contains required entries then return true		
             if(searchMap && searchMap.entries.length === this.MAX_SEARCH_ATTEMPTS_ALLOWED) {
@@ -250,44 +250,5 @@ export default class FalconeFacade {
 
      resetApp(){
         this.router.navigate(['/finderboard/reset']);
-      }
-
-    public vm$ = combineLatest(
-        this.searchMap$, 
-        this.maxSearchAttemptAllowed$, 
-        this.errorMessage$, 
-        this.vehicles$, 
-        this.planets$, 
-        this.totalTimeTaken$, 
-        this.planetFoundOn$, 
-        this.planetListChanges$, 
-        this.some$, 
-        this.vehicleListChanges$, 
-        this.isReadyForSearch$
-        )
-    .pipe(
-        map(([searchMap$, 
-            maxSearchAttemptAllowed$, 
-            errorMessage$, 
-            vehicles$, 
-            planets$, 
-            totalTimeTaken$, 
-            planetFoundOn$, 
-            planetListChanges$, 
-            some$, 
-            vehicleListChanges$, 
-            isReadyForSearch$]) => {
-                ([searchMap$, 
-                    maxSearchAttemptAllowed$, 
-                    errorMessage$, 
-                    vehicles$, 
-                    planets$, 
-                    totalTimeTaken$, 
-                    planetFoundOn$, 
-                    planetListChanges$, 
-                    some$, 
-                    vehicleListChanges$, 
-                    isReadyForSearch$])
-            })
-    );
+      }      
 }

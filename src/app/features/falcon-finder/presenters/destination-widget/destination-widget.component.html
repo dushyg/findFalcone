@@ -4,7 +4,7 @@
             [(ngModel)] = "selectedPlanet.name"                                                
             (change)="planetSelected($event.target.value)" >                
                 <option value="Select">Select</option>
-                <option *ngFor="let planet of planetListWithSelect"  [value]="planet.name">
+                <option *ngFor="let planet of initialPlanetList"  [value]="planet.name">
                     {{planet.name}}
                 </option>
         </select> 

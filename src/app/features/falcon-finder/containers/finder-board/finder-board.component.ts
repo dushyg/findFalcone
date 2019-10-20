@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 import { takeUntil, takeWhile } from 'rxjs/operators';
 import { ISearchAttempt } from 'src/app/core/models/searchAttempt';
 import FalconeFacade  from 'src/app/core/facade.service';
+import PlanetChange from 'src/app/core/models/planetChange';
 
 @Component({
   selector: 'app-finder-board',
@@ -25,24 +26,31 @@ export class FinderBoardComponent implements OnInit, OnDestroy {
    }
      
   public error$ : Observable<string>;
-  public planetList$ : Observable<IPlanet[]>;
-  public vehicleList$ : Observable<IVehicle[]>;
+  // public planetList$ : Observable<IPlanet[]>;
+  // public vehicleList$ : Observable<IVehicle[]>;
+  public planetList : IPlanet[];
+  public vehicleList : IVehicle[];
   public timeTaken$ : Observable<number>;  
   public readyToSearch$: Observable<boolean>;
-
   public countPlanetsToBeSearched : number;
   private findFalconRequest : IFindFalconRequest ; 
   private isComponentActive =  true;
 
   ngOnInit() {
     
-    this.error$ = this.finderFacadeService.error$;
-    this.planetList$ = this.finderFacadeService.planetList$;
-    this.vehicleList$ = this.finderFacadeService.vehicleList$;
+   
+    this.error$ = this.finderFacadeService.errorMessage$;
+    // this.planetList$ = this.finderFacadeService.planetList$;
+    // this.vehicleList$ = this.finderFacadeService.vehicleList$;
     this.timeTaken$ = this.finderFacadeService.totalTimeTaken$;    
-    this.readyToSearch$ = this.finderFacadeService.readyToSearch$;
-    this.finderFacadeService.initializeAppData();
+    this.readyToSearch$ = this.finderFacadeService.isReadyForSearch$;
+    
 
+    this.finderFacadeService.planetListChanges$
+        .pipe( takeWhile( () => this.isComponentActive))
+        .subscribe( planetChange => {
+            this.planetList = planetChange.planets; 
+        });     
     this.finderFacadeService.maxSearchAttemptAllowed$
           .pipe( takeWhile( () => this.isComponentActive))
           .subscribe( count => {
@@ -77,6 +85,7 @@ export class FinderBoardComponent implements OnInit, OnDestroy {
               }
           }); 
     
+    this.finderFacadeService.initializeAppData();
   }
 
   planetSelected(planetSelectionParam : IPlanetSelectionParam) {
