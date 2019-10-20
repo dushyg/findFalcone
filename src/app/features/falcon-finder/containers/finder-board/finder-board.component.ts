@@ -10,6 +10,7 @@ import { IVehicleSelectionParam } from 'src/app/core/models/vehicleSelectionPara
 import { Router } from '@angular/router';
 import { takeUntil, takeWhile } from 'rxjs/operators';
 import { ISearchAttempt } from 'src/app/core/models/searchAttempt';
+import FalconeFacade  from 'src/app/core/facade.service';
 
 @Component({
   selector: 'app-finder-board',
@@ -18,7 +19,7 @@ import { ISearchAttempt } from 'src/app/core/models/searchAttempt';
 })
 export class FinderBoardComponent implements OnInit, OnDestroy {
     
-  constructor(private finderFacadeService : FinderFacadeService,
+  constructor(private finderFacadeService : FalconeFacade,
               private router : Router) {
     console.log('finder facade service constructed',finderFacadeService);
    }
