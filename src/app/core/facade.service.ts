@@ -5,16 +5,18 @@ import { FalconFinderService } from './falcon-finder.service';
 import { Router } from '@angular/router';
 import { IFindFalconRequest } from './models/find-falcon-request';
 import { IFindFalconResponse } from './models/find-falcon-response';
-import { catchError, map } from 'rxjs/operators';
-import { Subject, EMPTY, BehaviorSubject, Observable, combineLatest } from 'rxjs';
+import { catchError, map, withLatestFrom } from 'rxjs/operators';
+import { Subject, EMPTY, BehaviorSubject, Observable, combineLatest, forkJoin } from 'rxjs';
 import PlanetChange from './models/planetChange';
 import VehicleChange from './models/vehicleChange';
 import PlanetUpdates from './models/planetUpdates';
 import { IPlanet } from './models/planet';
+import { IVehicle } from './models/vehicle';
+import VehicleUpdates from './models/vehicleUpdates';
 
 @Injectable({providedIn : 'root'})
-export class Facade {
-
+export class FalconeFacade {    
+    
     constructor(private planetService : PlanetsService,
                 private vehicleService : VehiclesService,
                 private finderService : FalconFinderService,
@@ -27,20 +29,27 @@ export class Facade {
     private searchMapSubject = new Subject<Map<string, string>>();
     public searchMap$ : Observable<Map<string, string>> = this.searchMapSubject.asObservable();
 
-    private maxSearchAttemptAllowedSubject = new BehaviorSubject<number>(4);    
+    private readonly MAX_SEARCH_ATTEMPTS_ALLOWED = 4; 
+    private maxSearchAttemptAllowedSubject = new BehaviorSubject<number>(this.MAX_SEARCH_ATTEMPTS_ALLOWED);    
     public maxSearchAttemptAllowed$ : Observable<number> = this.maxSearchAttemptAllowedSubject.asObservable();
 
     private errorMessageSubject = new Subject<string>();
     public errorMessage$ : Observable<string> = this.errorMessageSubject.asObservable();
 
-    public vehicles$ = this.vehicleService.getAllVehicles()
-        .pipe(this.errorHandler());
+    // public vehicles$ = this.vehicleService.getAllVehicles()
+    //     .pipe(this.errorHandler()) as Observable<IVehicle[]>;   
 
-    public planets$ = this.planetService.getAllPlanets()
-        .pipe(this.errorHandler());
+    // public planets$ = this.planetService.getAllPlanets()
+    //     .pipe(this.errorHandler()) as Observable<IPlanet[]>;    
 
-    public token$ = this.finderService.getFalconFinderApiToken()
-        .pipe(this.errorHandler());
+    // public token$ = this.finderService.getFalconFinderApiToken()
+    //     .pipe(this.errorHandler()) as Observable<string>;
+
+    private vehiclesSubject = new Subject<IVehicle[]>();
+    public vehicles$ : Observable<IVehicle[]> = this.vehiclesSubject.asObservable();
+
+    private planetsSubject = new Subject<IPlanet[]>();
+    public planets$ : Observable<IPlanet[]> = this.planetsSubject.asObservable();
 
     private totalTimeTakenSubject = new BehaviorSubject<number>(0);    
     public totalTimeTaken$ : Observable<number> = this.totalTimeTakenSubject.asObservable();
@@ -54,64 +63,144 @@ export class Facade {
     private vehicleChangedSubject = new Subject<VehicleChange>(); 
     public vehicleChangedAction$ : Observable<VehicleChange> = this.vehicleChangedSubject.asObservable();
     
-    
-    // combineLatest or merge
-    public planetListChanges$ = combineLatest([this.planets$, this.planetChangedAction$])
+    public planetListChanges$ = this.planetChangedAction$.pipe(withLatestFrom(this.planets$))
+        .pipe(
+            map(([planetChange, planets]) => {
+                console.log('planetChangedAction$.pipe(withLatestFrom(this.planets$)',planetChange, planets);
+                const updatedPlanets = this.getPlanetListWithUpdatedAvailabilityField(planetChange, planets);                
+                this.updatePlanetListForAvailability(updatedPlanets);
+
+                const planetsLeftForSearch = this.getPlanetsAvailableForSearch(updatedPlanets);
+                return new PlanetUpdates(planetsLeftForSearch, planetChange);
+            })
+        );
+
+    // todo remove, just for testing
+    public some$ = combineLatest([this.planets$, this.planetChangedAction$])
     .pipe(
         map(([planets, planetChange]) => {
-            // if planet is being set for first time, update the planet list by removing currently set planet
-            // if planet is being updated, add back earlier planet and remove new planet
-            // return modified planet array along with planetChange
-            let planetUpdates : PlanetUpdates;
-            let updatedPlanets : IPlanet[];
-
+            
+            console.log('combinelatest [this.planets$, this.planetChangedAction$]',planets, planetChange);
+            return new PlanetUpdates(planets, planetChange);
+            
         })
     )
+    
+    updatePlanetListForAvailability(planets : IPlanet[]) : void {
 
-    vehicleListChanges$ = combineLatest([vehicles$, vehicleChangedAction$]).pipe(
-        map([vehicles, vehicleChanged] => {
-            // if vehicle is being set for the first time, decrement avail qty
-            // if vehicle is being updated, increment previously decremented vehicle qty, decrement current vehicle qty
-            // return updated vehile array
+        this.planetsSubject.next(planets);
+    }
+    
+    getPlanetListWithUpdatedAvailabilityField(planetChange : PlanetChange, planets: IPlanet[])  : IPlanet[] {       
+
+        if(!planetChange){
+            return [...planets];
+        }
+
+        return planets.map( planet => {
+
+            const planetCopy = {...planet};
+            
+            // if oldPlanet is present in the change that means we need to set includedInSearch = false
+            if(planetChange.oldPlanet && planetCopy.name === planetChange.oldPlanet.name) {
+                planetCopy.includedInSearch = false;
+            }
+
+            if(planetChange.newPlanet && planetCopy.name === planetChange.newPlanet.name) {
+                planetCopy.includedInSearch = true;
+            }
+
+            return planetCopy;
+        });
+                        
+    }
+
+    getPlanetsAvailableForSearch(planets : IPlanet[]) : IPlanet[] {
+
+        return planets.filter( currentPlanet => !currentPlanet.includedInSearch );        
+    }
+
+    vehicleListChanges$ = combineLatest([this.vehicles$, this.vehicleChangedAction$]).pipe(
+        map(([vehicles, vehicleChange]) => {
+           
+            const updatedVehicles = this.getVehicleListWithUpdatedAvailableUnits(vehicleChange, vehicles);                            
+            this.updateVehicleInfo(updatedVehicles);
+            
+            return new VehicleUpdates(updatedVehicles, vehicleChange);
+
         })
-    )    
+    );
+    
+    getVehicleListWithUpdatedAvailableUnits(vehicleChange: VehicleChange, vehicles: IVehicle[]): IVehicle[] {
+        
+         // if vehicle is being set for the first time, decrement avail qty
+         // if vehicle is being updated, increment previously decremented vehicle qty, decrement current vehicle qty
+         // return updated vehile array
+        return vehicles.map( vehicle => {
+
+            const clonedVehicle = {...vehicle};
+
+            if(vehicleChange && vehicleChange.newVehicle && vehicleChange.newVehicle.name === clonedVehicle.name) {
+                clonedVehicle.availNumUnits = clonedVehicle.availNumUnits - 1;
+            }
+
+            if(vehicleChange && vehicleChange.oldVehicle && vehicleChange.oldVehicle.name === vehicle.name) {
+                clonedVehicle.availNumUnits = clonedVehicle.availNumUnits + 1;
+            }
+
+            return clonedVehicle;
+        });
+
+    }
+
+    updateVehicleInfo(updatedVehicles: IVehicle[]): void {
+        
+        this.vehiclesSubject.next(updatedVehicles);
+    }
 
     isReadyForSearch$ = this.searchMap$.pipe(
         map(searchMap => {
             // if searchMap contains required entries then return true		
+            if(searchMap && searchMap.entries.length === this.MAX_SEARCH_ATTEMPTS_ALLOWED) {
+                for(let entry of searchMap){
+                    if(!entry[0] || !entry[1]) {
+                        return false;
+                    }
+                }
+            }
+            return false;
         })
     )
 
-    public initializeApp(){
+    public initializeAppData() {
 
-        this.finderService.getFalconFinderApiToken()
-            .subscribe( resp => {
-                if(resp && resp.token){
-                    this.finderApiToken = resp.token;
-                }                
-                else {
-                    this.setErrorMsg('Invalid or empty token passed by falcone api.');
+        forkJoin(
+          this.vehicleService.getAllVehicles(),
+          this.planetService.getAllPlanets(),
+          this.finderService.getFalconFinderApiToken()
+        )
+        .pipe(
+            catchError(
+                error => {
+                    this.setErrorMsg(error);
+                    return EMPTY;
                 }
-            },
-            error => {
-                this.setErrorMsg(error);
-            })
-    }
+            )
+        )
+        .subscribe( response => {
+                      
+            const vehicleList : IVehicle[] = response[0];
+            const planetList : IPlanet[] = response[1];
+            this.finderApiToken = response[2].token;
 
-    private errorHandler() {
-        return catchError(
-            error => {
-                this.setErrorMsg(error);
-                return EMPTY;
-            }
+            this.vehiclesSubject.next(vehicleList);
+            this.planetsSubject.next(planetList);    
+        },
+          (error) => {
+            this.setErrorMsg(error);
+          }
         );
-    }
-
-    private setErrorMsg(error) {
-        this.errorMessageSubject.next(error);
-    }
-    
-
+    }      
         
     public findFalcon(request : IFindFalconRequest) {
 
@@ -130,7 +219,7 @@ export class Facade {
                  if(response.status.trim().toLowerCase() === "success") {
    
                    if(response.planetName) {
-                     this.appStateService.updatePlanetFoundOn(response.planetName);
+                     this.planetFoundOnSubject.next(response.planetName);
                    }
                    else {
                      errorMsg = "Search api returned empty planet name";
@@ -157,6 +246,19 @@ export class Facade {
            }
            );
      }
+
+     private errorHandler() {
+        return catchError(
+            error => {
+                this.setErrorMsg(error);
+                return EMPTY;
+            }
+        );
+    }
+
+    private setErrorMsg(error) {
+        this.errorMessageSubject.next(error);
+    }
 
      resetApp(){
         this.router.navigate(['/finderboard/reset']);
