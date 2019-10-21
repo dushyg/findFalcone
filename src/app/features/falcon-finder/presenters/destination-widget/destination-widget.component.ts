@@ -50,7 +50,12 @@ export class DestinationWidgetComponent implements OnInit {
   //   }
   // }
   ngOnInit(): void {
-    this.initialPlanetList = [...this.planetList];
+    console.log('destination-widget oninit -> this.planetList', this.planetList);
+
+    if(this.planetList) {
+      this.initialPlanetList = [...this.planetList];
+    }
+    
 
     this.planetListChanges$.subscribe( planetChanges => {
 

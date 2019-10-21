@@ -50,6 +50,15 @@ export class FinderBoardComponent implements OnInit, OnDestroy {
     this.timeTaken$ = this.finderFacadeService.totalTimeTaken$;    
     this.readyToSearch$ = this.finderFacadeService.isReadyForSearch$;
     
+    this.finderFacadeService.planets$.subscribe( planets => {
+
+      this.planetList = planets;
+    });
+
+    this.finderFacadeService.vehicles$.subscribe( vehicles => {
+
+      this.vehicleList = vehicles;
+    });
 
     this.finderFacadeService.planetListChanges$
         .pipe( takeWhile( () => this.isComponentActive))
