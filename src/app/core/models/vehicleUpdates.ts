@@ -3,7 +3,7 @@ import VehicleChange from './vehicleChange';
 
 export default class VehicleUpdates{
 
-    constructor(public vehicles: IVehicle[], public planetChange : VehicleChange){
+    constructor(public vehicles: IVehicle[], public vehicleChange : VehicleChange){
 
     }
 }

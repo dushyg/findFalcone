@@ -1,6 +1,9 @@
 import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { IVehicle } from 'src/app/core/models/vehicle';
 import VehicleChange from 'src/app/core/models/vehicleChange';
+import { Observable } from 'rxjs';
+import PlanetUpdates from 'src/app/core/models/planetUpdates';
+import VehicleUpdates from 'src/app/core/models/vehicleUpdates';
 
 
 @Component({
@@ -16,6 +19,8 @@ export class VehicleListComponent implements OnInit {
   public localVehicleList : IVehicle[];
   @Input() public destinationDistance : number;
   @Input() public widgetId : number;
+  @Input() public planetListChanges$ : Observable<PlanetUpdates>; 
+  @Input() public vehicleListChanges$ : Observable<VehicleUpdates>;
 
   @Output() public onVehicleSelected = new EventEmitter<VehicleChange>();
   
@@ -23,6 +28,28 @@ export class VehicleListComponent implements OnInit {
   
   ngOnInit() {
     this.localVehicleList = [...this.vehicleList];
+
+    this.vehicleListChanges$.subscribe( vehicleChanges => {
+
+      // If vehicle was changed in an earlier widget then reset the vehicle list 
+      if(vehicleChanges && vehicleChanges.vehicleChange && vehicleChanges.vehicles) {
+
+        this.localVehicleList = [...vehicleChanges.vehicles];
+      }
+
+    });
+
+    this.planetListChanges$.subscribe( planetChanges => {
+
+      if(planetChanges && planetChanges.planetChange && planetChanges.planets) {
+
+        //If planet was changed in an earlier widget then reset the initialPlanetList to currently remaining planets list
+        if(planetChanges.planetChange.widgetId < this.widgetId) {
+
+          
+        }
+      }
+  });    
   }
 
   // ngOnChanges(simpleChanges : SimpleChanges): void {
@@ -47,6 +74,5 @@ export class VehicleListComponent implements OnInit {
     this.lastSelectedVehicle = vehicle;
   }
 
-  private reduceAvailCount
 
 }

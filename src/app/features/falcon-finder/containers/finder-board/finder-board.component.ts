@@ -12,6 +12,9 @@ import { takeUntil, takeWhile } from 'rxjs/operators';
 import { ISearchAttempt } from 'src/app/core/models/searchAttempt';
 import FalconeFacade  from 'src/app/core/facade.service';
 import PlanetChange from 'src/app/core/models/planetChange';
+import VehicleChange from 'src/app/core/models/vehicleChange';
+import PlanetUpdates from 'src/app/core/models/planetUpdates';
+import VehicleUpdates from 'src/app/core/models/vehicleUpdates';
 
 @Component({
   selector: 'app-finder-board',
@@ -34,8 +37,10 @@ export class FinderBoardComponent implements OnInit, OnDestroy {
   public readyToSearch$: Observable<boolean>;
   public countPlanetsToBeSearched : number;
   private findFalconRequest : IFindFalconRequest ; 
-  private isComponentActive =  true;
-
+  private isComponentActive =  true;  
+  public planetListChanges$ : Observable<PlanetUpdates> = this.finderFacadeService.planetListChanges$; 
+  public vehicleListChanges$ : Observable<VehicleUpdates> = this.finderFacadeService.vehicleListChanges$;
+  
   ngOnInit() {
     
    
@@ -57,7 +62,7 @@ export class FinderBoardComponent implements OnInit, OnDestroy {
               this.countPlanetsToBeSearched = count;  
           });     
 
-    combineLatest(this.finderFacadeService.searchAttemptMap$, this.finderFacadeService.readyToSearch$)
+    combineLatest(this.finderFacadeService.searchMap$, this.finderFacadeService.isReadyForSearch$)
           .subscribe( searchState => {
               const searchAttemptMap = searchState[0];
               const isReadyToSearch = searchState[1];
@@ -68,14 +73,15 @@ export class FinderBoardComponent implements OnInit, OnDestroy {
                     planet_names : new Array<string>(this.countPlanetsToBeSearched),
                     vehicle_names : new Array<string>(this.countPlanetsToBeSearched)
                   };
-
+                
+                let index = 0;
                 for(let searchAttemptEntry of searchAttemptMap) {
 
-                  const widgetId = searchAttemptEntry[0];
-                  const searchAttempt = searchAttemptEntry[1];
+                  const planetName = searchAttemptEntry[0];
+                  const vehicleName = searchAttemptEntry[1];
 
-                  request.planet_names[+widgetId] = searchAttempt.searchedPlanet.name;
-                  request.vehicle_names[+widgetId] = searchAttempt.vehicleUsed.name;
+                  request.planet_names[index] = planetName;
+                  request.vehicle_names[index] = vehicleName;
                 }  
 
                 this.findFalconRequest = request;
@@ -88,19 +94,17 @@ export class FinderBoardComponent implements OnInit, OnDestroy {
     this.finderFacadeService.initializeAppData();
   }
 
-  planetSelected(planetSelectionParam : IPlanetSelectionParam) {
+  planetSelected(planetSelectionParam : PlanetChange) {
     console.log('finder board - planet selected', planetSelectionParam);
     
-    this.finderFacadeService.markPlanetForSearch(planetSelectionParam.selectedPlanet);
-    this.finderFacadeService.updateSearchData(planetSelectionParam.widgetId, <ISearchAttempt>{searchedPlanet : planetSelectionParam.selectedPlanet})
+    this.finderFacadeService.planetChanged(planetSelectionParam);
 
   }
 
-  vehicleSelected(vehicleSelectionParam : IVehicleSelectionParam){
+  vehicleSelected(vehicleSelectionParam : VehicleChange){
     console.log('finder board - vehicle selected', vehicleSelectionParam);
 
-    this.finderFacadeService.updateVehicleAvailability(vehicleSelectionParam);
-    this.finderFacadeService.updateSearchData(vehicleSelectionParam.widgetId, <ISearchAttempt>{vehicleUsed : vehicleSelectionParam.selectedVehicle});
+    this.finderFacadeService.vehicleChanged(vehicleSelectionParam);
   }
 
 

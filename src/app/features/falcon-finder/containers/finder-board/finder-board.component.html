@@ -12,6 +12,8 @@
             [vehicleList]="vehicleList$ | async"
             [planetList]="planetList$ | async"
             [countPlanetsToBeSearched] = "countPlanetsToBeSearched"
+            [planetListChanges$] = "planetListChanges$"
+            [vehicleListChanges$] = "vehicleListChanges$"
             (onPlanetSelected)="planetSelected($event)"
             (onVehicleSelected)="vehicleSelected($event)">
         </app-destination-widget-list>

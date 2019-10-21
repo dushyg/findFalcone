@@ -6,6 +6,9 @@ import { IVehicle } from 'src/app/core/models/vehicle';
 import { IPlanetSelectionParam } from 'src/app/core/models/planetSelectionParam';
 import PlanetChange from 'src/app/core/models/planetChange';
 import VehicleChange from 'src/app/core/models/vehicleChange';
+import { Observable } from 'rxjs';
+import PlanetUpdates from 'src/app/core/models/planetUpdates';
+import VehicleUpdates from 'src/app/core/models/vehicleUpdates';
 
 @Component({
   selector: 'app-destination-widget',
@@ -15,7 +18,8 @@ export class DestinationWidgetComponent implements OnInit {
     
   @Input() public vehicleList : IVehicle[];
   @Input() public planetList : IPlanet[];
-
+  @Input() public planetListChanges$ : Observable<PlanetUpdates>; 
+  @Input() public vehicleListChanges$ : Observable<VehicleUpdates>;
   private initialPlanetList : IPlanet[];
 
   @Output() public onPlanetSelected  = new EventEmitter<PlanetChange>();
@@ -47,6 +51,18 @@ export class DestinationWidgetComponent implements OnInit {
   // }
   ngOnInit(): void {
     this.initialPlanetList = [...this.planetList];
+
+    this.planetListChanges$.subscribe( planetChanges => {
+
+        if(planetChanges && planetChanges.planetChange && planetChanges.planets) {
+
+          //If planet was changed in an earlier widget then reset the initialPlanetList to currently remaining planets list
+          if(planetChanges.planetChange.widgetId < this.widgetId) {
+
+            this.initialPlanetList = [...planetChanges.planets];
+          }
+        }
+    });    
   }
 
   public planetSelected(planetName: string) {

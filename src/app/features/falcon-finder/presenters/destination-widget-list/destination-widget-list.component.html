@@ -4,6 +4,8 @@
                 <app-destination-widget 
                     [planetList]="planetList"
                     [vehicleList]="vehicleList"
+                    [planetListChanges$] = "planetListChanges$"
+                    [vehicleListChanges$] = "vehicleListChanges$"
                     (onPlanetSelected)="planetSelected($event)"
                     (onVehicleSelected)="vehicleSelected($event)">                    
                 </app-destination-widget>

@@ -13,6 +13,8 @@
             [vehicleList]="vehicleList"
             (onVehicleSelected)="onVehicleSelected"
             [destinationDistance]="destinationDistance"
+            [planetListChanges$] = "planetListChanges$"
+            [vehicleListChanges$] = "vehicleListChanges$"
             (onVehicleSelected)="vehicleSelected($event)"
             [widgetId]="widgetId">
         </app-vehicle-list>

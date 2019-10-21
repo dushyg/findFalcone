@@ -49,26 +49,26 @@ export default class FalconeFacade {
     public planetFoundOn$ : Observable<string> = this.planetFoundOnSubject.asObservable();
     
     private planetChangedSubject = new Subject<PlanetChange>(); 
-    public planetChangedAction$ : Observable<PlanetChange> = this.planetChangedSubject.asObservable();
+    private planetChangedAction$ : Observable<PlanetChange> = this.planetChangedSubject.asObservable();
     public planetChanged(planetChange : PlanetChange) {
         this.planetChangedSubject.next(planetChange);
     }
     
     private vehicleChangedSubject = new Subject<VehicleChange>(); 
-    public vehicleChangedAction$ : Observable<VehicleChange> = this.vehicleChangedSubject.asObservable();
+    private vehicleChangedAction$ : Observable<VehicleChange> = this.vehicleChangedSubject.asObservable();
     public vehicleChanged(vehicleChange : VehicleChange) {
         this.vehicleChangedSubject.next(vehicleChange);
     }
 
-    public planetListChanges$ = this.planetChangedAction$.pipe(withLatestFrom(this.planets$))
+    public planetListChanges$ = this.planetChangedAction$.pipe(withLatestFrom(this.planets$, this.vehicleChangedSubject))
         .pipe(
-            map(([planetChange, planets]) => {
+            map(([planetChange, planets, vehicleChange]) => {
                 console.log('planetChangedAction$.pipe(withLatestFrom(this.planets$)',planetChange, planets);
                 const updatedPlanets = this.getPlanetListWithUpdatedAvailabilityField(planetChange, planets);                
                 this.updatePlanetListForAvailability(updatedPlanets);
 
                 const planetsLeftForSearch = this.getPlanetsAvailableForSearch(updatedPlanets);
-                return new PlanetUpdates(planetsLeftForSearch, planetChange);
+                return new PlanetUpdates(planetsLeftForSearch, planetChange, vehicleChange);
             })
         );
 
@@ -78,7 +78,7 @@ export default class FalconeFacade {
         map(([planets, planetChange]) => {
             
             console.log('combinelatest [this.planets$, this.planetChangedAction$]',planets, planetChange);
-            return new PlanetUpdates(planets, planetChange);
+            return new PlanetUpdates(planets, planetChange, null);
             
         })
     )

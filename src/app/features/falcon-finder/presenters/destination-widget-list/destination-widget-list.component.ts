@@ -3,6 +3,9 @@ import { IVehicle } from 'src/app/core/models/vehicle';
 import { IPlanet } from 'src/app/core/models/planet';
 import { IVehicleSelectionParam } from 'src/app/core/models/vehicleSelectionParam';
 import { IPlanetSelectionParam } from 'src/app/core/models/planetSelectionParam';
+import { Observable } from 'rxjs';
+import PlanetUpdates from 'src/app/core/models/planetUpdates';
+import VehicleUpdates from 'src/app/core/models/vehicleUpdates';
 
 @Component({
   selector: 'app-destination-widget-list',
@@ -16,6 +19,8 @@ export class DestinationWidgetListComponent implements OnInit {
   @Input() vehicleList : IVehicle[];
   @Input() planetList : IPlanet[];
   @Input() countPlanetsToBeSearched : number; 
+  @Input() public planetListChanges$ : Observable<PlanetUpdates>; 
+  @Input() public vehicleListChanges$ : Observable<VehicleUpdates>;
 
   @Output() public onPlanetSelected  = new EventEmitter<IPlanetSelectionParam>();
   @Output() public onVehicleSelected = new EventEmitter<IVehicleSelectionParam>();
