@@ -28,16 +28,17 @@ export class DestinationWidgetComponent implements OnInit {
   private static createdWidgetCount : number = 0;
   public destinationDistance : number = 0 ;  
   public widgetId : number; 
-  public lastSelectedPlanet : IPlanet = null;
-  public dummyPlanet : IPlanet ;
+  public lastSelectedPlanet : IPlanet ;
+  public defaultSelectedPlanet : IPlanet ;
 
   constructor() { 
     
     this.widgetId = DestinationWidgetComponent.createdWidgetCount++;
-    // this.lastSelectedPlanet = <IPlanet>{
-    //   name : 'Select',
-    //   distance : 0
-    // };
+
+    this.lastSelectedPlanet = this.defaultSelectedPlanet = <IPlanet>{
+      name : 'Select',
+      distance : 0
+    };
 
     console.log(this.widgetId);
   }
@@ -53,7 +54,7 @@ export class DestinationWidgetComponent implements OnInit {
     console.log('destination-widget oninit -> this.planetList', this.planetList);
 
     if(this.planetList) {
-      this.initialPlanetList = [...this.planetList];
+      this.initialPlanetList = [...this.planetList, this.defaultSelectedPlanet];
     }
     
 
@@ -64,7 +65,7 @@ export class DestinationWidgetComponent implements OnInit {
           //If planet was changed in an earlier widget then reset the initialPlanetList to currently remaining planets list
           if(planetChanges.planetChange.widgetId < this.widgetId) {
 
-            this.initialPlanetList = [...planetChanges.planets];
+            this.initialPlanetList = [...planetChanges.planets, this.defaultSelectedPlanet];
           }
         }
     });    

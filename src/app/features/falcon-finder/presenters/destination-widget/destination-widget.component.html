@@ -1,7 +1,8 @@
 <div>
         <select      
             name="selectPlanet"
-            [(ngModel)] = "selectedPlanet.name"                                                
+            this.lastSelectedPlanet = planet;
+            [(ngModel)] = "lastSelectedPlanet.name"                                                
             (change)="planetSelected($event.target.value)" >                
                 <option value="Select">Select</option>
                 <option *ngFor="let planet of initialPlanetList"  [value]="planet.name">
@@ -9,7 +10,7 @@
                 </option>
         </select> 
         <br>
-        <app-vehicle-list *ngIf="selectedPlanet.name!='Select'"
+        <app-vehicle-list *ngIf="lastSelectedPlanet.name!='Select'"
             [vehicleList]="vehicleList"
             (onVehicleSelected)="onVehicleSelected"
             [destinationDistance]="destinationDistance"
