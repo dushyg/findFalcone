@@ -19,37 +19,34 @@ export class VehicleListComponent implements OnInit {
   public localVehicleList : IVehicle[];
   @Input() public destinationDistance : number;
   @Input() public widgetId : number;
-  @Input() public planetListChanges$ : Observable<PlanetUpdates>; 
-  @Input() public vehicleListChanges$ : Observable<VehicleUpdates>;
+  // @Input() public planetListChanges$ : Observable<PlanetUpdates>; 
+  // @Input() public vehicleListChanges$ : Observable<VehicleUpdates>;
+
+  @Input() public planetListChanges$ : Observable<number>; 
+  @Input() public vehicleListChanges$ : Observable<number>;
 
   @Output() public onVehicleSelected = new EventEmitter<VehicleChange>();
   
-  public lastSelectedVehicle : IVehicle = null;
+  public lastSelectedVehicle : IVehicle = <IVehicle>{ availNumUnits : 0, name : null};
   
   ngOnInit() {
     this.localVehicleList = [...this.vehicleList];
 
-    this.vehicleListChanges$.subscribe( vehicleChanges => {
+    this.vehicleListChanges$.subscribe( widgetId => {
 
       // If vehicle was changed in an earlier widget then reset the vehicle list 
-      if(vehicleChanges && vehicleChanges.vehicleChange && vehicleChanges.vehicles) {
+      if(widgetId < this.widgetId) {
 
-        this.localVehicleList = [...vehicleChanges.vehicles];
+        this.setVehicleListWithLatestVehicles();
       }
 
     });
 
-    this.planetListChanges$.subscribe( planetChanges => {
-
-      if(planetChanges && planetChanges.planetChange && planetChanges.planets) {
-
-        //If planet was changed in an earlier widget then reset the initialPlanetList to currently remaining planets list
-        if(planetChanges.planetChange.widgetId < this.widgetId) {
-
-          
-        }
-      }
-  });    
+    this.planetListChanges$.subscribe( widgetId => {
+      
+        // If planet was changed then reset the list of available vehicles for all the widgets
+        this.setVehicleListWithLatestVehicles()                
+    });    
   }
 
   // ngOnChanges(simpleChanges : SimpleChanges): void {
@@ -69,10 +66,18 @@ export class VehicleListComponent implements OnInit {
   public vehicleSelected(vehicle : IVehicle) {
     console.log('vehicle select - ', vehicle);
     
-    this.onVehicleSelected.emit(new VehicleChange(this.widgetId, this.lastSelectedVehicle, vehicle));
+    this.onVehicleSelected.emit(new VehicleChange(this.widgetId, {...this.lastSelectedVehicle}, {...vehicle}));
 
     this.lastSelectedVehicle = vehicle;
+
+    // reduce the availNumUnits of local vehicle instance if its not the default vehicle whose name is null
+    if(this.lastSelectedVehicle.name) {
+      this.lastSelectedVehicle.availNumUnits--;
+    }
   }
 
+  private setVehicleListWithLatestVehicles() : void {
+    this.localVehicleList = [...this.vehicleList]; 
+  }
 
 }

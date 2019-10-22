@@ -1,11 +1,11 @@
 import { IPlanet } from './planet';
 
 import PlanetChange from './planetChange';
-import VehicleChange from './vehicleChange';
+import { IVehicle } from './vehicle';
 
 export default class PlanetUpdates {
 
-    constructor(public planets: IPlanet[], public planetChange : PlanetChange, public vehicleChange : VehicleChange){
+    constructor(public planets: IPlanet[], public planetChange : PlanetChange, public vehicles : IVehicle[]){
 
     }
 }

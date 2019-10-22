@@ -18,12 +18,12 @@ export class DestinationWidgetComponent implements OnInit {
     
   @Input() public vehicleList : IVehicle[];
   @Input() public planetList : IPlanet[];
-  @Input() public planetListChanges$ : Observable<PlanetUpdates>; 
-  @Input() public vehicleListChanges$ : Observable<VehicleUpdates>;
+  @Input() public planetListChanges$ : Observable<number>; 
+  @Input() public vehicleListChanges$ : Observable<number>;
   private initialPlanetList : IPlanet[];
 
   @Output() public onPlanetSelected  = new EventEmitter<PlanetChange>();
-  @Output() public onVehicleSelected = new EventEmitter<VehicleChange>();
+  @Output() public onVehicleSelected = new EventEmitter<VehicleChange>();  
   
   private static createdWidgetCount : number = 0;
   public destinationDistance : number = 0 ;  
@@ -58,17 +58,22 @@ export class DestinationWidgetComponent implements OnInit {
     }
     
 
-    this.planetListChanges$.subscribe( planetChanges => {
-
-        if(planetChanges && planetChanges.planetChange && planetChanges.planets) {
-
+    this.planetListChanges$.subscribe( widgetId => {
+        
           //If planet was changed in an earlier widget then reset the initialPlanetList to currently remaining planets list
-          if(planetChanges.planetChange.widgetId < this.widgetId) {
+          if(widgetId < this.widgetId) {
 
-            this.initialPlanetList = [...planetChanges.planets, this.defaultSelectedPlanet];
+            this.setPlanetListWithSelectOption();
           }
-        }
+        
     });    
+
+    this.vehicleListChanges$.subscribe( widgetId => {
+
+      if(widgetId < this.widgetId) {
+        this.setPlanetListWithSelectOption();
+      }
+    });
   }
 
   public planetSelected(planetName: string) {
@@ -89,5 +94,8 @@ export class DestinationWidgetComponent implements OnInit {
     this.onVehicleSelected.emit(vehicleChange);
   }
 
+  setPlanetListWithSelectOption() : void {
+    this.initialPlanetList = [...this.planetList, this.defaultSelectedPlanet];
+  }
 
 }

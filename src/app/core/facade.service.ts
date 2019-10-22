@@ -36,11 +36,19 @@ export default class FalconeFacade {
     private errorMessageSubject = new Subject<string>();
     public errorMessage$ : Observable<string> = this.errorMessageSubject.asObservable();
 
+    private apiVehiclesSubject = new Subject<IVehicle[]>();
+    public apiVehicles$ : Observable<IVehicle[]> = this.apiVehiclesSubject.asObservable();
+
     private vehiclesSubject = new Subject<IVehicle[]>();
     public vehicles$ : Observable<IVehicle[]> = this.vehiclesSubject.asObservable();
 
+
+    private apiPlanetsSubject = new Subject<IPlanet[]>();
+    public apiPlanets$ : Observable<IPlanet[]> = this.apiPlanetsSubject.asObservable();
+
     private planetsSubject = new Subject<IPlanet[]>();
     public planets$ : Observable<IPlanet[]> = this.planetsSubject.asObservable();
+
 
     private totalTimeTakenSubject = new BehaviorSubject<number>(0);    
     public totalTimeTaken$ : Observable<number> = this.totalTimeTakenSubject.asObservable();
@@ -59,30 +67,67 @@ export default class FalconeFacade {
     public vehicleChanged(vehicleChange : VehicleChange) {
         this.vehicleChangedSubject.next(vehicleChange);
     }
+    
+    public vehiclesUpdated$ = this.vehicleChangedAction$.pipe( 
+        withLatestFrom(this.vehicles$),
+        map(([vehicleChange, vehicles]) => {
 
-    public planetListChanges$ = this.planetChangedAction$.pipe(withLatestFrom(this.planets$, this.vehicleChangedSubject))
-        .pipe(
-            map(([planetChange, planets, vehicleChange]) => {
-                console.log('planetChangedAction$.pipe(withLatestFrom(this.planets$)',planetChange, planets);
-                const updatedPlanets = this.getPlanetListWithUpdatedAvailabilityField(planetChange, planets);                
-                this.updatePlanetListForAvailability(updatedPlanets);
-
-                const planetsLeftForSearch = this.getPlanetsAvailableForSearch(updatedPlanets);
-                return new PlanetUpdates(planetsLeftForSearch, planetChange, vehicleChange);
-            })
-        );
-
-    // todo remove, just for testing
-    public some$ = combineLatest([this.planets$, this.planetChangedAction$])
-    .pipe(
-        map(([planets, planetChange]) => {
-            
-            console.log('combinelatest [this.planets$, this.planetChangedAction$]',planets, planetChange);
-            return new PlanetUpdates(planets, planetChange, null);
-            
+            const updatedVehicles = this.getVehicleListWithUpdatedAvailableUnits(vehicleChange, vehicles);                            
+            this.updateVehicleInfo(updatedVehicles);            
+            return vehicleChange.widgetId;
         })
     )
+
+    // public vehicleListChanges$ = combineLatest([this.vehicles$, this.vehicleChangedAction$]).pipe(
+    //     map(([vehicles, vehicleChange]) => {
+           
+    //         const updatedVehicles = this.getVehicleListWithUpdatedAvailableUnits(vehicleChange, vehicles);                            
+    //         this.updateVehicleInfo(updatedVehicles);            
+
+    //         return new VehicleUpdates(updatedVehicles, vehicleChange);
+
+    //     })
+    // );
     
+    private getVehicleListWithUpdatedAvailableUnits(vehicleChange: VehicleChange, vehicles: IVehicle[]): IVehicle[] {
+        
+         // if vehicle is being set for the first time, decrement avail qty
+         // if vehicle is being updated, increment previously decremented vehicle qty, decrement current vehicle qty
+         // return updated vehile array
+        return vehicles.map( vehicle => {
+
+            const clonedVehicle = {...vehicle};
+
+            if(vehicleChange && vehicleChange.newVehicle && vehicleChange.newVehicle.name === clonedVehicle.name) {
+                clonedVehicle.availNumUnits = clonedVehicle.availNumUnits - 1;
+            }
+
+            if(vehicleChange && vehicleChange.oldVehicle && vehicleChange.oldVehicle.name === vehicle.name) {
+                clonedVehicle.availNumUnits = clonedVehicle.availNumUnits + 1;
+            }
+
+            return clonedVehicle;
+        });
+
+    }
+
+    private updateVehicleInfo(updatedVehicles: IVehicle[]): void {
+        
+        this.vehiclesSubject.next(updatedVehicles);
+    }
+
+    public planetsUpdated$ = this.planetChangedAction$
+            .pipe(withLatestFrom(this.planets$),
+                  map(([planetChange, planets]) => {
+
+                    console.log('planetChangedAction$.pipe(withLatestFrom(this.planets$)',planetChange, planets);
+                    const updatedPlanets = this.getPlanetListWithUpdatedAvailabilityField(planetChange, planets);                
+                    const planetsLeftForSearch = this.getPlanetsAvailableForSearch(updatedPlanets);
+                    this.updatePlanetListForAvailability(planetsLeftForSearch);
+                    return planetChange.widgetId;
+                  })
+            );
+
     private updatePlanetListForAvailability(planets : IPlanet[]) : void {
 
         this.planetsSubject.next(planets);
@@ -116,45 +161,31 @@ export default class FalconeFacade {
 
         return planets.filter( currentPlanet => !currentPlanet.includedInSearch );        
     }
+        
+    // public planetListChanges$ = this.planetChangedAction$.pipe(withLatestFrom(this.planets$, this.vehicleListChanges$))
+    //     .pipe(
+    //         map(([planetChange, planets, vehicleChanges]) => {
+    //             console.log('planetChangedAction$.pipe(withLatestFrom(this.planets$)',planetChange, planets);
+    //             const updatedPlanets = this.getPlanetListWithUpdatedAvailabilityField(planetChange, planets);                
+    //             const planetsLeftForSearch = this.getPlanetsAvailableForSearch(updatedPlanets);
+    //             this.updatePlanetListForAvailability(planetsLeftForSearch);
+                
+    //             return new PlanetUpdates(planetsLeftForSearch, planetChange, vehicleChanges.vehicles);
+    //         })
+    //     );
 
-    public vehicleListChanges$ = combineLatest([this.vehicles$, this.vehicleChangedAction$]).pipe(
-        map(([vehicles, vehicleChange]) => {
-           
-            const updatedVehicles = this.getVehicleListWithUpdatedAvailableUnits(vehicleChange, vehicles);                            
-            this.updateVehicleInfo(updatedVehicles);
+    // todo remove, just for testing
+    public some$ = combineLatest([this.planets$, this.planetChangedAction$])
+    .pipe(
+        map(([planets, planetChange]) => {
             
-            return new VehicleUpdates(updatedVehicles, vehicleChange);
-
+            console.log('combinelatest [this.planets$, this.planetChangedAction$]',planets, planetChange);
+            return new PlanetUpdates(planets, planetChange, null);
+            
         })
-    );
+    )
     
-    private getVehicleListWithUpdatedAvailableUnits(vehicleChange: VehicleChange, vehicles: IVehicle[]): IVehicle[] {
-        
-         // if vehicle is being set for the first time, decrement avail qty
-         // if vehicle is being updated, increment previously decremented vehicle qty, decrement current vehicle qty
-         // return updated vehile array
-        return vehicles.map( vehicle => {
-
-            const clonedVehicle = {...vehicle};
-
-            if(vehicleChange && vehicleChange.newVehicle && vehicleChange.newVehicle.name === clonedVehicle.name) {
-                clonedVehicle.availNumUnits = clonedVehicle.availNumUnits - 1;
-            }
-
-            if(vehicleChange && vehicleChange.oldVehicle && vehicleChange.oldVehicle.name === vehicle.name) {
-                clonedVehicle.availNumUnits = clonedVehicle.availNumUnits + 1;
-            }
-
-            return clonedVehicle;
-        });
-
-    }
-
-    private updateVehicleInfo(updatedVehicles: IVehicle[]): void {
-        
-        this.vehiclesSubject.next(updatedVehicles);
-    }
-
+    
     public isReadyForSearch$ = this.searchMap$.pipe(
         map(searchMap => {
             // if searchMap contains required entries then return true		
@@ -190,7 +221,10 @@ export default class FalconeFacade {
             const planetList : IPlanet[] = response[1];
             this.finderApiToken = response[2].token;
 
+            this.apiVehiclesSubject.next(vehicleList);
             this.vehiclesSubject.next(vehicleList);
+
+            this.apiPlanetsSubject.next(planetList);    
             this.planetsSubject.next(planetList);    
         },
           (error) => {

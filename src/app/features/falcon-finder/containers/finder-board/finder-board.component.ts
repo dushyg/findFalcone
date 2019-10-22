@@ -38,9 +38,13 @@ export class FinderBoardComponent implements OnInit, OnDestroy {
   public countPlanetsToBeSearched : number;
   private findFalconRequest : IFindFalconRequest ; 
   private isComponentActive =  true;  
-  public planetListChanges$ : Observable<PlanetUpdates> = this.finderFacadeService.planetListChanges$; 
-  public vehicleListChanges$ : Observable<VehicleUpdates> = this.finderFacadeService.vehicleListChanges$;
+  // public planetListChanges$ : Observable<PlanetUpdates> = this.finderFacadeService.planetListChanges$; 
+  // public vehicleListChanges$ : Observable<VehicleUpdates> = this.finderFacadeService.vehicleListChanges$;
   
+  public planetListChanges$ : Observable<number> = this.finderFacadeService.planetsUpdated$; 
+  public vehicleListChanges$ : Observable<number> = this.finderFacadeService.vehiclesUpdated$;
+  
+  vehiclesUpdated
   ngOnInit() {
     
    
@@ -60,11 +64,12 @@ export class FinderBoardComponent implements OnInit, OnDestroy {
       this.vehicleList = vehicles;
     });
 
-    this.finderFacadeService.planetListChanges$
-        .pipe( takeWhile( () => this.isComponentActive))
-        .subscribe( planetChange => {
-            this.planetList = planetChange.planets; 
-        });     
+    // this.finderFacadeService.planetListChanges$
+    //     .pipe( takeWhile( () => this.isComponentActive))
+    //     .subscribe( planetChange => {
+    //         this.planetList = planetChange.planets; 
+    //     });     
+
     this.finderFacadeService.maxSearchAttemptAllowed$
           .pipe( takeWhile( () => this.isComponentActive))
           .subscribe( count => {
