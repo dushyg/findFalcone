@@ -1,7 +1,6 @@
 <div>
         <select      
-            name="selectPlanet"
-            this.lastSelectedPlanet = planet;
+            name="selectPlanet"            
             [(ngModel)] = "lastSelectedPlanet"                                                
             (change)="planetSelected($event.target.value)" >                
                 <option value="Select">Select</option>
