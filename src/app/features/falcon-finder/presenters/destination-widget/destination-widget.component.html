@@ -2,7 +2,7 @@
         <select      
             name="selectPlanet"
             this.lastSelectedPlanet = planet;
-            [(ngModel)] = "lastSelectedPlanet.name"                                                
+            [(ngModel)] = "lastSelectedPlanet"                                                
             (change)="planetSelected($event.target.value)" >                
                 <option value="Select">Select</option>
                 <option *ngFor="let planet of initialPlanetList"  [value]="planet.name">
@@ -10,12 +10,12 @@
                 </option>
         </select> 
         <br>
-        <app-vehicle-list *ngIf="lastSelectedPlanet.name!='Select'"
+        <app-vehicle-list *ngIf="lastSelectedPlanet!='Select'"
             [vehicleList]="vehicleList"
             (onVehicleSelected)="onVehicleSelected"
             [destinationDistance]="destinationDistance"
-            [planetListChanges$] = "planetListChanges$"
-            [vehicleListChanges$] = "vehicleListChanges$"
+            [planetListChanged] = "planetListChanged"
+            [vehicleListChanged] = "vehicleListChanged"
             (onVehicleSelected)="vehicleSelected($event)"
             [widgetId]="widgetId">
         </app-vehicle-list>

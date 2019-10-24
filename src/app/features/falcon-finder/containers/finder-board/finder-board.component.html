@@ -1,4 +1,4 @@
-<div class="card">
+<div class="card" *ngIf="vehicleList && planetList">
     <div class="card-header">
         Select planets you want to search in:
     </div>        
@@ -12,8 +12,8 @@
             [vehicleList]="vehicleList"
             [planetList]="planetList"
             [countPlanetsToBeSearched] = "countPlanetsToBeSearched"
-            [planetListChanges$] = "planetListChanges$"
-            [vehicleListChanges$] = "vehicleListChanges$"
+            [planetListChanged] = "planetListChanges$ | async"
+            [vehicleListChanged] = "vehicleListChanges$ | async"
             (onPlanetSelected)="planetSelected($event)"
             (onVehicleSelected)="vehicleSelected($event)">
         </app-destination-widget-list>

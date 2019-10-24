@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges, SimpleChange } from '@angular/core';
 import { IVehicle } from 'src/app/core/models/vehicle';
 import VehicleChange from 'src/app/core/models/vehicleChange';
 import { Observable } from 'rxjs';
@@ -22,46 +22,29 @@ export class VehicleListComponent implements OnInit {
   // @Input() public planetListChanges$ : Observable<PlanetUpdates>; 
   // @Input() public vehicleListChanges$ : Observable<VehicleUpdates>;
 
-  @Input() public planetListChanges$ : Observable<number>; 
-  @Input() public vehicleListChanges$ : Observable<number>;
+  @Input() public planetListChanged : number; 
+  @Input() public vehicleListChanged : number;
 
   @Output() public onVehicleSelected = new EventEmitter<VehicleChange>();
   
   public lastSelectedVehicle : IVehicle = <IVehicle>{ availNumUnits : 0, name : null};
   
   ngOnInit() {
-    this.localVehicleList = [...this.vehicleList];
-
-    this.vehicleListChanges$.subscribe( widgetId => {
-
-      // If vehicle was changed in an earlier widget then reset the vehicle list 
-      if(widgetId < this.widgetId) {
-
-        this.setVehicleListWithLatestVehicles();
-      }
-
-    });
-
-    this.planetListChanges$.subscribe( widgetId => {
-      
-        // If planet was changed then reset the list of available vehicles for all the widgets
-        this.setVehicleListWithLatestVehicles()                
-    });    
+    this.localVehicleList = [...this.vehicleList];    
   }
 
-  // ngOnChanges(simpleChanges : SimpleChanges): void {
-  //   const vehicleListChange = simpleChanges['vehicleList'];
-  //   if(vehicleListChange) {
+  ngOnChanges(changes: SimpleChanges): void {
+    const planetListChange : SimpleChange = changes['planetListChanged'];    
+    if(planetListChange){        
+        this.setVehicleListWithLatestVehicles();
+    }
 
-  //     const vehicleList : IVehicle[] = vehicleListChange.currentValue;
-
-  //     //if(!this.localVehicleList && vehicleList && vehicleList.length > 0) {
-  //     if(vehicleList && vehicleList.length > 0) {
-  //       this.localVehicleList = vehicleList;
-  //     }    
-  //   }
-     
-  // }
+    const vehicleListChange : SimpleChange = changes['vehicleListChanged'];    
+    if(vehicleListChange){
+      let widgetId = vehicleListChange.currentValue;
+      this.updateVehicleList(widgetId);
+    }
+  }
 
   public vehicleSelected(vehicle : IVehicle) {
     console.log('vehicle select - ', vehicle);
@@ -78,6 +61,16 @@ export class VehicleListComponent implements OnInit {
 
   private setVehicleListWithLatestVehicles() : void {
     this.localVehicleList = [...this.vehicleList]; 
+  }
+
+  updateVehicleList( widgetId ) {
+        
+    //If planet was changed in an earlier widget then reset the initialPlanetList to currently remaining planets list
+    if(widgetId < this.widgetId) {
+
+      this.setVehicleListWithLatestVehicles();
+    }
+  
   }
 
 }
