@@ -5,7 +5,7 @@
                 <input type="radio" 
                        name="radio_{{widgetId}}"
                        [value]="vehicle.name"   
-                       [(ngModel)]="lastSelectedVehicle.name"                                           
+                       [ngModel]="lastSelectedVehicle.name"                                           
                        [disabled]="vehicle.maxDistance < destinationDistance || vehicle.availNumUnits == 0"
                        id="vehicle_{{widgetId}}_{{i}}" 
                        (change)="vehicleSelected(vehicle)"/>                

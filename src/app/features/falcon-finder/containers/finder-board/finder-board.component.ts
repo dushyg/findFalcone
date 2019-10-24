@@ -41,10 +41,9 @@ export class FinderBoardComponent implements OnInit, OnDestroy {
   // public planetListChanges$ : Observable<PlanetUpdates> = this.finderFacadeService.planetListChanges$; 
   // public vehicleListChanges$ : Observable<VehicleUpdates> = this.finderFacadeService.vehicleListChanges$;
   
-  public planetListChanges$ : Observable<number> = this.finderFacadeService.planetsUpdated$; 
-  public vehicleListChanges$ : Observable<number> = this.finderFacadeService.vehiclesUpdated$;
-  
-  vehiclesUpdated
+  public planetsUpdated : number ; 
+  public vehiclesUpdated : number;
+    
   ngOnInit() {
     
    
@@ -63,6 +62,14 @@ export class FinderBoardComponent implements OnInit, OnDestroy {
 
       this.vehicleList = vehicles;
     });
+
+    this.finderFacadeService.planetsUpdated$.subscribe( widgetId => {
+      this.vehiclesUpdated = widgetId;
+    }); 
+
+    this.finderFacadeService.vehiclesUpdated$.subscribe( widgetId => {
+      this.planetsUpdated = widgetId;
+    }); 
 
     // this.finderFacadeService.planetListChanges$
     //     .pipe( takeWhile( () => this.isComponentActive))
