@@ -22,8 +22,8 @@ export class VehicleListComponent implements OnInit {
   // @Input() public planetListChanges$ : Observable<PlanetUpdates>; 
   // @Input() public vehicleListChanges$ : Observable<VehicleUpdates>;
 
-  @Input() public planetListChanged : number; 
-  @Input() public vehicleListChanged : number;
+  @Input() public planetListChanged : {widgetId : number, changer : string} ; 
+  @Input() public vehicleListChanged : {widgetId : number, changer : string} ;
 
   @Output() public onVehicleSelected = new EventEmitter<VehicleChange>();
   
@@ -36,13 +36,14 @@ export class VehicleListComponent implements OnInit {
   ngOnChanges(changes: SimpleChanges): void {
     const planetListChange : SimpleChange = changes['planetListChanged'];    
     if(planetListChange){        
-        this.setVehicleListWithLatestVehicles();
+      let widgetUpdate = planetListChange.currentValue;
+      this.updateVehicleList(widgetUpdate);
     }
 
     const vehicleListChange : SimpleChange = changes['vehicleListChanged'];    
     if(vehicleListChange){
-      let widgetId = vehicleListChange.currentValue;
-      this.updateVehicleList(widgetId);
+      let widgetUpdate = vehicleListChange.currentValue;
+      this.updateVehicleList(widgetUpdate);
     }
   }
 
@@ -63,14 +64,18 @@ export class VehicleListComponent implements OnInit {
     this.localVehicleList = [...this.vehicleList]; 
   }
 
-  updateVehicleList( widgetId ) {
+  updateVehicleList( widgetUpdate : {widgetId : number, changer : string}  ) {
         
     //If planet was changed in an earlier widget then reset the initialPlanetList to currently remaining planets list
-    if(widgetId < this.widgetId) {
+    if(widgetUpdate.changer === 'planetUpdate' && widgetUpdate.widgetId <= this.widgetId) {
 
       this.setVehicleListWithLatestVehicles();
     }
   
+    if(widgetUpdate.changer === 'vehicleUpdate' && widgetUpdate.widgetId < this.widgetId) {
+
+      this.setVehicleListWithLatestVehicles();
+    }
   }
 
 }

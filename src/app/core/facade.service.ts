@@ -74,7 +74,7 @@ export default class FalconeFacade {
 
             const updatedVehicles = this.getVehicleListWithUpdatedAvailableUnits(vehicleChange, vehicles);                            
             this.updateVehicleInfo(updatedVehicles);            
-            return vehicleChange.widgetId;
+            return {widgetId : vehicleChange.widgetId, changer : 'vehicleUpdate'};
         })
     )
 
@@ -124,7 +124,7 @@ export default class FalconeFacade {
                     const updatedPlanets = this.getPlanetListWithUpdatedAvailabilityField(planetChange, planets);                
                     const planetsLeftForSearch = this.getPlanetsAvailableForSearch(updatedPlanets);
                     this.updatePlanetListForAvailability(planetsLeftForSearch);
-                    return planetChange.widgetId;
+                    return {widgetId : planetChange.widgetId, changer : 'planetUpdate'};
                   })
             );
 

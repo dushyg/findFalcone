@@ -18,8 +18,8 @@ export class DestinationWidgetComponent implements OnInit, OnChanges {
     
   @Input() public vehicleList : IVehicle[];
   @Input() public planetList : IPlanet[];
-  @Input() public planetListChanged : number; 
-  @Input() public vehicleListChanged : number;
+  @Input() public planetListChanged : {widgetId : number, changer : string} ; 
+  @Input() public vehicleListChanged : {widgetId : number, changer : string} ;
   private initialPlanetList : IPlanet[];
 
   @Output() public onPlanetSelected  = new EventEmitter<PlanetChange>();
@@ -43,21 +43,21 @@ export class DestinationWidgetComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     const planetListChange : SimpleChange = changes['planetListChanged'];    
     if(planetListChange){
-        let widgetId = planetListChange.currentValue;
-        this.updatePlanetList(widgetId);
+        let widgetUpdate = planetListChange.currentValue;
+        this.updatePlanetList(widgetUpdate);
     }
 
     const vehicleListChange : SimpleChange = changes['vehicleListChanged'];    
     if(vehicleListChange){
-      let widgetId = vehicleListChange.currentValue;
-      this.updatePlanetList(widgetId);
+      let widgetUpdate = vehicleListChange.currentValue;
+      this.updatePlanetList(widgetUpdate);
     }
   }
 
-  updatePlanetList( widgetId ) {
+  updatePlanetList( widgetUpdate : {widgetId : number, changer : string}  ) {
         
     //If planet was changed in an earlier widget then reset the initialPlanetList to currently remaining planets list
-    if(widgetId < this.widgetId) {
+    if( (widgetUpdate.changer === 'planetUpdate' || widgetUpdate.changer === 'vehicleUpdate') && widgetUpdate.widgetId < this.widgetId) {
 
       this.setLatestPlanetList();
     }
