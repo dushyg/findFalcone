@@ -63,12 +63,12 @@ export class FinderBoardComponent implements OnInit, OnDestroy {
       this.vehicleList = vehicles;
     });
 
-    this.finderFacadeService.planetsUpdated$.subscribe( widgetId => {
-      this.vehiclesUpdated = widgetId;
+    this.finderFacadeService.planetsUpdated$.subscribe( widgetId => {      
+      this.planetsUpdated = widgetId;
     }); 
 
     this.finderFacadeService.vehiclesUpdated$.subscribe( widgetId => {
-      this.planetsUpdated = widgetId;
+      this.vehiclesUpdated = widgetId;
     }); 
 
     // this.finderFacadeService.planetListChanges$
