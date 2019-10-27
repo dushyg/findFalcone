@@ -37,13 +37,17 @@ export class VehicleListComponent implements OnInit {
     const planetListChange : SimpleChange = changes['planetListChanged'];    
     if(planetListChange){        
       let widgetUpdate = planetListChange.currentValue;
-      this.updateVehicleList(widgetUpdate);
+      if(widgetUpdate) {
+        this.updateVehicleList(widgetUpdate);
+      }
     }
 
     const vehicleListChange : SimpleChange = changes['vehicleListChanged'];    
     if(vehicleListChange){
       let widgetUpdate = vehicleListChange.currentValue;
-      this.updateVehicleList(widgetUpdate);
+      if(widgetUpdate) {
+        this.updateVehicleList(widgetUpdate);
+      }
     }
   }
 

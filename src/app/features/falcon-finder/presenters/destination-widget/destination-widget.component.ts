@@ -44,13 +44,17 @@ export class DestinationWidgetComponent implements OnInit, OnChanges {
     const planetListChange : SimpleChange = changes['planetListChanged'];    
     if(planetListChange){
         let widgetUpdate = planetListChange.currentValue;
-        this.updatePlanetList(widgetUpdate);
+        if(widgetUpdate) {
+          this.updatePlanetList(widgetUpdate);
+        }        
     }
 
     const vehicleListChange : SimpleChange = changes['vehicleListChanged'];    
     if(vehicleListChange){
       let widgetUpdate = vehicleListChange.currentValue;
-      this.updatePlanetList(widgetUpdate);
+      if(widgetUpdate) {
+        this.updatePlanetList(widgetUpdate);
+      }
     }
   }
 
