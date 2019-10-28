@@ -18,6 +18,6 @@
             (onVehicleSelected)="vehicleSelected($event)">
         </app-destination-widget-list>
 
-        <input [disabled]=" !(readyToSearch$ | async)" type="button" value="Find Falcone!" (click)="findFalcone()">
+        <input [disabled]="!isReadyToSearch" type="button" value="Find Falcone!" (click)="findFalcone()">
     </div>
 </div>

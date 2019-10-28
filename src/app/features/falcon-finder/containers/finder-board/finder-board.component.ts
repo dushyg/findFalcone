@@ -34,7 +34,7 @@ export class FinderBoardComponent implements OnInit, OnDestroy {
   public planetList : IPlanet[];
   public vehicleList : IVehicle[];
   public timeTaken$ : Observable<number>;  
-  public readyToSearch$: Observable<boolean>;
+  public isReadyToSearch: boolean;
   public countPlanetsToBeSearched : number;
   private findFalconRequest : IFindFalconRequest ; 
   private isComponentActive =  true;  
@@ -51,8 +51,11 @@ export class FinderBoardComponent implements OnInit, OnDestroy {
     // this.planetList$ = this.finderFacadeService.planetList$;
     // this.vehicleList$ = this.finderFacadeService.vehicleList$;
     this.timeTaken$ = this.finderFacadeService.totalTimeTaken$;    
-    this.readyToSearch$ = this.finderFacadeService.isReadyForSearch$;
-    
+
+    this.finderFacadeService.isReadyForSearch$.subscribe( isReadyForSearch => {
+      this.isReadyToSearch = isReadyForSearch;
+    });
+
     this.finderFacadeService.planets$.subscribe( planets => {
 
       this.planetList = planets;

@@ -33,7 +33,7 @@ export class DestinationWidgetComponent implements OnInit, OnChanges {
 
   constructor() { 
     
-    this.widgetId = ++DestinationWidgetComponent.createdWidgetCount + 1;
+    this.widgetId = ++DestinationWidgetComponent.createdWidgetCount;
 
     this.lastSelectedPlanet = this.defaultSelectedPlanet = 'Select';
 
