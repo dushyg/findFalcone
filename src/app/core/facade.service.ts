@@ -129,9 +129,7 @@ export default class FalconeFacade {
 
         //const widgetId = planetChange.widgetId;
         // if there are any existing searchAttempts then
-        // include searchAttempts to the left of currently changed widget 
-        // exclude searchAttempts to thte right of currently changed widget
-        // include searchAttempt for the currently changed widget
+        // include searchAttempts to the left of currently changed widget         
         if(searchMap.size > 0) {            
            searchMap.forEach( (searchAttempt, widgetId) => {
                // this is the searchAttempt for widget to the left of the changed widget and it should be retained
@@ -139,33 +137,18 @@ export default class FalconeFacade {
 
                     const unchangedSearchAttemptClone = { ...searchAttempt};
                     newSearchMap.set(widgetId, unchangedSearchAttemptClone);
-                }
-                else if(changedWidgetId === widgetId) {
-                    // only include the searchAttempt for currently changed widget
-                    // if a valid planet is selected 
-                    if(changedWidgetPlanet.name !== 'Select') {
-                        newSearchMap.set(
-                            widgetId, 
-                            {
-                                searchedPlanet : {...changedWidgetPlanet}, 
-                                vehicleUsed : changedWidgetVehicle
-                            }
-                        );
-                    }                    
-                }
-                // else no action 
-                // (exclude any searchAttempts for widgets to the right of currently changed widget)
-
+                }                
            }); 
         }
-        else // if there are no map entries, this is the first planet being selected, simply add a new entry to the search map 
-            if(changedWidgetPlanet.name){
-                newSearchMap.set(changedWidgetId,
-                            <ISearchAttempt>{ 
-                                searchedPlanet : {...changedWidgetPlanet},
-                                vehicleUsed: null
-                                }
-                            );
+
+        // this is the first planet being selected, simply add a new entry to the search map 
+        if(changedWidgetPlanet && changedWidgetPlanet.name && changedWidgetPlanet.name !== 'Select'){
+            newSearchMap.set(changedWidgetId,
+                        <ISearchAttempt>{ 
+                            searchedPlanet : {...changedWidgetPlanet},
+                            vehicleUsed: changedWidgetVehicle
+                            }
+                        );
         }
 
         return newSearchMap;
