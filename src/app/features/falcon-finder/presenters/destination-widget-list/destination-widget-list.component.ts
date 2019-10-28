@@ -21,8 +21,8 @@ export class DestinationWidgetListComponent implements OnInit {
   @Input() countPlanetsToBeSearched : number; 
   // @Input() public planetListChanges$ : Observable<PlanetUpdates>; 
   // @Input() public vehicleListChanges$ : Observable<VehicleUpdates>;
-  @Input() public planetListChanged : number; 
-  @Input() public vehicleListChanged : number;
+  @Input() public planetListChanged : {widgetId : number, changer : string} ; 
+  @Input() public vehicleListChanged : {widgetId : number, changer : string} ;
 
 
   @Output() public onPlanetSelected  = new EventEmitter<IPlanetSelectionParam>();
