@@ -189,10 +189,10 @@ export default class FalconeFacade {
             // If the control reaches here due to planet being updated in which case oldVehicle and newVehicle will be null 
             // then this widget slot will not have any vehicles
             else if(widgetId === updatedWidgetId){                
-                    if(vehicleChange.oldVehicle) {
+                    if(vehicleChange.oldVehicle && vehicleChange.oldVehicle.name) {
                         vehiclesInUseMap.set(vehicleChange.oldVehicle.name, <IVehicle>{ ...vehicleChange.oldVehicle, availNumUnits : vehicleChange.oldVehicle.availNumUnits + 1});
                     }
-                    if(vehicleChange.newVehicle) {
+                    if(vehicleChange.newVehicle && vehicleChange.newVehicle.name) {
                         vehiclesInUseMap.set(vehicleChange.newVehicle.name, <IVehicle>{ ...vehicleChange.newVehicle, availNumUnits : vehicleChange.oldVehicle.availNumUnits - 1})
                     }                
             }   
