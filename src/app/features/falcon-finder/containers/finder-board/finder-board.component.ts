@@ -25,7 +25,7 @@ export class FinderBoardComponent implements OnInit, OnDestroy {
     
   constructor(private finderFacadeService : FalconeFacade,
               private router : Router) {
-    console.log('finder facade service constructed',finderFacadeService);
+    
    }
      
   public error$ : Observable<string>;
@@ -116,14 +116,14 @@ export class FinderBoardComponent implements OnInit, OnDestroy {
   }
 
   planetSelected(planetSelectionParam : PlanetChange) {
-    console.log('finder board - planet selected', planetSelectionParam);
+    // console.log('finder board - planet selected', planetSelectionParam);
     
     this.finderFacadeService.planetChanged(planetSelectionParam);
 
   }
 
   vehicleSelected(vehicleSelectionParam : VehicleChange){
-    console.log('finder board - vehicle selected', vehicleSelectionParam);
+    // console.log('finder board - vehicle selected', vehicleSelectionParam);
 
     this.finderFacadeService.vehicleChanged(vehicleSelectionParam);
   }

@@ -85,7 +85,7 @@ export default class FalconeFacade {
             this.setSearchMap(updatedSearchMap);
             const planetsLeftForSearch = this.getPlanetsAvailableForSearch(planets, updatedSearchMap);                                    
             this.updatePlanetListForAvailability(planetsLeftForSearch);
-
+            console.log(`vehiclesUpdated$ -> vehicleChangedAction$ withLatestFrom`,updatedSearchMap);
             return {widgetId : vehicleChange.widgetId, changer : 'vehicleUpdate'};
         })
     )     
@@ -94,7 +94,7 @@ export default class FalconeFacade {
             .pipe(withLatestFrom(this.apiPlanets$, this.apiVehicles$, this.searchMap$),
                   map(([planetChange, planets, vehicles, searchMap]) => {
 
-                        console.log('planetChangedAction$.pipe(withLatestFrom(this.planets$)',planetChange, planets, searchMap);
+                        
 
                         // update list of planets available to be searched after this change
                         const updatedSearchMap = this.getUpdatedSearchMap(planetChange.widgetId, planetChange.newPlanet, null, searchMap);
@@ -108,7 +108,7 @@ export default class FalconeFacade {
                         
                         const vehiclesWithUpdatedAvailableUnits: IVehicle[] = vehicleUpdates.updatedVehicles;
                         this.updateVehicleInfo(vehiclesWithUpdatedAvailableUnits);
-
+                        console.log(`planetsUpdated$ -> withLatestFrom`,updatedSearchMap);
                         return {widgetId : planetChange.widgetId, changer : 'planetUpdate'};
 
                   })

@@ -35,7 +35,7 @@ export class DestinationWidgetListComponent implements OnInit {
   }
 
   planetSelected(planetSelectionParam : IPlanetSelectionParam) {
-    console.log('destination widget', planetSelectionParam);
+    // console.log('destination widget', planetSelectionParam);
     this.onPlanetSelected.emit(planetSelectionParam);
   }
 

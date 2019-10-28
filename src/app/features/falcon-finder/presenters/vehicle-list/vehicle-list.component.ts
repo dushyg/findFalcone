@@ -52,7 +52,7 @@ export class VehicleListComponent implements OnInit {
   }
 
   public vehicleSelected(vehicle : IVehicle) {
-    console.log('vehicle select - ', vehicle);
+    // console.log('vehicle select - ', vehicle);
     
     this.onVehicleSelected.emit(new VehicleChange(this.widgetId, {...this.lastSelectedVehicle}, {...vehicle}));
 

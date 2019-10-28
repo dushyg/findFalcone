@@ -33,11 +33,11 @@ export class DestinationWidgetComponent implements OnInit, OnChanges {
 
   constructor() { 
     
-    this.widgetId = DestinationWidgetComponent.createdWidgetCount++;
+    this.widgetId = ++DestinationWidgetComponent.createdWidgetCount + 1;
 
     this.lastSelectedPlanet = this.defaultSelectedPlanet = 'Select';
 
-    console.log(this.widgetId);
+    // console.log(this.widgetId);
   }
   
   ngOnChanges(changes: SimpleChanges): void {
@@ -69,7 +69,7 @@ export class DestinationWidgetComponent implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
-    console.log('destination-widget oninit -> this.planetList', this.planetList);
+    // console.log('destination-widget oninit -> this.planetList', this.planetList);
 
     if(this.planetList) {
       this.initialPlanetList = [...this.planetList];
@@ -78,7 +78,7 @@ export class DestinationWidgetComponent implements OnInit, OnChanges {
 
   public planetSelected(planetName: string) {
 
-    console.log(planetName);
+    // console.log(planetName);
 
     let planet : IPlanet = this.initialPlanetList.find( p => p.name === planetName);
         
@@ -90,7 +90,7 @@ export class DestinationWidgetComponent implements OnInit, OnChanges {
   }
 
   public vehicleSelected(vehicleChange : VehicleChange) {
-    console.log(JSON.stringify(vehicleChange));
+    // console.log(JSON.stringify(vehicleChange));
     this.onVehicleSelected.emit(vehicleChange);
   }
 

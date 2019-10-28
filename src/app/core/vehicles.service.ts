@@ -31,10 +31,10 @@ export class VehiclesService {
                            }) 
                         
                       }),
-                      tap(r => {
-                        console.log('getAllVehicles',r)
-                      })
-                      ,
+                      // tap(r => {
+                      //   console.log('getAllVehicles',r)
+                      // })
+                      // ,
                       catchError(handleError)
                     );
 
