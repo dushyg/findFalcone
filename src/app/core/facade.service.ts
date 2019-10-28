@@ -26,6 +26,7 @@ export default class FalconeFacade {
     }
 
     private finderApiToken : string;   
+    private searchMap : Map<number, ISearchAttempt>;
 
     private searchMapSubject = new Subject<Map<number, ISearchAttempt>>();
     public searchMap$ : Observable<Map<number, ISearchAttempt>> = this.searchMapSubject.asObservable();
@@ -79,7 +80,7 @@ export default class FalconeFacade {
             
             // update list of planets available to be searched after this change
             const updatedSearchMap = this.getUpdatedSearchMap(vehicleChange.widgetId, null, searchMap);
-            this.setUpdatedSearchMap(updatedSearchMap);
+            this.setSearchMap(updatedSearchMap);
             const planetsLeftForSearch = this.getPlanetsAvailableForSearch(planets, updatedSearchMap);                                    
             this.updatePlanetListForAvailability(planetsLeftForSearch);
 
@@ -95,7 +96,7 @@ export default class FalconeFacade {
 
                         // update list of planets available to be searched after this change
                         const updatedSearchMap = this.getUpdatedSearchMap(planetChange.widgetId, planetChange.newPlanet, searchMap);
-                        this.setUpdatedSearchMap(updatedSearchMap);
+                        this.setSearchMap(updatedSearchMap);
                         const planetsLeftForSearch = this.getPlanetsAvailableForSearch(planets, updatedSearchMap);                                    
                         this.updatePlanetListForAvailability(planetsLeftForSearch);
 
@@ -214,11 +215,7 @@ export default class FalconeFacade {
         });
 
         return updatedVehicles;
-    }
-
-    private setUpdatedSearchMap(searchMap: Map<number, ISearchAttempt>) : void {
-        this.searchMapSubject.next(searchMap);
-    }
+    }    
 
     private updatePlanetListForAvailability(planets : IPlanet[]) : void {
 
@@ -298,6 +295,8 @@ export default class FalconeFacade {
             const vehicleList : IVehicle[] = response[0];
             const planetList : IPlanet[] = response[1];
             this.finderApiToken = response[2].token;
+            
+            this.setSearchMap(new Map<number, ISearchAttempt>());
 
             this.apiVehiclesSubject.next(vehicleList);
             this.vehiclesSubject.next(vehicleList);
@@ -309,7 +308,11 @@ export default class FalconeFacade {
             this.setErrorMsg(error);
           }
         );
-    }      
+    }   
+    
+    private setSearchMap(searchMap: Map<number, ISearchAttempt>) : void {
+        this.searchMapSubject.next(searchMap);
+    }
         
     public findFalcon(request : IFindFalconRequest) {
 
