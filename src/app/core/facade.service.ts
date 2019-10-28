@@ -155,7 +155,7 @@ export default class FalconeFacade {
         }
         else // if there are no map entries, this is the first planet being selected, simply add a new entry to the search map 
             if(changedWidgetPlanet.name){
-                searchMap.set(changedWidgetId,
+                newSearchMap.set(changedWidgetId,
                             <ISearchAttempt>{ 
                                 searchedPlanet : {...changedWidgetPlanet},
                                 vehicleUsed: null
