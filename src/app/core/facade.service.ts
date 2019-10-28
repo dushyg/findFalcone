@@ -5,7 +5,7 @@ import { FalconFinderService } from './falcon-finder.service';
 import { Router } from '@angular/router';
 import { IFindFalconRequest } from './models/find-falcon-request';
 import { IFindFalconResponse } from './models/find-falcon-response';
-import { catchError, map, withLatestFrom } from 'rxjs/operators';
+import { catchError, map, withLatestFrom, tap } from 'rxjs/operators';
 import { Subject, EMPTY, BehaviorSubject, Observable, combineLatest, forkJoin } from 'rxjs';
 import PlanetChange from './models/planetChange';
 import VehicleChange from './models/vehicleChange';
@@ -25,8 +25,7 @@ export default class FalconeFacade {
         
     }
 
-    private finderApiToken : string;   
-    private searchMap : Map<number, ISearchAttempt>;
+    private finderApiToken : string;       
 
     private searchMapSubject = new Subject<Map<number, ISearchAttempt>>();
     public searchMap$ : Observable<Map<number, ISearchAttempt>> = this.searchMapSubject.asObservable();
@@ -69,7 +68,8 @@ export default class FalconeFacade {
     public vehicleChanged(vehicleChange : VehicleChange) {
         this.vehicleChangedSubject.next(vehicleChange);
     }
-    
+        
+
     public vehiclesUpdated$ = this.vehicleChangedAction$.pipe( 
         withLatestFrom(this.apiVehicles$, this.apiPlanets$, this.searchMap$),
         map(([vehicleChange, vehicles, planets, searchMap]) => {
@@ -261,7 +261,7 @@ export default class FalconeFacade {
     public isReadyForSearch$ = this.searchMap$.pipe(
         map(searchMap => {
             // if searchMap contains required entries then return true		
-            if(searchMap && searchMap.entries.length === this.MAX_SEARCH_ATTEMPTS_ALLOWED) {
+            if(searchMap && searchMap.size === this.MAX_SEARCH_ATTEMPTS_ALLOWED) {
                 for(let entry of searchMap){
                     if(!entry[1] ||
                         (entry[1] && (!entry[1].searchedPlanet || entry[1].vehicleUsed))) {
@@ -272,7 +272,7 @@ export default class FalconeFacade {
             }
             return false;
         })
-    )
+    )        
 
     public initializeAppData() {
 
@@ -307,6 +307,24 @@ export default class FalconeFacade {
             this.setErrorMsg(error);
           }
         );
+
+        this.searchMap$.pipe(
+            tap(searchMap => {
+                if(searchMap.size > 0){
+                    let totalTimeTaken = 0;
+                    for(let entry of searchMap){                        
+                        let searchAttempt = entry[1];
+                        if(searchAttempt.searchedPlanet && searchAttempt.searchedPlanet.name &&
+                           searchAttempt.vehicleUsed && searchAttempt.vehicleUsed.name && searchAttempt.vehicleUsed.speed){
+
+                                totalTimeTaken +=  (searchAttempt.searchedPlanet.distance / searchAttempt.vehicleUsed.speed);
+                           }
+                    }
+                    this.totalTimeTakenSubject.next(totalTimeTaken);
+                }
+            })
+        ).subscribe();
+
     }   
     
     private setSearchMap(searchMap: Map<number, ISearchAttempt>) : void {

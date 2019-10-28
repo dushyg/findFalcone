@@ -33,7 +33,7 @@ export class FinderBoardComponent implements OnInit, OnDestroy {
   // public vehicleList$ : Observable<IVehicle[]>;
   public planetList : IPlanet[];
   public vehicleList : IVehicle[];
-  public timeTaken$ : Observable<number>;  
+  public timeTaken : number;  
   public isReadyToSearch: boolean;
   public countPlanetsToBeSearched : number;
   private findFalconRequest : IFindFalconRequest ; 
@@ -50,7 +50,9 @@ export class FinderBoardComponent implements OnInit, OnDestroy {
     this.error$ = this.finderFacadeService.errorMessage$;
     // this.planetList$ = this.finderFacadeService.planetList$;
     // this.vehicleList$ = this.finderFacadeService.vehicleList$;
-    this.timeTaken$ = this.finderFacadeService.totalTimeTaken$;    
+    this.finderFacadeService.totalTimeTaken$.subscribe( totalTimeTaken => {
+      this.timeTaken = totalTimeTaken;
+    });    
 
     this.finderFacadeService.isReadyForSearch$.subscribe( isReadyForSearch => {
       this.isReadyToSearch = isReadyForSearch;
