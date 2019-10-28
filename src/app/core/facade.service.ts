@@ -180,7 +180,9 @@ export default class FalconeFacade {
             // If current widget is to the left of updated widget
             // the available unit count for the vehicle used in that widget wont change
             if(widgetId < updatedWidgetId){
-                vehiclesInUseMap.set(vehicleUsed.name, {...vehicleUsed});
+                if(vehicleUsed) {
+                    vehiclesInUseMap.set(vehicleUsed.name, {...vehicleUsed});
+                }                
             }
             // We free up one unit from vehicle that was used earlier 
             // and decrease one unit from the newly selected vehicle.
@@ -206,10 +208,10 @@ export default class FalconeFacade {
             const existingVehicle: IVehicle = vehiclesInUseMap.get(vehicle.name);
 
             if(existingVehicle){
-                return existingVehicle;
+                return {...existingVehicle};
             }
             else {
-                return vehicle;
+                return {...vehicle};
             }
 
         });
