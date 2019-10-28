@@ -17,7 +17,7 @@ import { ISearchAttempt } from './models/searchAttempt';
 
 @Injectable({providedIn : 'root'})
 export default class FalconeFacade {
-        
+            
     constructor(private planetService : PlanetsService,
                 private vehicleService : VehiclesService,
                 private finderService : FalconFinderService,
@@ -70,59 +70,58 @@ export default class FalconeFacade {
     }
     
     public vehiclesUpdated$ = this.vehicleChangedAction$.pipe( 
-        withLatestFrom(this.vehicles$, this.searchMap$),
-        map(([vehicleChange, vehicles, searchMap]) => {
+        withLatestFrom(this.apiVehicles$, this.apiPlanets$, this.searchMap$),
+        map(([vehicleChange, vehicles, planets, searchMap]) => {
 
-            const updatedVehicles = this.getVehicleListWithUpdatedAvailableUnits(vehicleChange, vehicles);                            
-            this.updateVehicleInfo(updatedVehicles);            
+            // update list of vehicles with updated available units
+            const updatedVehicles : IVehicle[] = this.getVehiclesWithUpdatedAvailableUnits(vehicles, vehicleChange, searchMap);
+            this.updateVehicleInfo(updatedVehicles);       
+            
+            // update list of planets available to be searched after this change
+            const updatedSearchMap = this.getUpdatedSearchMap(vehicleChange.widgetId, null, searchMap);
+            this.setUpdatedSearchMap(updatedSearchMap);
+            const planetsLeftForSearch = this.getPlanetsAvailableForSearch(planets, updatedSearchMap);                                    
+            this.updatePlanetListForAvailability(planetsLeftForSearch);
+
             return {widgetId : vehicleChange.widgetId, changer : 'vehicleUpdate'};
         })
-    )
-  
-    private getVehicleListWithUpdatedAvailableUnits(vehicleChange: VehicleChange, vehicles: IVehicle[]): IVehicle[] {
-        
-         // if vehicle is being set for the first time, decrement avail qty
-         // if vehicle is being updated, increment previously decremented vehicle qty, decrement current vehicle qty
-         // return updated vehile array
-        return vehicles.map( vehicle => {
-
-            const clonedVehicle = {...vehicle};
-
-            if(vehicleChange && vehicleChange.newVehicle && vehicleChange.newVehicle.name === clonedVehicle.name) {
-                clonedVehicle.availNumUnits = clonedVehicle.availNumUnits - 1;
-            }
-
-            if(vehicleChange && vehicleChange.oldVehicle && vehicleChange.oldVehicle.name === vehicle.name) {
-                clonedVehicle.availNumUnits = clonedVehicle.availNumUnits + 1;
-            }
-
-            return clonedVehicle;
-        });
-
-    }
-
-    private updateVehicleInfo(updatedVehicles: IVehicle[]): void {
-        
-        this.vehiclesSubject.next(updatedVehicles);
-    }
-
+    )     
+    
     public planetsUpdated$ = this.planetChangedAction$
-            .pipe(withLatestFrom(this.planets$, this.searchMap$),
-                  map(([planetChange, planets, searchMap]) => {
+            .pipe(withLatestFrom(this.apiPlanets$, this.apiVehicles$, this.searchMap$),
+                  map(([planetChange, planets, vehicles, searchMap]) => {
 
                         console.log('planetChangedAction$.pipe(withLatestFrom(this.planets$)',planetChange, planets, searchMap);
-                        const updatedSearchMap = this.getUpdatedSearchMap(planetChange, searchMap);
+
+                        // update list of planets available to be searched after this change
+                        const updatedSearchMap = this.getUpdatedSearchMap(planetChange.widgetId, planetChange.newPlanet, searchMap);
                         this.setUpdatedSearchMap(updatedSearchMap);
                         const planetsLeftForSearch = this.getPlanetsAvailableForSearch(planets, updatedSearchMap);                                    
                         this.updatePlanetListForAvailability(planetsLeftForSearch);
+
+                        // update list of vehicles with updated available units
+                        const vehiclesWithUpdatedAvailableUnits: IVehicle[] = this.getVehiclesWithUpdatedAvailableUnits(vehicles, <VehicleChange>{ widgetId : planetChange.widgetId}, updatedSearchMap);
+                        this.updateVehicleInfo(vehiclesWithUpdatedAvailableUnits);
+
                         return {widgetId : planetChange.widgetId, changer : 'planetUpdate'};
 
                   })
             );
 
-    private getUpdatedSearchMap(planetChange: PlanetChange, searchMap: Map<number, ISearchAttempt>): Map<number, ISearchAttempt> {
+    
+    private updateVehicleInfo(updatedVehicles: IVehicle[]): void {
+
+        this.vehiclesSubject.next(updatedVehicles);
+    }
+
+    private getUpdatedSearchMap(changedWidgetId: number, changedWidgetPlanet: IPlanet, searchMap: Map<number, ISearchAttempt>): Map<number, ISearchAttempt> {
         const newSearchMap = new Map<number, ISearchAttempt>();
 
+        if(!changedWidgetPlanet) {
+            changedWidgetPlanet = searchMap.get(changedWidgetId).searchedPlanet;
+        }
+
+        //const widgetId = planetChange.widgetId;
         // if there are any existing searchAttempts then
         // include searchAttempts to the left of currently changed widget 
         // exclude searchAttempts to thte right of currently changed widget
@@ -130,19 +129,19 @@ export default class FalconeFacade {
         if(searchMap.size > 0) {            
            searchMap.forEach( (searchAttempt, widgetId) => {
                // this is the searchAttempt for widget to the left of the changed widget and it should be retained
-                if(planetChange.widgetId > widgetId){
+                if(changedWidgetId > widgetId){
 
                     const unchangedSearchAttemptClone = { ...searchAttempt};
                     newSearchMap.set(widgetId, unchangedSearchAttemptClone);
                 }
-                else if(planetChange.widgetId === widgetId) {
+                else if(changedWidgetId === widgetId) {
                     // only include the searchAttempt for currently changed widget
                     // if a valid planet is selected 
-                    if(planetChange.newPlanet.name !== 'Select') {
+                    if(changedWidgetPlanet.name !== 'Select') {
                         newSearchMap.set(
                             widgetId, 
                             {
-                                searchedPlanet : {...planetChange.newPlanet}, 
+                                searchedPlanet : {...changedWidgetPlanet}, 
                                 vehicleUsed : null
                             }
                         );
@@ -154,10 +153,10 @@ export default class FalconeFacade {
            }); 
         }
         else // if there are no map entries, this is the first planet being selected, simply add a new entry to the search map 
-            if(planetChange.newPlanet.name){
-                searchMap.set(planetChange.widgetId,
+            if(changedWidgetPlanet.name){
+                searchMap.set(changedWidgetId,
                             <ISearchAttempt>{ 
-                                searchedPlanet : {...planetChange.newPlanet},
+                                searchedPlanet : {...changedWidgetPlanet},
                                 vehicleUsed: null
                                 }
                             );
@@ -165,6 +164,57 @@ export default class FalconeFacade {
 
         return newSearchMap;
     }              
+
+    getVehiclesWithUpdatedAvailableUnits(vehicles : IVehicle[], vehicleChange: VehicleChange, searchMap: Map<number, ISearchAttempt>): IVehicle[] {
+        
+        const updatedWidgetId = vehicleChange.widgetId;
+
+        // Create a map which will store the updated available units of vehicles against vehicle name
+        const vehiclesInUseMap = new Map<string, IVehicle>();
+        for(let searchAttemptEntry of searchMap){
+            // searchAttemptEntry is an array that has widgetId at index 0 and has serchAttempt at index 1
+            const widgetId = searchAttemptEntry[0];
+            const vehicleUsed = searchAttemptEntry[1].vehicleUsed; 
+
+            // If current widget is to the left of updated widget
+            // the available unit count for the vehicle used in that widget wont change
+            if(widgetId < updatedWidgetId){
+                vehiclesInUseMap.set(vehicleUsed.name, {...vehicleUsed});
+            }
+            // We free up one unit from vehicle that was used earlier 
+            // and decrease one unit from the newly selected vehicle.
+            // If the control reaches here due to planet being updated in which case oldVehicle and newVehicle will be null 
+            // then this widget slot will not have any vehicles
+            else if(widgetId === updatedWidgetId){                
+                    if(vehicleChange.oldVehicle) {
+                        vehiclesInUseMap.set(vehicleChange.oldVehicle.name, <IVehicle>{ ...vehicleChange.oldVehicle, availNumUnits : vehicleChange.oldVehicle.availNumUnits + 1});
+                    }
+                    if(vehicleChange.newVehicle) {
+                        vehiclesInUseMap.set(vehicleChange.newVehicle.name, <IVehicle>{ ...vehicleChange.newVehicle, availNumUnits : vehicleChange.oldVehicle.availNumUnits - 1})
+                    }                
+            }   
+            // for all the widgets to the right of the updated widgets we can simply free up all the used units of the vehicles
+            // and set availableUnits to totalUnits
+            else if(widgetId > updatedWidgetId){
+                vehiclesInUseMap.set(vehicleUsed.name, <IVehicle>{ ...vehicleUsed, availNumUnits : vehicleUsed.totalNumUnits});
+            }
+        }
+
+        // Loop over the list of 
+        const updatedVehicles : IVehicle[] = vehicles.map( vehicle => {
+            const existingVehicle: IVehicle = vehiclesInUseMap.get(vehicle.name);
+
+            if(existingVehicle){
+                return existingVehicle;
+            }
+            else {
+                return vehicle;
+            }
+
+        });
+
+        return updatedVehicles;
+    }
 
     private setUpdatedSearchMap(searchMap: Map<number, ISearchAttempt>) : void {
         this.searchMapSubject.next(searchMap);
@@ -181,6 +231,7 @@ export default class FalconeFacade {
 
             const planetsIncludedInSearch = new Set<string>();
 
+            // create a set of all planets that have already been searched (i.e are present in searchMap)
             for(let searchAttempt of searchMap) {
                 //searchAttempt is an array with index 0 being the widget id and index 1 being searchAttempt
                 planetsIncludedInSearch.add(searchAttempt[1].searchedPlanet.name)
