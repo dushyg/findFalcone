@@ -193,7 +193,7 @@ export default class FalconeFacade {
                         vehiclesInUseMap.set(vehicleChange.oldVehicle.name, <IVehicle>{ ...vehicleChange.oldVehicle, availNumUnits : vehicleChange.oldVehicle.availNumUnits + 1});
                     }
                     if(vehicleChange.newVehicle && vehicleChange.newVehicle.name) {
-                        vehiclesInUseMap.set(vehicleChange.newVehicle.name, <IVehicle>{ ...vehicleChange.newVehicle, availNumUnits : vehicleChange.oldVehicle.availNumUnits - 1})
+                        vehiclesInUseMap.set(vehicleChange.newVehicle.name, <IVehicle>{ ...vehicleChange.newVehicle, availNumUnits : vehicleChange.newVehicle.availNumUnits - 1})
                     }                
             }   
             // for all the widgets to the right of the updated widgets we can simply free up all the used units of the vehicles
