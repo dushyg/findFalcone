@@ -79,7 +79,7 @@ export default class FalconeFacade {
             this.updateVehicleInfo(updatedVehicles);       
             
             // update list of planets available to be searched after this change
-            const updatedSearchMap = this.getUpdatedSearchMap(vehicleChange.widgetId, null, searchMap);
+            const updatedSearchMap = this.getUpdatedSearchMap(vehicleChange.widgetId, null, vehicleChange.newVehicle, searchMap);
             this.setSearchMap(updatedSearchMap);
             const planetsLeftForSearch = this.getPlanetsAvailableForSearch(planets, updatedSearchMap);                                    
             this.updatePlanetListForAvailability(planetsLeftForSearch);
@@ -95,7 +95,7 @@ export default class FalconeFacade {
                         console.log('planetChangedAction$.pipe(withLatestFrom(this.planets$)',planetChange, planets, searchMap);
 
                         // update list of planets available to be searched after this change
-                        const updatedSearchMap = this.getUpdatedSearchMap(planetChange.widgetId, planetChange.newPlanet, searchMap);
+                        const updatedSearchMap = this.getUpdatedSearchMap(planetChange.widgetId, planetChange.newPlanet, null, searchMap);
                         this.setSearchMap(updatedSearchMap);
                         const planetsLeftForSearch = this.getPlanetsAvailableForSearch(planets, updatedSearchMap);                                    
                         this.updatePlanetListForAvailability(planetsLeftForSearch);
@@ -115,7 +115,7 @@ export default class FalconeFacade {
         this.vehiclesSubject.next(updatedVehicles);
     }
 
-    private getUpdatedSearchMap(changedWidgetId: number, changedWidgetPlanet: IPlanet, searchMap: Map<number, ISearchAttempt>): Map<number, ISearchAttempt> {
+    private getUpdatedSearchMap(changedWidgetId: number, changedWidgetPlanet: IPlanet, changedWidgetVehicle : IVehicle, searchMap: Map<number, ISearchAttempt>): Map<number, ISearchAttempt> {
         const newSearchMap = new Map<number, ISearchAttempt>();
 
         if(!changedWidgetPlanet) {
@@ -143,7 +143,7 @@ export default class FalconeFacade {
                             widgetId, 
                             {
                                 searchedPlanet : {...changedWidgetPlanet}, 
-                                vehicleUsed : null
+                                vehicleUsed : changedWidgetVehicle
                             }
                         );
                     }                    
