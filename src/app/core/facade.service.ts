@@ -13,10 +13,11 @@ import PlanetUpdates from './models/planetUpdates';
 import { IPlanet } from './models/planet';
 import { IVehicle } from './models/vehicle';
 import VehicleUpdates from './models/vehicleUpdates';
+import { ISearchAttempt } from './models/searchAttempt';
 
 @Injectable({providedIn : 'root'})
-export default class FalconeFacade {    
-    
+export default class FalconeFacade {
+        
     constructor(private planetService : PlanetsService,
                 private vehicleService : VehiclesService,
                 private finderService : FalconFinderService,
@@ -26,8 +27,8 @@ export default class FalconeFacade {
 
     private finderApiToken : string;   
 
-    private searchMapSubject = new Subject<Map<string, string>>();
-    public searchMap$ : Observable<Map<string, string>> = this.searchMapSubject.asObservable();
+    private searchMapSubject = new Subject<Map<number, ISearchAttempt>>();
+    public searchMap$ : Observable<Map<number, ISearchAttempt>> = this.searchMapSubject.asObservable();
 
     private readonly MAX_SEARCH_ATTEMPTS_ALLOWED = 4; 
     private maxSearchAttemptAllowedSubject = new BehaviorSubject<number>(this.MAX_SEARCH_ATTEMPTS_ALLOWED);    
@@ -69,26 +70,15 @@ export default class FalconeFacade {
     }
     
     public vehiclesUpdated$ = this.vehicleChangedAction$.pipe( 
-        withLatestFrom(this.vehicles$),
-        map(([vehicleChange, vehicles]) => {
+        withLatestFrom(this.vehicles$, this.searchMap$),
+        map(([vehicleChange, vehicles, searchMap]) => {
 
             const updatedVehicles = this.getVehicleListWithUpdatedAvailableUnits(vehicleChange, vehicles);                            
             this.updateVehicleInfo(updatedVehicles);            
             return {widgetId : vehicleChange.widgetId, changer : 'vehicleUpdate'};
         })
     )
-
-    // public vehicleListChanges$ = combineLatest([this.vehicles$, this.vehicleChangedAction$]).pipe(
-    //     map(([vehicles, vehicleChange]) => {
-           
-    //         const updatedVehicles = this.getVehicleListWithUpdatedAvailableUnits(vehicleChange, vehicles);                            
-    //         this.updateVehicleInfo(updatedVehicles);            
-
-    //         return new VehicleUpdates(updatedVehicles, vehicleChange);
-
-    //     })
-    // );
-    
+  
     private getVehicleListWithUpdatedAvailableUnits(vehicleChange: VehicleChange, vehicles: IVehicle[]): IVehicle[] {
         
          // if vehicle is being set for the first time, decrement avail qty
@@ -117,62 +107,97 @@ export default class FalconeFacade {
     }
 
     public planetsUpdated$ = this.planetChangedAction$
-            .pipe(withLatestFrom(this.planets$),
-                  map(([planetChange, planets]) => {
+            .pipe(withLatestFrom(this.planets$, this.searchMap$),
+                  map(([planetChange, planets, searchMap]) => {
 
-                    console.log('planetChangedAction$.pipe(withLatestFrom(this.planets$)',planetChange, planets);
-                    const updatedPlanets = this.getPlanetListWithUpdatedAvailabilityField(planetChange, planets);                
-                    const planetsLeftForSearch = this.getPlanetsAvailableForSearch(updatedPlanets);
-                    this.updatePlanetListForAvailability(planetsLeftForSearch);
-                    return {widgetId : planetChange.widgetId, changer : 'planetUpdate'};
+                        console.log('planetChangedAction$.pipe(withLatestFrom(this.planets$)',planetChange, planets, searchMap);
+                        const updatedSearchMap = this.getUpdatedSearchMap(planetChange, searchMap);
+                        this.setUpdatedSearchMap(updatedSearchMap);
+                        const planetsLeftForSearch = this.getPlanetsAvailableForSearch(planets, updatedSearchMap);                                    
+                        this.updatePlanetListForAvailability(planetsLeftForSearch);
+                        return {widgetId : planetChange.widgetId, changer : 'planetUpdate'};
+
                   })
             );
+
+    private getUpdatedSearchMap(planetChange: PlanetChange, searchMap: Map<number, ISearchAttempt>): Map<number, ISearchAttempt> {
+        const newSearchMap = new Map<number, ISearchAttempt>();
+
+        // if there are any existing searchAttempts then
+        // include searchAttempts to the left of currently changed widget 
+        // exclude searchAttempts to thte right of currently changed widget
+        // include searchAttempt for the currently changed widget
+        if(searchMap.size > 0) {            
+           searchMap.forEach( (searchAttempt, widgetId) => {
+               // this is the searchAttempt for widget to the left of the changed widget and it should be retained
+                if(planetChange.widgetId > widgetId){
+
+                    const unchangedSearchAttemptClone = { ...searchAttempt};
+                    newSearchMap.set(widgetId, unchangedSearchAttemptClone);
+                }
+                else if(planetChange.widgetId === widgetId) {
+                    // only include the searchAttempt for currently changed widget
+                    // if a valid planet is selected 
+                    if(planetChange.newPlanet.name !== 'Select') {
+                        newSearchMap.set(
+                            widgetId, 
+                            {
+                                searchedPlanet : {...planetChange.newPlanet}, 
+                                vehicleUsed : null
+                            }
+                        );
+                    }                    
+                }
+                // else no action 
+                // (exclude any searchAttempts for widgets to the right of currently changed widget)
+
+           }); 
+        }
+        else // if there are no map entries, this is the first planet being selected, simply add a new entry to the search map 
+            if(planetChange.newPlanet.name){
+                searchMap.set(planetChange.widgetId,
+                            <ISearchAttempt>{ 
+                                searchedPlanet : {...planetChange.newPlanet},
+                                vehicleUsed: null
+                                }
+                            );
+        }
+
+        return newSearchMap;
+    }              
+
+    private setUpdatedSearchMap(searchMap: Map<number, ISearchAttempt>) : void {
+        this.searchMapSubject.next(searchMap);
+    }
 
     private updatePlanetListForAvailability(planets : IPlanet[]) : void {
 
         this.planetsSubject.next(planets);
     }
     
-    private getPlanetListWithUpdatedAvailabilityField(planetChange : PlanetChange, planets: IPlanet[])  : IPlanet[] {       
+    private getPlanetsAvailableForSearch(planets: IPlanet[], searchMap : Map<number, ISearchAttempt>)  : IPlanet[] {       
+       
+        if(searchMap.size > 0) {
 
-        if(!planetChange){
+            const planetsIncludedInSearch = new Set<string>();
+
+            for(let searchAttempt of searchMap) {
+                //searchAttempt is an array with index 0 being the widget id and index 1 being searchAttempt
+                planetsIncludedInSearch.add(searchAttempt[1].searchedPlanet.name)
+            }
+        
+            const planetsAvailableForSearch = planets.filter( planet => {                    
+                    // if the planet is part of planetsIncludedInSearch set then filter it out                    
+                    return !planetsIncludedInSearch.has(planet.name);
+                });
+        
+            return [...planetsAvailableForSearch];
+        }
+        else {
             return [...planets];
         }
-
-        return planets.map( planet => {
-
-            const planetCopy = {...planet};
-            
-            // if oldPlanet is present in the change that means we need to set includedInSearch = false
-            if(planetChange.oldPlanet && planetCopy.name === planetChange.oldPlanet.name) {
-                planetCopy.includedInSearch = false;
-            }
-
-            if(planetChange.newPlanet && planetCopy.name === planetChange.newPlanet.name) {
-                planetCopy.includedInSearch = true;
-            }
-
-            return planetCopy;
-        });
                         
-    }
-
-    private getPlanetsAvailableForSearch(planets : IPlanet[]) : IPlanet[] {
-
-        return planets.filter( currentPlanet => !currentPlanet.includedInSearch );        
-    }
-        
-    // public planetListChanges$ = this.planetChangedAction$.pipe(withLatestFrom(this.planets$, this.vehicleListChanges$))
-    //     .pipe(
-    //         map(([planetChange, planets, vehicleChanges]) => {
-    //             console.log('planetChangedAction$.pipe(withLatestFrom(this.planets$)',planetChange, planets);
-    //             const updatedPlanets = this.getPlanetListWithUpdatedAvailabilityField(planetChange, planets);                
-    //             const planetsLeftForSearch = this.getPlanetsAvailableForSearch(updatedPlanets);
-    //             this.updatePlanetListForAvailability(planetsLeftForSearch);
-                
-    //             return new PlanetUpdates(planetsLeftForSearch, planetChange, vehicleChanges.vehicles);
-    //         })
-    //     );
+    }           
 
     // todo remove, just for testing
     public some$ = combineLatest([this.planets$, this.planetChangedAction$])
@@ -191,10 +216,12 @@ export default class FalconeFacade {
             // if searchMap contains required entries then return true		
             if(searchMap && searchMap.entries.length === this.MAX_SEARCH_ATTEMPTS_ALLOWED) {
                 for(let entry of searchMap){
-                    if(!entry[0] || !entry[1]) {
+                    if(!entry[1] ||
+                        (entry[1] && (!entry[1].searchedPlanet || entry[1].vehicleUsed))) {
                         return false;
                     }
                 }
+                return true;
             }
             return false;
         })

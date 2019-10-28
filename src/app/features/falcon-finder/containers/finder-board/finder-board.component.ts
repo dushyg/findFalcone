@@ -95,14 +95,14 @@ export class FinderBoardComponent implements OnInit, OnDestroy {
                     vehicle_names : new Array<string>(this.countPlanetsToBeSearched)
                   };
                 
-                let index = 0;
+                
                 for(let searchAttemptEntry of searchAttemptMap) {
 
-                  const planetName = searchAttemptEntry[0];
-                  const vehicleName = searchAttemptEntry[1];
+                  const widgetId = searchAttemptEntry[0];
+                  const searchAttempt = searchAttemptEntry[1];
 
-                  request.planet_names[index] = planetName;
-                  request.vehicle_names[index] = vehicleName;
+                  request.planet_names[widgetId] = searchAttempt.searchedPlanet.name;
+                  request.vehicle_names[widgetId] = searchAttempt.vehicleUsed.name;
                 }  
 
                 this.findFalconRequest = request;

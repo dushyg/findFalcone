@@ -77,7 +77,6 @@ export class VehicleListComponent implements OnInit {
     }
   
     if(widgetUpdate.changer === 'vehicleUpdate' && widgetUpdate.widgetId < this.widgetId) {
-
       this.setVehicleListWithLatestVehicles();
     }
   }
