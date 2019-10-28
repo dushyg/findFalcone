@@ -75,11 +75,13 @@ export default class FalconeFacade {
         map(([vehicleChange, vehicles, planets, searchMap]) => {
 
             // update list of vehicles with updated available units
-            const updatedVehicles : IVehicle[] = this.getVehiclesWithUpdatedAvailableUnits(vehicles, vehicleChange, searchMap);
+            const vehicleUpdates : {updatedVehicles : IVehicle[], lastUpdatedVehicle: IVehicle} 
+                        = this.getVehiclesWithUpdatedAvailableUnits(vehicles, vehicleChange, searchMap);
+            const updatedVehicles : IVehicle[] = vehicleUpdates.updatedVehicles;
             this.updateVehicleInfo(updatedVehicles);       
             
             // update list of planets available to be searched after this change
-            const updatedSearchMap = this.getUpdatedSearchMap(vehicleChange.widgetId, null, vehicleChange.newVehicle, searchMap);
+            const updatedSearchMap = this.getUpdatedSearchMap(vehicleChange.widgetId, null, vehicleUpdates.lastUpdatedVehicle, searchMap);
             this.setSearchMap(updatedSearchMap);
             const planetsLeftForSearch = this.getPlanetsAvailableForSearch(planets, updatedSearchMap);                                    
             this.updatePlanetListForAvailability(planetsLeftForSearch);
@@ -101,7 +103,10 @@ export default class FalconeFacade {
                         this.updatePlanetListForAvailability(planetsLeftForSearch);
 
                         // update list of vehicles with updated available units
-                        const vehiclesWithUpdatedAvailableUnits: IVehicle[] = this.getVehiclesWithUpdatedAvailableUnits(vehicles, <VehicleChange>{ widgetId : planetChange.widgetId}, updatedSearchMap);
+                        const vehicleUpdates : {updatedVehicles : IVehicle[], lastUpdatedVehicle: IVehicle}
+                                             = this.getVehiclesWithUpdatedAvailableUnits(vehicles, <VehicleChange>{ widgetId : planetChange.widgetId}, updatedSearchMap);
+                        
+                        const vehiclesWithUpdatedAvailableUnits: IVehicle[] = vehicleUpdates.updatedVehicles;
                         this.updateVehicleInfo(vehiclesWithUpdatedAvailableUnits);
 
                         return {widgetId : planetChange.widgetId, changer : 'planetUpdate'};
@@ -166,8 +171,12 @@ export default class FalconeFacade {
         return newSearchMap;
     }              
 
-    getVehiclesWithUpdatedAvailableUnits(vehicles : IVehicle[], vehicleChange: VehicleChange, searchMap: Map<number, ISearchAttempt>): IVehicle[] {
-        
+    getVehiclesWithUpdatedAvailableUnits(vehicles : IVehicle[], vehicleChange: VehicleChange, searchMap: Map<number, ISearchAttempt>)
+                : {updatedVehicles : IVehicle[], lastUpdatedVehicle: IVehicle} 
+    {
+    
+        const updates = {updatedVehicles : null, lastUpdatedVehicle: null};
+        let lastUpdatedVehicle : IVehicle;
         const updatedWidgetId = vehicleChange.widgetId;
 
         // Create a map which will store the updated available units of vehicles against vehicle name
@@ -181,7 +190,8 @@ export default class FalconeFacade {
             // the available unit count for the vehicle used in that widget wont change
             if(widgetId < updatedWidgetId){
                 if(vehicleUsed) {
-                    vehiclesInUseMap.set(vehicleUsed.name, {...vehicleUsed});
+                    lastUpdatedVehicle = {...vehicleUsed};
+                    vehiclesInUseMap.set(vehicleUsed.name, lastUpdatedVehicle);
                 }                
             }
             // We free up one unit from vehicle that was used earlier 
@@ -190,23 +200,26 @@ export default class FalconeFacade {
             // then this widget slot will not have any vehicles
             else if(widgetId === updatedWidgetId){                
                     if(vehicleChange.oldVehicle && vehicleChange.oldVehicle.name) {
-                        vehiclesInUseMap.set(vehicleChange.oldVehicle.name, <IVehicle>{ ...vehicleChange.oldVehicle, availNumUnits : vehicleChange.oldVehicle.availNumUnits + 1});
+                        lastUpdatedVehicle = <IVehicle>{ ...vehicleChange.oldVehicle, availNumUnits : vehicleChange.oldVehicle.availNumUnits + 1};
+                        vehiclesInUseMap.set(vehicleChange.oldVehicle.name, lastUpdatedVehicle);
                     }
                     if(vehicleChange.newVehicle && vehicleChange.newVehicle.name) {
-                        vehiclesInUseMap.set(vehicleChange.newVehicle.name, <IVehicle>{ ...vehicleChange.newVehicle, availNumUnits : vehicleChange.newVehicle.availNumUnits - 1})
+                        lastUpdatedVehicle = <IVehicle>{ ...vehicleChange.newVehicle, availNumUnits : vehicleChange.newVehicle.availNumUnits - 1};
+                        vehiclesInUseMap.set(vehicleChange.newVehicle.name, lastUpdatedVehicle);
                     }                
             }   
             // for all the widgets to the right of the updated widgets we can simply free up all the used units of the vehicles
             // and set availableUnits to totalUnits
             else if(widgetId > updatedWidgetId){
-                vehiclesInUseMap.set(vehicleUsed.name, <IVehicle>{ ...vehicleUsed, availNumUnits : vehicleUsed.totalNumUnits});
+                lastUpdatedVehicle = <IVehicle>{ ...vehicleUsed, availNumUnits : vehicleUsed.totalNumUnits};
+                vehiclesInUseMap.set(vehicleUsed.name, lastUpdatedVehicle);
             }
         }
 
         // Loop over the list of 
         const updatedVehicles : IVehicle[] = vehicles.map( vehicle => {
             const existingVehicle: IVehicle = vehiclesInUseMap.get(vehicle.name);
-
+            
             if(existingVehicle){
                 return {...existingVehicle};
             }
@@ -216,7 +229,8 @@ export default class FalconeFacade {
 
         });
 
-        return updatedVehicles;
+        
+        return {updatedVehicles, lastUpdatedVehicle};
     }    
 
     private updatePlanetListForAvailability(planets : IPlanet[]) : void {
