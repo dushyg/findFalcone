@@ -36,7 +36,7 @@ export class FinderBoardComponent implements OnInit, OnDestroy {
   public timeTaken : number;  
   public isReadyToSearch: boolean;
   public countPlanetsToBeSearched : number;
-  private findFalconRequest : IFindFalconRequest ; 
+  
   private isComponentActive =  true;  
   // public planetListChanges$ : Observable<PlanetUpdates> = this.finderFacadeService.planetListChanges$; 
   // public vehicleListChanges$ : Observable<VehicleUpdates> = this.finderFacadeService.vehicleListChanges$;
@@ -88,35 +88,7 @@ export class FinderBoardComponent implements OnInit, OnDestroy {
               this.countPlanetsToBeSearched = count;  
           });     
 
-    combineLatest(this.finderFacadeService.searchMap$, this.finderFacadeService.isReadyForSearch$)
-          .subscribe( searchState => {
-              const searchAttemptMap = searchState[0];
-              const isReadyToSearch = searchState[1];
-
-              if(isReadyToSearch && searchAttemptMap) {
-                  
-                const request = <IFindFalconRequest> {
-                    planet_names : new Array<string>(this.countPlanetsToBeSearched),
-                    vehicle_names : new Array<string>(this.countPlanetsToBeSearched)
-                  };
-                
-                let index = 0;
-                for(let searchAttemptEntry of searchAttemptMap) {
-                  
-                  const searchAttempt = searchAttemptEntry[1];
-
-                  request.planet_names[index] = searchAttempt.searchedPlanet.name;
-                  request.vehicle_names[index] = searchAttempt.vehicleUsed.name;
-                  
-                  index++;
-                }  
-
-                this.findFalconRequest = request;
-              }
-              else {
-                this.findFalconRequest = null;
-              }
-          }); 
+    
     
     this.finderFacadeService.initializeAppData();
   }
@@ -145,7 +117,7 @@ export class FinderBoardComponent implements OnInit, OnDestroy {
       //   vehicle_names : ['Space pod','Space pod','Space ship','Space shuttle']        
       // };
       
-      this.finderFacadeService.findFalcon(this.findFalconRequest);
+      
       this.router.navigate(['finderboard', 'result']);
   }
 

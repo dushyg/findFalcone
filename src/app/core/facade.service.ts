@@ -33,7 +33,9 @@ export default class FalconeFacade {
     private readonly MAX_SEARCH_ATTEMPTS_ALLOWED = 4; 
     private maxSearchAttemptAllowedSubject = new BehaviorSubject<number>(this.MAX_SEARCH_ATTEMPTS_ALLOWED);    
     public maxSearchAttemptAllowed$ : Observable<number> = this.maxSearchAttemptAllowedSubject.asObservable();
-
+    public getMaxSearchAttemptsAllowedCount() {
+        return this.MAX_SEARCH_ATTEMPTS_ALLOWED;
+    }
     private errorMessageSubject = new Subject<string>();
     public errorMessage$ : Observable<string> = this.errorMessageSubject.asObservable();
 
