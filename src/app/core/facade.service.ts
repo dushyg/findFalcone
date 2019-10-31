@@ -264,7 +264,7 @@ export default class FalconeFacade {
             if(searchMap && searchMap.size === this.MAX_SEARCH_ATTEMPTS_ALLOWED) {
                 for(let entry of searchMap){
                     if(!entry[1] ||
-                        (entry[1] && (!entry[1].searchedPlanet || entry[1].vehicleUsed))) {
+                        (entry[1] && (!entry[1].searchedPlanet || !entry[1].vehicleUsed))) {
                         return false;
                     }
                 }
@@ -293,15 +293,18 @@ export default class FalconeFacade {
                       
             const vehicleList : IVehicle[] = response[0];
             const planetList : IPlanet[] = response[1];
-            this.finderApiToken = response[2].token;
-            
-            this.setSearchMap(new Map<number, ISearchAttempt>());
+            this.finderApiToken = response[2].token;                        
 
             this.apiVehiclesSubject.next(vehicleList);
             this.vehiclesSubject.next(vehicleList);
 
             this.apiPlanetsSubject.next(planetList);    
-            this.planetsSubject.next(planetList);    
+            this.planetsSubject.next(planetList);   
+            
+            // initialize/reset searchmap, error message and total time taken
+            this.setSearchMap(new Map<number, ISearchAttempt>());
+            this.errorMessageSubject.next('');
+            this.totalTimeTakenSubject.next(0);
         },
           (error) => {
             this.setErrorMsg(error);
@@ -323,7 +326,7 @@ export default class FalconeFacade {
                     this.totalTimeTakenSubject.next(totalTimeTaken);
                 }
             })
-        ).subscribe();
+        ).subscribe( totalTime => {});
 
     }   
     

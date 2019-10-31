@@ -41,6 +41,7 @@ export class DestinationWidgetComponent implements OnInit, OnChanges {
   }
   
   ngOnChanges(changes: SimpleChanges): void {
+    console.log('ngOnchanges DestinationWidgetComponent, widgetId', changes, this.widgetId);
     const planetListChange : SimpleChange = changes['planetListChanged'];    
     if(planetListChange){
         let widgetUpdate = planetListChange.currentValue;

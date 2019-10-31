@@ -8,11 +8,11 @@
         {{errorMsg}}
 </div>
 
-<div>
-        Time Taken: {{timeTaken$ | async}}
+<div *ngIf="timeTaken">
+        Time Taken: {{timeTaken}}
 </div>
 
-<div>
+<div *ngIf="planetNameFalconFoundOn">
         Planet Found: {{planetNameFalconFoundOn}}
 </div>
 

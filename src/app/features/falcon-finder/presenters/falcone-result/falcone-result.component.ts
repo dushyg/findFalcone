@@ -3,6 +3,7 @@ import { FinderFacadeService } from 'src/app/core/finder-facade.service';
 import { Observable } from 'rxjs';
 import { IFindFalconResponse } from 'src/app/core/models/find-falcon-response';
 import { takeWhile, takeUntil, subscribeOn } from 'rxjs/operators';
+import FalconeFacade from 'src/app/core/facade.service';
 
 @Component({
   selector: 'app-falcone-result',
@@ -12,18 +13,18 @@ import { takeWhile, takeUntil, subscribeOn } from 'rxjs/operators';
 export class FalconeResultComponent implements OnInit, OnDestroy {
     
   
-  constructor(private finderFacadeService : FinderFacadeService) { }  
+  constructor(private finderFacadeService : FalconeFacade) { }  
   
   public error$ : Observable<string>;
   public timeTaken$ : Observable<number>;     
   public planetNameFalconFoundOn : string = "";
   private isComponentActive: boolean = true;
   public errorMsg: string;
+  public timeTaken : number = 0;
 
   ngOnInit() {
 
-    
-    this.error$ = this.finderFacadeService.error$;
+        
     this.timeTaken$ = this.finderFacadeService.totalTimeTaken$;
     
     this.finderFacadeService.planetFoundOn$.pipe( takeWhile( () => this.isComponentActive))
@@ -31,9 +32,11 @@ export class FalconeResultComponent implements OnInit, OnDestroy {
               planetName => this.planetNameFalconFoundOn = planetName
             );
 
-    this.finderFacadeService.error$.pipe( takeWhile( () => this.isComponentActive) )
+    this.finderFacadeService.errorMessage$.pipe( takeWhile( () => this.isComponentActive) )
               .subscribe( errorMsg => this.errorMsg = errorMsg);
 
+    this.finderFacadeService.totalTimeTaken$.pipe( takeWhile( () => this.isComponentActive) )
+    .subscribe( timeTaken => this.timeTaken = timeTaken);
   }
 
   reset() {

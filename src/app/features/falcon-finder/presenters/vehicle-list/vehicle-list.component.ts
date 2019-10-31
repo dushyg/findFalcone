@@ -34,6 +34,7 @@ export class VehicleListComponent implements OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    console.log('ngOnchanges VehicleListComponent, widgetId', changes, this.widgetId);
     const planetListChange : SimpleChange = changes['planetListChanged'];    
     if(planetListChange){        
       let widgetUpdate = planetListChange.currentValue;
