@@ -5,7 +5,7 @@ import { FalconFinderService } from './falcon-finder.service';
 import { Router } from '@angular/router';
 import { IFindFalconRequest } from './models/find-falcon-request';
 import { IFindFalconResponse } from './models/find-falcon-response';
-import { catchError, map, withLatestFrom, tap } from 'rxjs/operators';
+import { catchError, map, withLatestFrom, tap, distinctUntilChanged } from 'rxjs/operators';
 import { Subject, EMPTY, BehaviorSubject, Observable, combineLatest, forkJoin } from 'rxjs';
 import PlanetChange from './models/planetChange';
 import VehicleChange from './models/vehicleChange';
@@ -327,7 +327,8 @@ export default class FalconeFacade {
                     }
                     this.totalTimeTakenSubject.next(totalTimeTaken);
                 }
-            })
+            }),
+            distinctUntilChanged()
         ).subscribe( totalTime => {});
 
     }   
