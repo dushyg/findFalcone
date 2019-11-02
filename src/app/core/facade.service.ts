@@ -27,6 +27,7 @@ export default class FalconeFacade {
 
     private finderApiToken : string;       
 
+    private searchMap : Map<number, ISearchAttempt>;
     private searchMapSubject = new Subject<Map<number, ISearchAttempt>>();
     public searchMap$ : Observable<Map<number, ISearchAttempt>> = this.searchMapSubject.asObservable();
 
@@ -334,10 +335,47 @@ export default class FalconeFacade {
     }   
     
     private setSearchMap(searchMap: Map<number, ISearchAttempt>) : void {
-        this.searchMapSubject.next(searchMap);
+        this.searchMapSubject.next( this.searchMap = searchMap) ;
     }
+
+    
+    public findFalcon() : void {
+
+
+        let findFalconRequest : IFindFalconRequest ; 
+        const searchAttemptMap = this.searchMap;
         
-    public findFalcon(request : IFindFalconRequest) {
+
+        if(searchAttemptMap) {
+            
+          const request = <IFindFalconRequest> {
+              planet_names : new Array<string>(this.MAX_SEARCH_ATTEMPTS_ALLOWED),
+              vehicle_names : new Array<string>(this.MAX_SEARCH_ATTEMPTS_ALLOWED)
+            };
+          
+          let index = 0;
+          for(let searchAttemptEntry of searchAttemptMap) {
+            
+            const searchAttempt = searchAttemptEntry[1];
+
+            request.planet_names[index] = searchAttempt.searchedPlanet.name;
+            request.vehicle_names[index] = searchAttempt.vehicleUsed.name;
+            
+            index++;
+          }  
+
+          findFalconRequest = request;                
+        }
+        else {
+          findFalconRequest = null;
+        }
+
+        if(findFalconRequest) {
+          this.callFindFalconApi(findFalconRequest);
+        }
+    }
+
+    private callFindFalconApi(request : IFindFalconRequest) {
 
         request.token = this.finderApiToken; 
         this.finderService.findFalcon(request)
