@@ -38,7 +38,9 @@ export class FalconeResultComponent implements OnInit, OnDestroy {
               .subscribe( errorMsg => this.errorMsg = errorMsg);
 
     this.finderFacadeService.totalTimeTaken$.pipe( takeWhile( () => this.isComponentActive) )
-    .subscribe( timeTaken => this.timeTaken = timeTaken);       
+    .subscribe( timeTaken => this.timeTaken = timeTaken); 
+    
+    this.finderFacadeService.findFalcon();
   }
 
   reset() {
