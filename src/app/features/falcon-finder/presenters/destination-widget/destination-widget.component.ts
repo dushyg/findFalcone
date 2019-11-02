@@ -64,9 +64,14 @@ export class DestinationWidgetComponent implements OnInit, OnChanges {
     //If planet was changed in an earlier widget then reset the initialPlanetList to currently remaining planets list
     if( (widgetUpdate.changer === 'planetUpdate' || widgetUpdate.changer === 'vehicleUpdate') && widgetUpdate.widgetId < this.widgetId) {
 
-      this.setLatestPlanetList();
-    }
+      this.setLatestPlanetList();      
+      this.clearLastSelection();
+    }    
   
+  }
+
+  clearLastSelection(): void {
+    this.lastSelectedPlanet = 'Select';
   }
 
   ngOnInit(): void {

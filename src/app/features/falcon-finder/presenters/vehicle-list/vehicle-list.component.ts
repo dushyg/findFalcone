@@ -75,11 +75,17 @@ export class VehicleListComponent implements OnInit {
     if(widgetUpdate.changer === 'planetUpdate' && widgetUpdate.widgetId <= this.widgetId) {
 
       this.setVehicleListWithLatestVehicles();
+      this.clearLastSelection();
     }
   
     if(widgetUpdate.changer === 'vehicleUpdate' && widgetUpdate.widgetId < this.widgetId) {
       this.setVehicleListWithLatestVehicles();
+      this.clearLastSelection();
     }
+  }
+
+  clearLastSelection(): void {
+    this.lastSelectedVehicle = <IVehicle>{ availNumUnits : 0, name : null};
   }
 
 }
