@@ -11,7 +11,7 @@ import { FalconHeaderComponent } from './presenters/falcon-header/falcon-header.
 import { FalconFooterComponent } from './presenters/falcon-footer/falcon-footer.component';
 import { FalconeResultComponent } from './presenters/falcone-result/falcone-result.component';
 import { FalconeResetComponent } from './presenters/falcone-reset/falcone-reset.component';
-import { FormsModule } from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 @NgModule({
   declarations: [
     FinderBoardComponent,
@@ -27,7 +27,8 @@ import { FormsModule } from "@angular/forms";
   imports: [
     CommonModule,
     FalconFinderRoutingModule,
-    FormsModule    
+    FormsModule,
+    ReactiveFormsModule    
   ]
 })
 export class FalconFinderModule { }

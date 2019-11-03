@@ -1,0 +1,13 @@
+<div class='typeahead-container'>
+    <input type='text'
+           placeholder='Select...'
+           [formControl]='inputTextControl' 
+           (focus)='showInitialList()'>
+    <div class='resultList' *ngIf="doShowResults">
+        <span class='resultItem'
+              (click)="planetSelectHandler(planet.name)"
+              *ngFor="let planet of filteredSourceArray">
+              {{planet.name}}
+        </span>
+    </div>
+</div>
