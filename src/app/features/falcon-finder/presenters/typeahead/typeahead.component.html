@@ -1,13 +1,15 @@
-<div class='typeahead-container'>
+<div class='typeahead-container'  (focusout)='hideResultsList()'>
     <input type='text'
-           placeholder='Select...'
+           placeholder='Search...'
            [formControl]='inputTextControl' 
-           (focus)='showInitialList()'>
+           (focus)='showResultsList()'
+          >
     <div class='resultList' *ngIf="doShowResults">
-        <span class='resultItem'
+        <ul><li class='resultItem' style="list-style-type:none;"
               (click)="planetSelectHandler(planet.name)"
               *ngFor="let planet of filteredSourceArray">
               {{planet.name}}
-        </span>
+        </li>
+        </ul>
     </div>
 </div>

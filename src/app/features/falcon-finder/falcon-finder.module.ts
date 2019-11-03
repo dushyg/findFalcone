@@ -12,6 +12,7 @@ import { FalconFooterComponent } from './presenters/falcon-footer/falcon-footer.
 import { FalconeResultComponent } from './presenters/falcone-result/falcone-result.component';
 import { FalconeResetComponent } from './presenters/falcone-reset/falcone-reset.component';
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { Typeahead } from './presenters/typeahead/typeahead.component';
 @NgModule({
   declarations: [
     FinderBoardComponent,
@@ -22,7 +23,8 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
     FalconHeaderComponent, 
     FalconFooterComponent, 
     FalconeResultComponent,
-    FalconeResetComponent
+    FalconeResetComponent,
+    Typeahead
   ],
   imports: [
     CommonModule,
