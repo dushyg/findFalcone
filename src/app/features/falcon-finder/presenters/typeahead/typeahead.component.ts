@@ -1,27 +1,26 @@
-import { Component, Input, Output, EventEmitter, OnInit, Renderer2 } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnDestroy} from '@angular/core';
 import { IPlanet } from 'src/app/core/models/planet';
 import { FormControl } from '@angular/forms';
+import { Observable } from 'rxjs';
+import { takeWhile } from 'rxjs/operators';
 
 @Component({
     selector : 'app-typeahead',
     templateUrl : './typeahead.component.html',
     styleUrls : ['./typeahead.component.css']
 })
-export class Typeahead implements OnInit {
-
-    constructor(private renderer : Renderer2){
-
-    }
-    
+export class Typeahead implements OnInit, OnDestroy {
+        
     @Input() sourceArray : IPlanet[];
+    @Input() resetTypeAhead$ : Observable<void>;
     @Output() itemSelected = new EventEmitter<IPlanet>(); 
 
     public filteredSourceArray : IPlanet[];
     public inputTextControl =  new FormControl('');
     public doShowResults = false;
     private selectionMade = false;
-    private globalClickUnsubscription ;
     private lastSelection : string= "";
+    private isComponentActive = true;
 
     ngOnInit(): void {
 
@@ -29,6 +28,15 @@ export class Typeahead implements OnInit {
 
         this.inputTextControl.valueChanges.subscribe(this.performSearch);
 
+        this.resetTypeAhead$.pipe( takeWhile( () => this.isComponentActive ))
+                .subscribe( () => {
+                    this.reset();
+                }); 
+    }
+
+    private reset() {
+        this.filteredSourceArray = this.sourceArray;
+        this.lastSelection = "";
     }
 
     private performSearch = (value) => {
@@ -52,9 +60,14 @@ export class Typeahead implements OnInit {
     public planetSelectHandler(planetName){
         
         this.doShowResults = false;
-        const selectedPlanet = this.filteredSourceArray.find(planet => {
+        let selectedPlanet = this.filteredSourceArray.find(planet => {
             return planet.name === planetName;
         });
+
+        if(planetName==='Select') {
+            selectedPlanet = <IPlanet>{ name : 'Select'};
+        }
+
         this.lastSelection = selectedPlanet.name;
 
         this.itemSelected.emit(selectedPlanet);
@@ -71,7 +84,7 @@ export class Typeahead implements OnInit {
     }    
 
     private hideResultsList(){
-        // focusout event on the wrapper div is fired first, 
+        // focusout event on the wrapper div is fired first,         
         // hence we need to call this after some delay so that selectionMade field 
         // has latest value 
         setTimeout(this.hideResults, 250);        
@@ -91,5 +104,9 @@ export class Typeahead implements OnInit {
         this.selectionMade = true;
         this.inputTextControl.setValue(this.lastSelection);
     }
-}
 
+    ngOnDestroy(): void {
+        this.isComponentActive = false;
+    }
+
+}

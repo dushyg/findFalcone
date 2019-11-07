@@ -6,7 +6,7 @@ import { IVehicle } from 'src/app/core/models/vehicle';
 import { IPlanetSelectionParam } from 'src/app/core/models/planetSelectionParam';
 import PlanetChange from 'src/app/core/models/planetChange';
 import VehicleChange from 'src/app/core/models/vehicleChange';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import PlanetUpdates from 'src/app/core/models/planetUpdates';
 import VehicleUpdates from 'src/app/core/models/vehicleUpdates';
 
@@ -30,6 +30,8 @@ export class DestinationWidgetComponent implements OnInit, OnChanges {
   public widgetId : number; 
   public lastSelectedPlanet : string ;
   public defaultSelectedPlanet : string ;
+  private resetTypeAheadSubject = new Subject<void>();
+  public resetTypeAhead$ : Observable<void> = this.resetTypeAheadSubject.asObservable();
 
   constructor() { 
     
@@ -72,6 +74,7 @@ export class DestinationWidgetComponent implements OnInit, OnChanges {
 
   clearLastSelection(): void {
     this.lastSelectedPlanet = 'Select';
+    this.resetTypeAheadSubject.next();
   }
 
   ngOnInit(): void {

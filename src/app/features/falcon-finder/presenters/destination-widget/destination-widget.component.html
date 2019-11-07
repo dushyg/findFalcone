@@ -1,22 +1,17 @@
-<div>
-        <select      
-            name="selectPlanet"            
-            [ngModel] = "lastSelectedPlanet"                                                
-            (change)="planetSelected($event.target.value)" >                
-                <option value="Select">Select</option>
-                <option *ngFor="let planet of initialPlanetList"  [value]="planet.name">
-                    {{planet.name}}
-                </option>
-        </select> 
-        <br>
-        <app-vehicle-list *ngIf="lastSelectedPlanet!='Select'"
-            [vehicleList]="vehicleList"
-            (onVehicleSelected)="onVehicleSelected"
-            [destinationDistance]="destinationDistance"
-            [planetListChanged] = "planetListChanged"
-            [vehicleListChanged] = "vehicleListChanged"
-            (onVehicleSelected)="vehicleSelected($event)"
-            [widgetId]="widgetId">
-        </app-vehicle-list>
-        
+<div>      
+    <app-typeahead [sourceArray]="initialPlanetList"
+                   [resetTypeAhead$]="resetTypeAhead$"
+                (itemSelected)="planetSelected($event.name)">        
+    </app-typeahead>
+    <br>
+    <app-vehicle-list *ngIf="lastSelectedPlanet!='Select'"
+        [vehicleList]="vehicleList"
+        (onVehicleSelected)="onVehicleSelected"
+        [destinationDistance]="destinationDistance"
+        [planetListChanged] = "planetListChanged"
+        [vehicleListChanged] = "vehicleListChanged"
+        (onVehicleSelected)="vehicleSelected($event)"
+        [widgetId]="widgetId">
+    </app-vehicle-list>
+    
 </div>

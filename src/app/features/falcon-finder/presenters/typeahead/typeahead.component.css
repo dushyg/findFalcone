@@ -1,0 +1,33 @@
+div.typeahead-container input.typeAhead {
+    width: 150px;
+}
+
+div.resultList ul {
+    list-style-position: inside;
+    margin-left:0px;
+    padding-left: 0px;
+}
+
+ul li.resultItem {
+    list-style-type: none;
+    border-bottom: 1px solid black;
+    margin-left:0px;
+    padding-left: 5px;
+    cursor: pointer;
+}
+
+ul li.resultItem:hover {
+    background-color: lightsalmon;
+}
+
+ul li.resultItem:last-child {
+    border-bottom: none;
+}
+
+div.resultList {
+    width: 150px;
+    position: absolute;
+    z-index: 10;
+    background-color: white;
+    border: 1px solid black;
+}
