@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { PlanetsService } from './planets.service';
 import { VehiclesService } from './vehicles.service';
 import { IPlanet } from './models/planet';
-import { Observable, BehaviorSubject, forkJoin, Subject } from 'rxjs';
+import { BehaviorSubject, forkJoin, Subject } from 'rxjs';
 import { IVehicle } from './models/vehicle';
 import { IFindFalconResponse } from './models/find-falcon-response';
 import { IFindFalconRequest } from './models/find-falcon-request';
@@ -10,18 +10,15 @@ import { FalconFinderService } from './falcon-finder.service';
 import { ISearchAttempt } from './models/searchAttempt';
 import { IFalconAppState } from './models/falconApp.state';
 import { map, distinctUntilChanged, withLatestFrom } from 'rxjs/operators';
-import { IVehicleSelectionParam } from './models/vehicleSelectionParam';
-import { FalconeAppStateService } from './falconeAppState.service';
 import { Router } from '@angular/router';
 import PlanetChange from './models/planetChange';
 import VehicleChange from './models/vehicleChange';
-import { Utility } from '../core/utitlity';
+
 @Injectable({
   providedIn: 'root'
 })
 export class FinderFacadeService {
   
-    
   constructor(private planetService : PlanetsService,
               private vehicleService : VehiclesService,
               private finderService : FalconFinderService,              
@@ -46,9 +43,7 @@ export class FinderFacadeService {
   
   private store = new BehaviorSubject<IFalconAppState>(this._state);
      
-  public store$ = this.store.asObservable();
-
-  //public maxSearchAttemptAllowed$ = this.store$.pipe( map(state => state.maxSearchAttemptAllowed), distinctUntilChanged());    
+  public store$ = this.store.asObservable();  
   
   public error$ = this.store$.pipe(map(state => state.errorMsg));
 
@@ -65,12 +60,9 @@ export class FinderFacadeService {
   public readyToSearch$ = this.store$.pipe(map( state => state.isReadyToSearch), distinctUntilChanged());
 
   public lastUpdatedWidgetId$ = this.store$.pipe(map( state => state.lastUpdatedWidgetId), distinctUntilChanged());
-  public isLoading$ = this.store$.pipe(map(state => state.isLoading), distinctUntilChanged());
-
-  //public availablePlanetsSet$ = this.store$.pipe(map(state => state.availablePlanetsSet), distinctUntilChanged());
+  public isLoading$ = this.store$.pipe(map(state => state.isLoading), distinctUntilChanged());  
   
-  private planetChangedEvent$ = new Subject<void>();
-  private vehicleChangedEvent$ = new Subject<void>();
+  private widgetInputChangedEvent$ = new Subject<void>();  
 
   private updateState(state : IFalconAppState) {
     
@@ -91,14 +83,14 @@ export class FinderFacadeService {
   // public methods
 
   public initializeAppData() {
-
+    this.setLoadingFlag(true);
     forkJoin(
       this.vehicleService.getAllVehicles(),
       this.planetService.getAllPlanets(),
       this.finderService.getFalconFinderApiToken()
     )
     .subscribe( response => {
-      
+      this.setLoadingFlag(false);
         this.finderApiToken = response[2].token;
         const vehicleList : IVehicle[] = response[0];
         const planetList : IPlanet[] = response[1];
@@ -112,6 +104,7 @@ export class FinderFacadeService {
     },
       (error) => {
         this.updateError(error);
+        this.setLoadingFlag(false);
       }
     );
   }       
@@ -122,7 +115,7 @@ export class FinderFacadeService {
     let searchMap = new Map<string, ISearchAttempt>(this._state.searchMap);
     searchMap.set(
       planetChange.widgetId.toString(), 
-      <ISearchAttempt>{searchedPlanet : {...planetChange.newPlanet}}
+      <ISearchAttempt>{searchedPlanet : {...planetChange.newPlanet}, vehicleUsed : null}
     );
     this.updateState({
       ...this._state, 
@@ -130,7 +123,7 @@ export class FinderFacadeService {
       searchMap : searchMap
     });
     
-    this.planetChangedEvent$.next();
+    this.widgetInputChangedEvent$.next();
   }
 
 
@@ -155,7 +148,7 @@ export class FinderFacadeService {
       searchMap : searchMap
     });
 
-    this.vehicleChangedEvent$.next();
+    this.widgetInputChangedEvent$.next();
   }
 
   public updateError(errorMsg: string) {
@@ -164,56 +157,61 @@ export class FinderFacadeService {
   
   private updatePlanetFoundOn(planetFoundOn : string) {
     this.updateState({...this._state, planetFoundOn});
-  }
+  }     
 
-  private updateTotalTimeTaken(totalTimeTaken : number) {
-
-    this.updateState({ ...this._state, totalTimeTaken});    
-  }          
-
-  private planetChangesSubscription = this.planetChangedEvent$.pipe(
+  private widgetChangesSubscription = this.widgetInputChangedEvent$.pipe(
     withLatestFrom(this.searchAttemptMap$, this.planetList$, this.vehicleList$, this.lastUpdatedWidgetId$)    
   )
   .subscribe(([_, searchMap, planetList, vehicleList, widgetId]) => {
 
     // reset the widgets that are to the right of currently changed widget
     // all the widgets with id > widgetId are to the right, and their existing selections would be reset
-    const updatedSearchMapWithoutPlanetAndVehicleLists : Map<string, ISearchAttempt> 
-      = this.updateSearchMapAfterPlanetChange(searchMap, widgetId); 
+    const updatedSearchMapAfterWidgetResets : Map<string, ISearchAttempt> 
+      = this.getUpdatedSearchMapAfterWidgetResets(searchMap, widgetId); 
 
     // update the cloned search map with planet list to be shown for each widget
     const updatedSearchMapWithAvailablePlanetList : Map<string, ISearchAttempt> = 
-      this.updateSearchMapWithAvailablePlanetList(updatedSearchMapWithoutPlanetAndVehicleLists, planetList);
+      this.updateSearchMapWithAvailablePlanetList(updatedSearchMapAfterWidgetResets, planetList);
 
     // update the cloned search map with vehicle list to be shown for each widget
     const updatedSearchMapWithAvailablePlanetAndVehicleList : Map<string, ISearchAttempt> = 
       this.updateSearchMapWithAvailableVehicleList(updatedSearchMapWithAvailablePlanetList, vehicleList, widgetId);    
     
+    // calculate the total time taken to search planets with vehicles selected
+    const totalTimeTakenForSearch : number = this.getTotalTimeTakenForSearch(updatedSearchMapWithAvailablePlanetAndVehicleList);
+
+    const isReadyToSearch : boolean = this.isItFineToStartSearching(updatedSearchMapWithAvailablePlanetAndVehicleList);
     // update the application state to reflect latest changes
-    this.updateState({...this._state, searchMap : updatedSearchMapWithAvailablePlanetAndVehicleList});
+    this.updateState({
+      ...this._state, 
+      searchMap : updatedSearchMapWithAvailablePlanetAndVehicleList, 
+      totalTimeTaken : totalTimeTakenForSearch,
+      isReadyToSearch : isReadyToSearch
+    });
   });  
   
-  private vehicleChangesSubscription = this.vehicleChangedEvent$
-  .pipe(
-    withLatestFrom(this.searchAttemptMap$, this.planetList$, this.vehicleList$, this.lastUpdatedWidgetId$)        
-  )
-  .subscribe(([_, searchMap, planetList, vehicleList, lastChangedWidgetId]) => {
-      // reset the widgets that are to the right of currently changed widget
-      // all the widgets with id > widgetId are to the right, and their existing selections would be reset
-      const updatedSearchMapWithoutPlanetAndVehicleLists : Map<string, ISearchAttempt> 
-      = this.updateSearchMapAfterVehicleChange(searchMap, lastChangedWidgetId); 
+  private getUpdatedSearchMapAfterWidgetResets(searchMap: Map<string, ISearchAttempt>, lastChangedWidgetId: number): Map<string, ISearchAttempt> {
+    let updatedSearchMap = new Map<string, ISearchAttempt>();
 
-    // update the cloned search map with planet list to be shown for each widget
-    const updatedSearchMapWithAvailableVehicleList : Map<string, ISearchAttempt> = 
-      this.updateSearchMapWithAvailableVehicleList(updatedSearchMapWithoutPlanetAndVehicleLists, vehicleList, lastChangedWidgetId);
+    searchMap.forEach((value: ISearchAttempt, key: string) => {
+      let updatedSearchAttempt : ISearchAttempt ;
+      // if the current widget is to the left of changed widget or the changed widget then
+      // just make a clone for immutability and continue
+      const currentlyLoopedWidgetId = Number(key);
+      if(currentlyLoopedWidgetId <= lastChangedWidgetId ){
+        updatedSearchAttempt = <ISearchAttempt>{ ...value};
+      }      
+      else {
+       // else if the current widget is to the right of the changed widget then
+       // we will need to reset both the existing planet and vehicle selections if any
+       updatedSearchAttempt = <ISearchAttempt>{ vehicleUsed: null, searchedPlanet : null, planetsShown : null, vehiclesShown: null};
+      }
 
-    // update the cloned search map with vehicle list to be shown for each widget
-    const updatedSearchMapWithAvailablePlanetAndVehicleList : Map<string, ISearchAttempt> = 
-      this.updateSearchMapWithAvailablePlanetList(updatedSearchMapWithAvailableVehicleList, planetList);    
-      
-    // update the application state to reflect latest changes
-    this.updateState({...this._state, searchMap : updatedSearchMapWithAvailablePlanetAndVehicleList});
-  })
+      updatedSearchMap.set(key, updatedSearchAttempt);      
+    });
+
+    return updatedSearchMap;
+  } 
 
   private updateSearchMapWithAvailablePlanetList(searchMap: Map<string, ISearchAttempt>, planetList : IPlanet[])
             : Map<string, ISearchAttempt> {
@@ -232,9 +230,7 @@ export class FinderFacadeService {
 
     return updatedSearchMap;
   }
-
   
-
   private updateSearchMapWithAvailableVehicleList(searchMap: Map<string, ISearchAttempt>, vehicleList : IVehicle[], lastUpdatedWidgetId: number)
             : Map<string, ISearchAttempt> {          
     
@@ -287,62 +283,60 @@ export class FinderFacadeService {
     return updatedSearchMap;
   }
 
-  private updateSearchMapAfterPlanetChange(searchMap: Map<string, ISearchAttempt>, lastChangedWidgetId: number): Map<string, ISearchAttempt> {
-    let updatedSearchMap = new Map<string, ISearchAttempt>();
+  private getTotalTimeTakenForSearch(searchMap: Map<string, ISearchAttempt>): number {
+    
+    let totalTimeTakenForSearch : number = 0;
 
-    searchMap.forEach((value: ISearchAttempt, key: string) => {
-      let updatedSearchAttempt : ISearchAttempt ;
-      // if the current widget is to the left of changed widget then
-      // just make a clone for immutability and continue
-      const currentlyLoopedWidgetId = Number(key);
-      if(currentlyLoopedWidgetId < lastChangedWidgetId ){
-        updatedSearchAttempt = <ISearchAttempt>{ ...value};
-      }
-      else if(currentlyLoopedWidgetId === lastChangedWidgetId){
-        // if the current widget is the widget where planet has been changed
-        // then reset its vehicle
-        updatedSearchAttempt = <ISearchAttempt>{ ...value, vehicleUsed: null};
-      }
-      else {
-       // else if the current widget is to the right of the changed widget then
-       // we will need to reset both the existing planet and vehicle selections if any
-       updatedSearchAttempt = <ISearchAttempt>{ vehicleUsed: null, searchedPlanet : null, planetsShown : null, vehiclesShown: null};
+    searchMap.forEach((value: ISearchAttempt) => {
+      if(!value){        
+        return;
       }
 
-      updatedSearchMap.set(key, updatedSearchAttempt);      
+      if(!value.searchedPlanet || !value.vehicleUsed) {
+        return;
+      }
+
+      const planetDistance = value.searchedPlanet.distance;
+      const vehicleSpeed = value.vehicleUsed.speed;
+      if(!planetDistance || !vehicleSpeed) {
+        return;
+      }
+      
+      totalTimeTakenForSearch = totalTimeTakenForSearch + planetDistance / vehicleSpeed; 
+
     });
 
-    return updatedSearchMap;
-  }
-
-  updateSearchMapAfterVehicleChange(searchMap: Map<string, ISearchAttempt>, lastChangedWidgetId: number): Map<string, ISearchAttempt> {
-    let updatedSearchMap = new Map<string, ISearchAttempt>();
-
-    searchMap.forEach((value: ISearchAttempt, key: string) => {
-      let updatedSearchAttempt : ISearchAttempt ;
-      // if the current widget is to the left of changed widget then
-      // just make a clone for immutability and continue
-      const currentlyLoopedWidgetId = Number(key);
-      if(currentlyLoopedWidgetId <= lastChangedWidgetId ){
-        updatedSearchAttempt = <ISearchAttempt>{ ...value};
-      }      
-      else {
-       // else if the current widget is to the right of the changed widget then
-       // we will need to reset both the existing planet and vehicle selections if any
-       updatedSearchAttempt = <ISearchAttempt>{ vehicleUsed: null, searchedPlanet : null, planetsShown : null, vehiclesShown: null};
-      }
-
-      updatedSearchMap.set(key, updatedSearchAttempt);      
-    });
-
-    return updatedSearchMap;
+    return totalTimeTakenForSearch;
   }
   
+  private isItFineToStartSearching(searchMap: Map<string, ISearchAttempt>): boolean {
+    let isReadyForSearch : boolean = true;
+
+    searchMap.forEach((value : ISearchAttempt) => {
+      if(!value){        
+        isReadyForSearch = false;
+        return;
+      }
+
+      if(!value.searchedPlanet || !value.vehicleUsed) {
+        isReadyForSearch = false;
+        return;
+      }
+
+    });
+
+    return isReadyForSearch;
+  }
+
   public findFalcon(request : IFindFalconRequest) {
+
+    this.setLoadingFlag(true);
 
      request.token = this.finderApiToken; 
      this.finderService.findFalcon(request)
         .subscribe( (response: IFindFalconResponse) => {
+
+          this.setLoadingFlag(false);
           let errorMsg = null;  
           if(response) {
 
@@ -379,6 +373,7 @@ export class FinderFacadeService {
         },
         (error) => {
           this.updateError(error);
+          this.setLoadingFlag(false);
         }
         );
   }
@@ -387,4 +382,7 @@ export class FinderFacadeService {
     this.router.navigate(['/finderboard/reset']);
   }
 
+  private setLoadingFlag(isLoading : boolean) : void {
+    this.updateState({...this._state, isLoading : isLoading || false});
+  }
 }
