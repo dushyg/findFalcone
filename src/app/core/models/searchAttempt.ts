@@ -5,5 +5,7 @@ export interface ISearchAttempt {
 
     searchedPlanet : IPlanet;
     vehicleUsed : IVehicle;
+    planetsShown : IPlanet[];
+    vehiclesShown: IVehicle[];
 
 }

@@ -13,4 +13,6 @@ export interface IFalconAppState {
     isLoading : boolean;
     planetFoundOn: string;
     isReadyToSearch : boolean;
+    lastUpdatedWidgetId : number;
+    availablePlanetsSet: Set<string>;
 }
