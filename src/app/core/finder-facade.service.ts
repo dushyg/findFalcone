@@ -2,14 +2,14 @@ import { Injectable } from '@angular/core';
 import { PlanetsService } from './planets.service';
 import { VehiclesService } from './vehicles.service';
 import { IPlanet } from './models/planet';
-import { BehaviorSubject, forkJoin, Subject } from 'rxjs';
+import { BehaviorSubject, forkJoin, Subject, combineLatest } from 'rxjs';
 import { IVehicle } from './models/vehicle';
 import { IFindFalconResponse } from './models/find-falcon-response';
 import { IFindFalconRequest } from './models/find-falcon-request';
 import { FalconFinderService } from './falcon-finder.service';
 import { ISearchAttempt } from './models/searchAttempt';
 import { IFalconAppState } from './models/falconApp.state';
-import { map, distinctUntilChanged, withLatestFrom } from 'rxjs/operators';
+import { map, distinctUntilChanged, withLatestFrom} from 'rxjs/operators';
 import { Router } from '@angular/router';
 import PlanetChange from './models/planetChange';
 import VehicleChange from './models/vehicleChange';
@@ -59,28 +59,22 @@ export class FinderFacadeService {
 
   public readyToSearch$ = this.store$.pipe(map( state => state.isReadyToSearch), distinctUntilChanged());
 
-  public lastUpdatedWidgetId$ = this.store$.pipe(map( state => state.lastUpdatedWidgetId), distinctUntilChanged());
+  private lastUpdatedWidgetId$ = this.store$.pipe(map( state => state.lastUpdatedWidgetId), distinctUntilChanged());
+
+  private widgetInputChangedEvent$ = new Subject<void>();        
+
   public isLoading$ = this.store$.pipe(map(state => state.isLoading), distinctUntilChanged());  
   
-  private widgetInputChangedEvent$ = new Subject<void>();  
-
-  private updateState(state : IFalconAppState) {
-    
-    this.store.next(this._state = state);
-  }      
-
-  private getInitializedSearchMap(planetList, vehicleList) : Map<string, ISearchAttempt> {
-    const searchMap = new Map<string, ISearchAttempt>();
-
-    for(let index = 0; index < this.MAX_SEARCH_ATTEMPTS_ALLOWED; index++) {
-      searchMap.set(index.toString(), <ISearchAttempt>{
-        planetsShown : planetList,
-        vehiclesShown : vehicleList
-      });
-    }
-    return searchMap;
-  }
-  // public methods
+  public vm$ = combineLatest([this.error$, this.searchAttemptMap$, this.totalTimeTaken$, this.readyToSearch$, this.isLoading$])
+      .pipe(map(([error, searchAttemptMap, totalTimeTaken, isReadyForSearch, isLoading]) => {
+        return {
+          error,
+          searchAttemptMap,
+          totalTimeTaken,
+          isReadyForSearch,
+          isLoading
+        };
+      }));    
 
   public initializeAppData() {
     this.setLoadingFlag(true);
@@ -108,15 +102,33 @@ export class FinderFacadeService {
       }
     );
   }       
+   
+  private getInitializedSearchMap(planetList, vehicleList) : Map<string, ISearchAttempt> {
+    const searchMap = new Map<string, ISearchAttempt>();
+
+    for(let index = 0; index < this.MAX_SEARCH_ATTEMPTS_ALLOWED; index++) {
+      searchMap.set(index.toString(), <ISearchAttempt>{
+        planetsShown : planetList,
+        vehiclesShown : vehicleList
+      });
+    }
+    return searchMap;
+  }
   
   public planetUpdated(planetChange : PlanetChange) {
+    const changedWidgetId = planetChange.widgetId.toString();
+    let existingSearchAttempt : ISearchAttempt = this._state.searchMap.get(changedWidgetId);
     // shallow copying existing map is just fine, since we will assign a new value object
     // and value objects for other keys are not changing
     let searchMap = new Map<string, ISearchAttempt>(this._state.searchMap);
-    searchMap.set(
-      planetChange.widgetId.toString(), 
-      <ISearchAttempt>{searchedPlanet : {...planetChange.newPlanet}, vehicleUsed : null}
-    );
+
+    let updatedSearchAttempt = <ISearchAttempt>{        
+      ...existingSearchAttempt,
+      searchedPlanet : {...planetChange.newPlanet}, 
+      vehicleUsed : null        
+    }
+    searchMap.set(changedWidgetId, updatedSearchAttempt);
+
     this.updateState({
       ...this._state, 
       lastUpdatedWidgetId : planetChange.widgetId, 
@@ -128,18 +140,24 @@ export class FinderFacadeService {
 
 
   public vehicleUpdated(vehicleChange : VehicleChange) {
+
+    const changedWidgetId = vehicleChange.widgetId.toString();
+    let existingSearchAttempt : ISearchAttempt = this._state.searchMap.get(changedWidgetId);
+
     // shallow copying existing map is just fine, since we will assign a new value object
     // and value objects for other keys are not changing
     let searchMap = new Map<string, ISearchAttempt>(this._state.searchMap);
     const key = vehicleChange.widgetId.toString();
     
-    let searchAttempt = <ISearchAttempt>{
+    let updatedSearchAttempt = <ISearchAttempt>{
+      ...existingSearchAttempt,
       searchedPlanet : { ...searchMap.get(key).searchedPlanet},
       vehicleUsed : {...vehicleChange.newVehicle}
     };
+
     searchMap.set(
       vehicleChange.widgetId.toString(), 
-      searchAttempt
+      updatedSearchAttempt
     );
 
     this.updateState({
@@ -149,11 +167,7 @@ export class FinderFacadeService {
     });
 
     this.widgetInputChangedEvent$.next();
-  }
-
-  public updateError(errorMsg: string) {
-    this.updateState({...this._state, errorMsg});
-  }
+  }  
   
   private updatePlanetFoundOn(planetFoundOn : string) {
     this.updateState({...this._state, planetFoundOn});
@@ -385,4 +399,13 @@ export class FinderFacadeService {
   private setLoadingFlag(isLoading : boolean) : void {
     this.updateState({...this._state, isLoading : isLoading || false});
   }
+
+  public updateError(errorMsg: string) {
+    this.updateState({...this._state, errorMsg});
+  }
+  
+  private updateState(state : IFalconAppState) {
+    
+    this.store.next(this._state = state);
+  }     
 }
