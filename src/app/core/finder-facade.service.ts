@@ -70,7 +70,7 @@ export class FinderFacadeService {
   private widgetInputChangedEvent$ = new Subject<void>();        
 
   private isLoading$ = this.store$.pipe(map(state => state.isLoading), distinctUntilChanged());  
-  
+
   public dashboardVm$ = combineLatest([this.error$,  this.totalTimeTaken$, this.readyToSearch$, this.isLoading$, this.maxCountPlanetsToBeSearched$])
       .pipe(map(([error, totalTimeTaken, isReadyForSearch, isLoading, maxCountPlanetsToBeSearched]) => {
         return {
@@ -413,55 +413,93 @@ export class FinderFacadeService {
     return isReadyForSearch;
   }
 
-  public findFalcon(request : IFindFalconRequest) {
+  public findFalcon() : void {
 
+    let findFalconRequest : IFindFalconRequest ; 
+    const searchAttemptMap = this.getSearchMap(this._state);
+    
+
+    if(searchAttemptMap) {
+        
+      const request = <IFindFalconRequest> {
+          planet_names : new Array<string>(this.MAX_SEARCH_ATTEMPTS_ALLOWED),
+          vehicle_names : new Array<string>(this.MAX_SEARCH_ATTEMPTS_ALLOWED)
+        };
+      
+      let index = 0;
+      for(let searchAttemptEntry of searchAttemptMap) {
+        
+        const searchAttempt = searchAttemptEntry[1];
+
+        request.planet_names[index] = searchAttempt.searchedPlanet.name;
+        request.vehicle_names[index] = searchAttempt.vehicleUsed.name;
+        
+        index++;
+      }  
+
+      findFalconRequest = request;                
+    }
+    else {
+      findFalconRequest = null;
+    }
+
+    if(findFalconRequest) {
+      this.callFindFalconApi(findFalconRequest);
+    }
+}
+
+private callFindFalconApi(request : IFindFalconRequest) {
+
+    request.token = this.finderApiToken; 
     this.setLoadingFlag(true);
+    this.finderService.findFalcon(request)
+       .subscribe( (response: IFindFalconResponse) => {
 
-     request.token = this.finderApiToken; 
-     this.finderService.findFalcon(request)
-        .subscribe( (response: IFindFalconResponse) => {
+        this.setLoadingFlag(false);
 
-          this.setLoadingFlag(false);
-          let errorMsg = null;  
-          if(response) {
+        let errorMsg = null;  
+        if(response) {
 
-            if(response.error) {
-              errorMsg = response.error;
-              this.updateError(errorMsg);
-            }
-            else if(response.status) {
-
-              if(response.status.trim().toLowerCase() === "success") {
-
-                if(response.planetName) {
-                  this.updatePlanetFoundOn(response.planetName);
-                }
-                else {
-                  errorMsg = "Search api returned empty planet name";
-                  this.updateError(errorMsg);
-                }
-              }
-              else if(response.status.trim().toLocaleLowerCase() === "false") {
-                errorMsg = "Failure! You were unable to find Falcone. Better luck next time.";
-                this.updateError(errorMsg);
-              }
-              else {
-                errorMsg = "Search api did not return a response status value."
-                this.updateError(errorMsg);
-              }
-            }
-          }
-          else {
-            errorMsg = "Search api returned invalid response."
+          if(response.error) {
+            errorMsg = response.error;
             this.updateError(errorMsg);
           }
-        },
-        (error) => {
-          this.updateError(error);
-          this.setLoadingFlag(false);
+          else if(response.status) {
+
+            if(response.status.trim().toLowerCase() === "success") {
+
+              if(response.planetName) {
+                this.updateState({...this._state, planetFoundOn : response.planetName});
+              }
+              else {
+                errorMsg = "Search api returned empty planet name";
+                this.updateError(errorMsg);
+              }
+            }
+            else if(response.status.trim().toLocaleLowerCase() === "false") {
+              errorMsg = "Failure! You were unable to find Falcone. Better luck next time.";
+              this.updateError(errorMsg);
+            }
+            else {
+              errorMsg = "Search api did not return a response status value."
+              this.updateError(errorMsg);
+            }
+          }
         }
-        );
-  }
+        else {
+          errorMsg = "Search api returned invalid response."
+          this.updateError(errorMsg);
+        }
+       },
+       (error) => {
+        this.updateState({...this._state, errorMsg : error, isLoading : false});
+       }
+       );
+ }    
+
+private getSearchMap(state : IFalconAppState) : Map<string, ISearchAttempt> {
+  return state.searchMap;
+}
   
   resetApp(){
     this.router.navigate(['/finderboard/reset']);
