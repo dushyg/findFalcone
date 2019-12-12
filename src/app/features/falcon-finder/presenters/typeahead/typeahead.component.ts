@@ -76,14 +76,14 @@ export class Typeahead implements OnInit, OnDestroy {
        
     }
 
-    private showResultsList() {
+    public showResultsList() {
 
         this.selectionMade = false;
         this.doShowResults = true;
         this.performSearch(this.inputTextControl.value);
     }    
 
-    private hideResultsList(){
+    public hideResultsList(){
         // focusout event on the wrapper div is fired first,         
         // hence we need to call this after some delay so that selectionMade field 
         // has latest value 
