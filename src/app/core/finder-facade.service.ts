@@ -9,7 +9,7 @@ import { IFindFalconRequest } from './models/find-falcon-request';
 import { FalconFinderService } from './falcon-finder.service';
 import { ISearchAttempt } from './models/searchAttempt';
 import { IFalconAppState } from './models/falconApp.state';
-import { map, distinctUntilChanged, withLatestFrom} from 'rxjs/operators';
+import { map, distinctUntilChanged, withLatestFrom, distinct} from 'rxjs/operators';
 import { Router } from '@angular/router';
 import PlanetChange from './models/planetChange';
 import VehicleChange from './models/vehicleChange';
@@ -32,49 +32,64 @@ export class FinderFacadeService {
     isLoading : false,
     maxSearchAttemptAllowed : this.MAX_SEARCH_ATTEMPTS_ALLOWED,
     planetList : [],
-    searchMap : new Map<string, ISearchAttempt>(),
+    searchMap : null,
+    availablePlanetListMap : null,
+    availableVehicleListMap : null, 
     totalTimeTaken : 0,
     vehicleList : [],
     planetFoundOn : null,
     isReadyToSearch : false,
-    lastUpdatedWidgetId: null,
-    availablePlanetsSet: new Set<string>()
+    lastUpdatedWidgetId: null    
   };            
   
   private store = new BehaviorSubject<IFalconAppState>(this._state);
      
-  public store$ = this.store.asObservable();  
+  private store$ = this.store.asObservable();  
   
-  public error$ = this.store$.pipe(map(state => state.errorMsg));
+  private error$ = this.store$.pipe(map(state => state.errorMsg));
 
-  public planetList$ = this.store$.pipe(map(state => state.planetList), distinctUntilChanged());  
+  private planetList$ = this.store$.pipe(map(state => state.planetList), distinctUntilChanged());  
 
-  public vehicleList$ = this.store$.pipe(map(state => state.vehicleList), distinctUntilChanged());  
+  private vehicleList$ = this.store$.pipe(map(state => state.vehicleList), distinctUntilChanged());  
 
-  public searchAttemptMap$ = this.store$.pipe(map(state => state.searchMap), distinctUntilChanged());
+  private searchAttemptMap$ = this.store$.pipe(map(state => state.searchMap), distinctUntilChanged());
 
-  public totalTimeTaken$ = this.store$.pipe(map(state => state.totalTimeTaken), distinctUntilChanged());
+  private totalTimeTaken$ = this.store$.pipe(map(state => state.totalTimeTaken), distinctUntilChanged());
 
   public planetFoundOn$ = this.store$.pipe(map(state => state.planetFoundOn), distinctUntilChanged());
 
-  public readyToSearch$ = this.store$.pipe(map( state => state.isReadyToSearch), distinctUntilChanged());
+  private readyToSearch$ = this.store$.pipe(map( state => state.isReadyToSearch), distinctUntilChanged());
 
   private lastUpdatedWidgetId$ = this.store$.pipe(map( state => state.lastUpdatedWidgetId), distinctUntilChanged());
 
+  public availablePlanetListUpdated$ = this.store$.pipe(map( state =>  state.availablePlanetListMap), distinctUntilChanged());
+
+  public availableVehicleListUpdated$ = this.store$.pipe(map( state =>  state.availableVehicleListMap), distinctUntilChanged());
+
+  private maxCountPlanetsToBeSearched$ = this.store$.pipe( map(state => state.maxSearchAttemptAllowed), distinctUntilChanged());
   private widgetInputChangedEvent$ = new Subject<void>();        
 
-  public isLoading$ = this.store$.pipe(map(state => state.isLoading), distinctUntilChanged());  
+  private isLoading$ = this.store$.pipe(map(state => state.isLoading), distinctUntilChanged());  
   
-  public vm$ = combineLatest([this.error$, this.searchAttemptMap$, this.totalTimeTaken$, this.readyToSearch$, this.isLoading$])
-      .pipe(map(([error, searchAttemptMap, totalTimeTaken, isReadyForSearch, isLoading]) => {
+  public dashboardVm$ = combineLatest([this.error$,  this.totalTimeTaken$, this.readyToSearch$, this.isLoading$, this.maxCountPlanetsToBeSearched$])
+      .pipe(map(([error, totalTimeTaken, isReadyForSearch, isLoading, maxCountPlanetsToBeSearched]) => {
         return {
-          error,
-          searchAttemptMap,
+          error,          
           totalTimeTaken,
           isReadyForSearch,
-          isLoading
+          isLoading,
+          maxCountPlanetsToBeSearched
         };
       }));    
+
+  // public widgetVm$ = combineLatest([this.searchAttemptMap$, this.availablePlanetListUpdated$, this.availableVehicleListUpdated$])
+  //     .pipe(map(([searchAttemptMap, widgetIdToPlanetListMap, widgetIdToVehicleListMap]) => {
+  //         return {
+  //           searchAttemptMap,
+  //           widgetIdToPlanetListMap,
+  //           widgetIdToVehicleListMap
+  //         };      
+  //     }));
 
   public initializeAppData() {
     this.setLoadingFlag(true);
@@ -93,7 +108,9 @@ export class FinderFacadeService {
         this.updateState({...this._state,
             planetList,
             vehicleList,
-            searchMap : this.getInitializedSearchMap(planetList, vehicleList)
+            searchMap : this.getInitializedSearchMap(planetList, vehicleList),
+            availablePlanetListMap : this.getMapWithAllPlanets(planetList),
+            availableVehicleListMap : this.getMapWithAllVehicles(vehicleList)
         });          
     },
       (error) => {
@@ -102,20 +119,35 @@ export class FinderFacadeService {
       }
     );
   }       
-   
+     
   private getInitializedSearchMap(planetList, vehicleList) : Map<string, ISearchAttempt> {
     const searchMap = new Map<string, ISearchAttempt>();
 
     for(let index = 0; index < this.MAX_SEARCH_ATTEMPTS_ALLOWED; index++) {
-      searchMap.set(index.toString(), <ISearchAttempt>{
-        planetsShown : planetList,
-        vehiclesShown : vehicleList
-      });
+      searchMap.set(index.toString(), <ISearchAttempt>{});
     }
     return searchMap;
   }
+
+  private getMapWithAllPlanets(planetList: IPlanet[]): Map<string, IPlanet[]> {
+    const planetsMap = new Map<string, IPlanet[]>();
+
+    for(let index = 0; index < this.MAX_SEARCH_ATTEMPTS_ALLOWED; index++) {
+      planetsMap.set(index.toString(), planetList);
+    }
+    return planetsMap;
+  }
+
+  private getMapWithAllVehicles(vehicleList: IVehicle[]): Map<string, IVehicle[]> {
+    const vehiclesMap = new Map<string, IVehicle[]>();
+
+    for(let index = 0; index < this.MAX_SEARCH_ATTEMPTS_ALLOWED; index++) {
+      vehiclesMap.set(index.toString(), vehicleList);
+    }
+    return vehiclesMap;
+  }
   
-  public planetUpdated(planetChange : PlanetChange) {
+  public planetChanged(planetChange : PlanetChange) {
     const changedWidgetId = planetChange.widgetId.toString();
     let existingSearchAttempt : ISearchAttempt = this._state.searchMap.get(changedWidgetId);
     // shallow copying existing map is just fine, since we will assign a new value object
@@ -139,7 +171,7 @@ export class FinderFacadeService {
   }
 
 
-  public vehicleUpdated(vehicleChange : VehicleChange) {
+  public vehicleChanged(vehicleChange : VehicleChange) {
 
     const changedWidgetId = vehicleChange.widgetId.toString();
     let existingSearchAttempt : ISearchAttempt = this._state.searchMap.get(changedWidgetId);
@@ -174,31 +206,33 @@ export class FinderFacadeService {
   }     
 
   private widgetChangesSubscription = this.widgetInputChangedEvent$.pipe(
-    withLatestFrom(this.searchAttemptMap$, this.planetList$, this.vehicleList$, this.lastUpdatedWidgetId$)    
+    withLatestFrom(this.searchAttemptMap$, this.availablePlanetListUpdated$, this.availableVehicleListUpdated$, this.planetList$, this.vehicleList$, this.lastUpdatedWidgetId$)    
   )
-  .subscribe(([_, searchMap, planetList, vehicleList, widgetId]) => {
+  .subscribe(([_, searchMap, widgetIdToPlanetListMap, widgetIdToVehicleListMap, planetList, vehicleList, lastUpdatedWidgetId]) => {
 
     // reset the widgets that are to the right of currently changed widget
     // all the widgets with id > widgetId are to the right, and their existing selections would be reset
     const updatedSearchMapAfterWidgetResets : Map<string, ISearchAttempt> 
-      = this.getUpdatedSearchMapAfterWidgetResets(searchMap, widgetId); 
+      = this.getUpdatedSearchMapAfterWidgetResets(searchMap, lastUpdatedWidgetId); 
 
     // update the cloned search map with planet list to be shown for each widget
-    const updatedSearchMapWithAvailablePlanetList : Map<string, ISearchAttempt> = 
-      this.updateSearchMapWithAvailablePlanetList(updatedSearchMapAfterWidgetResets, planetList);
+    const updatedWidgetIdToAvailablePlanetsMap : Map<string, IPlanet[]> = 
+      this.updateWidgetIdToAvailablePlanetsMap(updatedSearchMapAfterWidgetResets, widgetIdToPlanetListMap, planetList, lastUpdatedWidgetId);
 
     // update the cloned search map with vehicle list to be shown for each widget
-    const updatedSearchMapWithAvailablePlanetAndVehicleList : Map<string, ISearchAttempt> = 
-      this.updateSearchMapWithAvailableVehicleList(updatedSearchMapWithAvailablePlanetList, vehicleList, widgetId);    
+    const updatedWidgetIdToAvailableVehiclesMap : Map<string, IVehicle[]> = 
+      this.updateWidgetIdToAvailableVehicleMap(updatedSearchMapAfterWidgetResets, widgetIdToVehicleListMap, vehicleList, lastUpdatedWidgetId);    
     
     // calculate the total time taken to search planets with vehicles selected
-    const totalTimeTakenForSearch : number = this.getTotalTimeTakenForSearch(updatedSearchMapWithAvailablePlanetAndVehicleList);
+    const totalTimeTakenForSearch : number = this.getTotalTimeTakenForSearch(updatedSearchMapAfterWidgetResets);
 
-    const isReadyToSearch : boolean = this.isItFineToStartSearching(updatedSearchMapWithAvailablePlanetAndVehicleList);
+    const isReadyToSearch : boolean = this.isItFineToStartSearching(updatedSearchMapAfterWidgetResets);
     // update the application state to reflect latest changes
     this.updateState({
       ...this._state, 
-      searchMap : updatedSearchMapWithAvailablePlanetAndVehicleList, 
+      searchMap : updatedSearchMapAfterWidgetResets, 
+      availablePlanetListMap : updatedWidgetIdToAvailablePlanetsMap,
+      availableVehicleListMap : updatedWidgetIdToAvailableVehiclesMap,
       totalTimeTaken : totalTimeTakenForSearch,
       isReadyToSearch : isReadyToSearch
     });
@@ -218,7 +252,7 @@ export class FinderFacadeService {
       else {
        // else if the current widget is to the right of the changed widget then
        // we will need to reset both the existing planet and vehicle selections if any
-       updatedSearchAttempt = <ISearchAttempt>{ vehicleUsed: null, searchedPlanet : null, planetsShown : null, vehiclesShown: null};
+       updatedSearchAttempt = <ISearchAttempt>{ vehicleUsed: null, searchedPlanet : null};
       }
 
       updatedSearchMap.set(key, updatedSearchAttempt);      
@@ -227,26 +261,52 @@ export class FinderFacadeService {
     return updatedSearchMap;
   } 
 
-  private updateSearchMapWithAvailablePlanetList(searchMap: Map<string, ISearchAttempt>, planetList : IPlanet[])
-            : Map<string, ISearchAttempt> {
+  // private updateWidgetIdToAvailablePlanetsMap(searchMap: Map<string, ISearchAttempt>, planetList : IPlanet[])
+  //           : Map<string, IPlanet[]> {
+
+  //   const usedPlanets = new Set<string>();
+  //   const updatedPlanetsMap = new Map<string, IPlanet[]>();
+  //   searchMap.forEach((value: ISearchAttempt, key: string) => {
+  //       const planet : IPlanet = value.searchedPlanet;        
+        
+  //       const availablePlanets = planetList.filter( (currentPlanet: IPlanet) => {
+  //         return !usedPlanets.has(currentPlanet.name);
+  //       });        
+  //       usedPlanets.add(planet.name);
+  //       updatedPlanetsMap.set(key, [...availablePlanets]);
+  //   });
+
+  //   return updatedPlanetsMap;
+  // }
+  private updateWidgetIdToAvailablePlanetsMap(searchMap: Map<string, ISearchAttempt>, widgetIdToPlanetListMap : Map<string, IPlanet[]>, lastUpdatedWidgetId: number, planetList : IPlanet[])
+            : Map<string, IPlanet[]> {
 
     const usedPlanets = new Set<string>();
-    const updatedSearchMap = new Map<string, ISearchAttempt>();
-    searchMap.forEach((value: ISearchAttempt, key: string) => {
-        const planet : IPlanet = value.searchedPlanet;        
+    const updatedPlanetsMap = new Map<string, IPlanet[]>();
+    widgetIdToPlanetListMap.forEach((value: IPlanet[], key: string) => {
         
-        const availablePlanets = planetList.filter( (currentPlanet: IPlanet) => {
-          return !usedPlanets.has(currentPlanet.name);
-        });        
+        const planet : IPlanet = searchMap.get(key).searchedPlanet;        
+        const widgetId = +key;
+        if(widgetId < lastUpdatedWidgetId) {
+
+          updatedPlanetsMap.set(key, [...value]);  
+        }
+        else {
+          const availablePlanets = planetList.filter( (currentPlanet: IPlanet) => {
+            return !usedPlanets.has(currentPlanet.name);
+          });   
+          updatedPlanetsMap.set(key, [...availablePlanets]);
+        }
+             
         usedPlanets.add(planet.name);
-        updatedSearchMap.set(key, <ISearchAttempt>{...value, planetsShown: availablePlanets});
+        
     });
 
-    return updatedSearchMap;
+    return updatedPlanetsMap;
   }
-  
-  private updateSearchMapWithAvailableVehicleList(searchMap: Map<string, ISearchAttempt>, vehicleList : IVehicle[], lastUpdatedWidgetId: number)
-            : Map<string, ISearchAttempt> {          
+
+  private updateWidgetIdToAvailableVehicleMap(searchMap: Map<string, ISearchAttempt> , widgetIdToVehiclesMap: Map<string, IVehicle[]>, vehicleList : IVehicle[], lastUpdatedWidgetId: number)
+            : Map<string, IVehicle[]> {          
     
     // create a map of vehicle name vs count of vehicles used
     const usedVehicleMap = this.getUsedVehicleMap(searchMap); 
@@ -256,7 +316,7 @@ export class FinderFacadeService {
       return <IVehicle>{...vehicle, availNumUnits: usedVehicleMap.get(vehicle.name)};                            
     });            
     
-    return this.getSearchMapWithUpdatedVehicleList(searchMap, lastUpdatedWidgetId, updatedVehicleList);
+    return this.getWidgetIdToUpdatedVehiclesMap(widgetIdToVehiclesMap, lastUpdatedWidgetId, updatedVehicleList);
   }  
 
   private getUsedVehicleMap(searchMap: Map<string, ISearchAttempt>) :  Map<string, number> {
@@ -281,20 +341,24 @@ export class FinderFacadeService {
     return usedVehicleMap;
   }
 
-  private getSearchMapWithUpdatedVehicleList(searchMap: Map<string, ISearchAttempt>, lastUpdatedWidgetId: number, updatedVehicleList: IVehicle[]) {
-
-    const updatedSearchMap = new Map<string, ISearchAttempt>();
+  private getWidgetIdToUpdatedVehiclesMap(
+    widgetIdToVehiclesMap: Map<string, IVehicle[]>, 
+    lastUpdatedWidgetId: number, 
+    updatedVehicleList: IVehicle[]) 
+                                        : Map<string, IVehicle[]> 
+  {
+    const usedVehicleMap = new Map<string, IVehicle[]>();
     // update the search map with the updatedVehicleList
-    searchMap.forEach((value: ISearchAttempt, key: string) => {
+    widgetIdToVehiclesMap.forEach((value: IVehicle[], key: string) => {
       const currentlyLoopedWidgetId = Number(lastUpdatedWidgetId);
       if (currentlyLoopedWidgetId >= lastUpdatedWidgetId) {
-        updatedSearchMap.set(key, <ISearchAttempt>{ ...value, vehiclesShown: updatedVehicleList });
+        usedVehicleMap.set(key, [...updatedVehicleList]);
       }
       else {
-        updatedSearchMap.set(key, <ISearchAttempt>{ ...value });
+        usedVehicleMap.set(key, [...value]);
       }
     });
-    return updatedSearchMap;
+    return usedVehicleMap;
   }
 
   private getTotalTimeTakenForSearch(searchMap: Map<string, ISearchAttempt>): number {
@@ -403,7 +467,7 @@ export class FinderFacadeService {
   public updateError(errorMsg: string) {
     this.updateState({...this._state, errorMsg});
   }
-  
+
   private updateState(state : IFalconAppState) {
     
     this.store.next(this._state = state);

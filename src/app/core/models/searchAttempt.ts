@@ -1,11 +1,8 @@
 import { IVehicle } from './vehicle';
 import { IPlanet } from './planet';
 
-export interface ISearchAttempt {
-
+export interface ISearchAttempt {  
+    
     searchedPlanet : IPlanet;
     vehicleUsed : IVehicle;
-    planetsShown : IPlanet[];
-    vehiclesShown: IVehicle[];
-
 }
