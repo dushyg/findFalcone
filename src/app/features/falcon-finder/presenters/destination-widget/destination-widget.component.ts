@@ -26,7 +26,7 @@ export class DestinationWidgetComponent implements OnInit, OnDestroy {
   // @Output() public onPlanetSelected  = new EventEmitter<PlanetChange>();
   // @Output() public onVehicleSelected = new EventEmitter<VehicleChange>();  
   
-  private static createdWidgetCount : number = 0;
+  private static createdWidgetCount : number = 1;
   public destinationDistance : number = 0 ;  
   public widgetId : number; 
   public lastSelectedPlanet : string ;
@@ -37,7 +37,7 @@ export class DestinationWidgetComponent implements OnInit, OnDestroy {
 
   constructor(private finderFacadeService : FinderFacadeService) { 
     
-    this.widgetId = ++DestinationWidgetComponent.createdWidgetCount;  
+    this.widgetId = DestinationWidgetComponent.createdWidgetCount++;  
     // console.log(this.widgetId);
   }
 
@@ -46,6 +46,10 @@ export class DestinationWidgetComponent implements OnInit, OnDestroy {
      this.finderFacadeService.availablePlanetListUpdated$
       .pipe(takeWhile( () => this.isComponentActive))     
       .subscribe( (widgetIdToPlanetListMap) => {
+        if(!widgetIdToPlanetListMap)
+        {
+          return;
+        }
 
         const updatedPlanetList : IPlanet[] = widgetIdToPlanetListMap.get(this.widgetId.toString());
         if(updatedPlanetList !== this.planetList) {
@@ -56,7 +60,9 @@ export class DestinationWidgetComponent implements OnInit, OnDestroy {
       this.finderFacadeService.lastUpdatedWidgetId$
       .pipe(takeWhile( () => this.isComponentActive))     
       .subscribe( (lastUpdatedWidgetId) => {
-
+        if(lastUpdatedWidgetId === null || lastUpdatedWidgetId === undefined){
+          return;
+        }
         if(this.widgetId > lastUpdatedWidgetId) {
           this.clearLastSelection();
         }

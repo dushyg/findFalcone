@@ -22,9 +22,7 @@ export class FinderBoardComponent implements OnInit, OnDestroy {
    }
      
   public isLoading: boolean;
-  public error : string;  
-  public planetList : IPlanet[];
-  public vehicleList : IVehicle[];
+  public error : string;    
   public timeTaken : number;  
   public isReadyToSearch: boolean;
   public countPlanetsToBeSearched : number;

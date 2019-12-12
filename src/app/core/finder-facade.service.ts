@@ -130,7 +130,7 @@ export class FinderFacadeService {
   private getInitializedSearchMap(planetList, vehicleList) : Map<string, ISearchAttempt> {
     const searchMap = new Map<string, ISearchAttempt>();
 
-    for(let index = 0; index < this.MAX_SEARCH_ATTEMPTS_ALLOWED; index++) {
+    for(let index = 1; index < this.MAX_SEARCH_ATTEMPTS_ALLOWED+1; index++) {
       searchMap.set(index.toString(), <ISearchAttempt>{});
     }
     return searchMap;
@@ -139,7 +139,7 @@ export class FinderFacadeService {
   private getMapWithAllPlanets(planetList: IPlanet[]): Map<string, IPlanet[]> {
     const planetsMap = new Map<string, IPlanet[]>();
 
-    for(let index = 0; index < this.MAX_SEARCH_ATTEMPTS_ALLOWED; index++) {
+    for(let index = 1; index < this.MAX_SEARCH_ATTEMPTS_ALLOWED+1; index++) {
       planetsMap.set(index.toString(), planetList);
     }
     return planetsMap;
@@ -148,7 +148,7 @@ export class FinderFacadeService {
   private getMapWithAllVehicles(vehicleList: IVehicle[]): Map<string, IVehicle[]> {
     const vehiclesMap = new Map<string, IVehicle[]>();
 
-    for(let index = 0; index < this.MAX_SEARCH_ATTEMPTS_ALLOWED; index++) {
+    for(let index = 1; index < this.MAX_SEARCH_ATTEMPTS_ALLOWED+1; index++) {
       vehiclesMap.set(index.toString(), vehicleList);
     }
     return vehiclesMap;
@@ -224,11 +224,11 @@ export class FinderFacadeService {
 
     // update the cloned search map with planet list to be shown for each widget
     const updatedWidgetIdToAvailablePlanetsMap : Map<string, IPlanet[]> = 
-      this.updateWidgetIdToAvailablePlanetsMap(updatedSearchMapAfterWidgetResets, widgetIdToPlanetListMap, planetList, lastUpdatedWidgetId);
+      this.updateWidgetIdToAvailablePlanetsMap(updatedSearchMapAfterWidgetResets, widgetIdToPlanetListMap, lastUpdatedWidgetId, planetList);
 
     // update the cloned search map with vehicle list to be shown for each widget
     const updatedWidgetIdToAvailableVehiclesMap : Map<string, IVehicle[]> = 
-      this.updateWidgetIdToAvailableVehicleMap(updatedSearchMapAfterWidgetResets, widgetIdToVehicleListMap, vehicleList, lastUpdatedWidgetId);    
+      this.updateWidgetIdToAvailableVehicleMap(updatedSearchMapAfterWidgetResets, widgetIdToVehicleListMap, lastUpdatedWidgetId, vehicleList);    
     
     // calculate the total time taken to search planets with vehicles selected
     const totalTimeTakenForSearch : number = this.getTotalTimeTakenForSearch(updatedSearchMapAfterWidgetResets);
@@ -329,7 +329,7 @@ export class FinderFacadeService {
   private getUsedVehicleMap(searchMap: Map<string, ISearchAttempt>) :  Map<string, number> {
     
     const usedVehicleMap = new Map<string, number>();
-    for (let index = 0; index < searchMap.size; index++) {
+    for(let index = 1; index < this.MAX_SEARCH_ATTEMPTS_ALLOWED+1; index++) {
       const key = index.toString();
       const searchAttempt: ISearchAttempt = searchMap.get(key);
       if (searchAttempt) {
@@ -514,7 +514,7 @@ private getSearchMap(state : IFalconAppState) : Map<string, ISearchAttempt> {
   }
 
   private updateState(state : IFalconAppState) {
-    
+    console.log(state);
     this.store.next(this._state = state);
   }     
 }
