@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges, SimpleChange } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges, SimpleChange, OnDestroy } from '@angular/core';
 
 import { IPlanet } from 'src/app/core/models/planet';
 import { IVehicleSelectionParam } from 'src/app/core/models/vehicleSelectionParam';
@@ -9,102 +9,145 @@ import VehicleChange from 'src/app/core/models/vehicleChange';
 import { Observable, Subject } from 'rxjs';
 import PlanetUpdates from 'src/app/core/models/planetUpdates';
 import VehicleUpdates from 'src/app/core/models/vehicleUpdates';
+import { ISearchAttempt } from 'src/app/core/models/searchAttempt';
+import { FinderFacadeService } from 'src/app/core/finder-facade.service';
+import { takeWhile } from 'rxjs/operators';
 
 @Component({
   selector: 'app-destination-widget',
   templateUrl: './destination-widget.component.html'
 })
-export class DestinationWidgetComponent implements OnInit, OnChanges {
-    
-  @Input() public vehicleList : IVehicle[];
-  @Input() public planetList : IPlanet[];
-  @Input() public planetListChanged : {widgetId : number, changer : string} ; 
-  @Input() public vehicleListChanged : {widgetId : number, changer : string} ;
-  private initialPlanetList : IPlanet[];
+export class DestinationWidgetComponent implements OnInit, OnDestroy {
+      
+  public vehicleList : IVehicle[];
+  public planetList : IPlanet[];
+  // @Input() public searchAttemptMap : Map<string, ISearchAttempt> ;  
 
-  @Output() public onPlanetSelected  = new EventEmitter<PlanetChange>();
-  @Output() public onVehicleSelected = new EventEmitter<VehicleChange>();  
+  // @Output() public onPlanetSelected  = new EventEmitter<PlanetChange>();
+  // @Output() public onVehicleSelected = new EventEmitter<VehicleChange>();  
   
   private static createdWidgetCount : number = 0;
   public destinationDistance : number = 0 ;  
   public widgetId : number; 
   public lastSelectedPlanet : string ;
-  public defaultSelectedPlanet : string ;
+  
   private resetTypeAheadSubject = new Subject<void>();
   public resetTypeAhead$ : Observable<void> = this.resetTypeAheadSubject.asObservable();
+  private isComponentActive = true;
 
-  constructor() { 
+  constructor(private finderFacadeService : FinderFacadeService) { 
     
-    this.widgetId = ++DestinationWidgetComponent.createdWidgetCount;
-
-    this.lastSelectedPlanet = this.defaultSelectedPlanet = 'Select';
-
+    this.widgetId = ++DestinationWidgetComponent.createdWidgetCount;  
     // console.log(this.widgetId);
   }
-  
-  ngOnChanges(changes: SimpleChanges): void {
-    console.log('ngOnchanges DestinationWidgetComponent, widgetId', changes, this.widgetId);
-    const planetListChange : SimpleChange = changes['planetListChanged'];    
-    if(planetListChange){
-        let widgetUpdate = planetListChange.currentValue;
-        if(widgetUpdate) {
-          this.updatePlanetList(widgetUpdate);
+
+  ngOnInit(): void {
+
+     this.finderFacadeService.availablePlanetListUpdated$
+      .pipe(takeWhile( () => this.isComponentActive))     
+      .subscribe( (widgetIdToPlanetListMap) => {
+
+        const updatedPlanetList : IPlanet[] = widgetIdToPlanetListMap.get(this.widgetId.toString());
+        if(updatedPlanetList !== this.planetList) {
+          this.planetList = updatedPlanetList;
         }        
-    }
+      });  
 
-    const vehicleListChange : SimpleChange = changes['vehicleListChanged'];    
-    if(vehicleListChange){
-      let widgetUpdate = vehicleListChange.currentValue;
-      if(widgetUpdate) {
-        this.updatePlanetList(widgetUpdate);
-      }
-    }
-  }
+      this.finderFacadeService.lastUpdatedWidgetId$
+      .pipe(takeWhile( () => this.isComponentActive))     
+      .subscribe( (lastUpdatedWidgetId) => {
 
-  updatePlanetList( widgetUpdate : {widgetId : number, changer : string}  ) {
+        if(this.widgetId > lastUpdatedWidgetId) {
+          this.clearLastSelection();
+        }
         
-    //If planet was changed in an earlier widget then reset the initialPlanetList to currently remaining planets list
-    if( (widgetUpdate.changer === 'planetUpdate' || widgetUpdate.changer === 'vehicleUpdate') && widgetUpdate.widgetId < this.widgetId) {
+      });
 
-      this.setLatestPlanetList();      
-      this.clearLastSelection();
-    }    
-  
+    // this.finderFacadeService.planetVm$
+    //   .pipe(takeWhile( () => this.isComponentActive))     
+    //   .subscribe( ({widgetIdToPlanetListMap, lastUpdatedWidgetId}) => {
+
+    //     const updatedPlanetList : IPlanet[] = widgetIdToPlanetListMap.get(this.widgetId.toString());
+    //     if(updatedPlanetList !== this.planetList) {
+    //       this.planetList = updatedPlanetList;
+    //     }
+
+    //     if(this.widgetId > lastUpdatedWidgetId) {
+    //       this.clearLastSelection();
+    //     }
+    //   });  
+    
   }
+  
+  // ngOnChanges(changes: SimpleChanges): void {
+  //   console.log('ngOnchanges DestinationWidgetComponent, widgetId', changes, this.widgetId);
+  //   const searchAttemptMapChange : SimpleChange = changes['searchAttemptMap'];    
+  //   if(!searchAttemptMapChange){
+  //     return;
+  //   }
+
+  //   let updatedSearchMap : Map<string, ISearchAttempt> = searchAttemptMapChange.currentValue;
+  //   if(!updatedSearchMap){
+  //     return;
+  //   }
+    
+  //   const latestSearchAttempt : ISearchAttempt = updatedSearchMap.get(this.widgetId.toString());
+
+  //   const updatedPlanets : IPlanet[] = latestSearchAttempt.planetsShown;
+  //   const updatedVehicles : IVehicle[] = latestSearchAttempt.vehiclesShown;
+
+  //   if(updatedPlanets) {
+  //     this.planetList = updatedPlanets;  
+  //   }
+
+  //   if(updatedVehicles){
+  //     this.vehicleList = updatedVehicles;
+  //   }    
+  // }
+
+  // updatePlanetList( widgetUpdate : {widgetId : number, changer : string}  ) {
+        
+  //   //If planet was changed in an earlier widget then reset the initialPlanetList to currently remaining planets list
+  //   if( (widgetUpdate.changer === 'planetUpdate' || widgetUpdate.changer === 'vehicleUpdate') && widgetUpdate.widgetId < this.widgetId) {
+
+  //     this.setLatestPlanetList();      
+  //     this.clearLastSelection();
+  //   }    
+  
+  // }
 
   clearLastSelection(): void {
     this.lastSelectedPlanet = 'Select';
     this.resetTypeAheadSubject.next();
   }
-
-  ngOnInit(): void {
-    // console.log('destination-widget oninit -> this.planetList', this.planetList);
-
-    if(this.planetList) {
-      this.initialPlanetList = [...this.planetList];
-    }          
-  }
-
+ 
   public planetSelected(planetName: string) {
 
     // console.log(planetName);
 
-    let planet : IPlanet = this.initialPlanetList.find( p => p.name === planetName);
+    let planet : IPlanet = this.planetList.find( p => p.name === planetName);
         
     this.destinationDistance = planet.distance;
 
-    this.onPlanetSelected.emit(new PlanetChange(this.widgetId, {name : this.lastSelectedPlanet, distance : null, includedInSearch : false}, planet));
-
     this.lastSelectedPlanet = planetName;
+
+    this.finderFacadeService.planetChanged(new PlanetChange(this.widgetId, {name : this.lastSelectedPlanet, distance : null, includedInSearch : false}, planet));
+    
   }
 
-  public vehicleSelected(vehicleChange : VehicleChange) {
-    // console.log(JSON.stringify(vehicleChange));
-    this.onVehicleSelected.emit(vehicleChange);
-  }
+  // public vehicleSelected(vehicleChange : VehicleChange) {
+  //   // console.log(JSON.stringify(vehicleChange));
+    
+  //   this.finderFacadeService.vehicleChanged(vehicleChange);
+  // }
 
-  setLatestPlanetList() : void {
-    this.initialPlanetList = [...this.planetList];
+  // setLatestPlanetList() : void {
+  //   this.initialPlanetList = [...this.planetList];
+  // }
+
+  ngOnDestroy(): void {
+    this.isComponentActive = false;
   }
+  
 
 }

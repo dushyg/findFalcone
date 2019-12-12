@@ -16,17 +16,10 @@ export class DestinationWidgetListComponent implements OnInit {
 
   constructor() { }
 
-  @Input() vehicleList : IVehicle[];
-  @Input() planetList : IPlanet[];
-  @Input() countPlanetsToBeSearched : number; 
-  // @Input() public planetListChanges$ : Observable<PlanetUpdates>; 
-  // @Input() public vehicleListChanges$ : Observable<VehicleUpdates>;
-  @Input() public planetListChanged : {widgetId : number, changer : string} ; 
-  @Input() public vehicleListChanged : {widgetId : number, changer : string} ;
-
-
-  @Output() public onPlanetSelected  = new EventEmitter<IPlanetSelectionParam>();
-  @Output() public onVehicleSelected = new EventEmitter<IVehicleSelectionParam>();
+  @Input() countPlanetsToBeSearched : number;   
+  
+  // @Output() public onPlanetSelected  = new EventEmitter<IPlanetSelectionParam>();
+  // @Output() public onVehicleSelected = new EventEmitter<IVehicleSelectionParam>();
   
   public widgetCountIterator : number[];
   
@@ -34,12 +27,12 @@ export class DestinationWidgetListComponent implements OnInit {
     this.widgetCountIterator = new Array<number>(this.countPlanetsToBeSearched).fill(0);
   }
 
-  planetSelected(planetSelectionParam : IPlanetSelectionParam) {
-    // console.log('destination widget', planetSelectionParam);
-    this.onPlanetSelected.emit(planetSelectionParam);
-  }
+  // planetSelected(planetSelectionParam : IPlanetSelectionParam) {
+  //   // console.log('destination widget', planetSelectionParam);
+  //   this.onPlanetSelected.emit(planetSelectionParam);
+  // }
 
-  vehicleSelected(vehicleSelectionParam : IVehicleSelectionParam){
-    this.onVehicleSelected.emit(vehicleSelectionParam);
-  }
+  // vehicleSelected(vehicleSelectionParam : IVehicleSelectionParam){
+  //   this.onVehicleSelected.emit(vehicleSelectionParam);
+  // }
 }

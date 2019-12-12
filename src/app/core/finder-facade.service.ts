@@ -60,7 +60,7 @@ export class FinderFacadeService {
 
   private readyToSearch$ = this.store$.pipe(map( state => state.isReadyToSearch), distinctUntilChanged());
 
-  private lastUpdatedWidgetId$ = this.store$.pipe(map( state => state.lastUpdatedWidgetId), distinctUntilChanged());
+  public lastUpdatedWidgetId$ = this.store$.pipe(map( state => state.lastUpdatedWidgetId), distinctUntilChanged());
 
   public availablePlanetListUpdated$ = this.store$.pipe(map( state =>  state.availablePlanetListMap), distinctUntilChanged());
 
@@ -81,16 +81,23 @@ export class FinderFacadeService {
           maxCountPlanetsToBeSearched
         };
       }));    
-
-  // public widgetVm$ = combineLatest([this.searchAttemptMap$, this.availablePlanetListUpdated$, this.availableVehicleListUpdated$])
-  //     .pipe(map(([searchAttemptMap, widgetIdToPlanetListMap, widgetIdToVehicleListMap]) => {
-  //         return {
-  //           searchAttemptMap,
+  
+  // public planetVm$ = combineLatest([this.availablePlanetListUpdated$, this.lastUpdatedWidgetId$])
+  //     .pipe(map(([widgetIdToPlanetListMap, lastUpdatedWidgetId]) => {
+  //         return {            
   //           widgetIdToPlanetListMap,
-  //           widgetIdToVehicleListMap
+  //           lastUpdatedWidgetId
   //         };      
   //     }));
 
+  //   public vehicleVm$ = combineLatest([this.availableVehicleListUpdated$, this.lastUpdatedWidgetId$])
+  //   .pipe(map(([widgetIdToVehicleListMap, lastUpdatedWidgetId]) => {
+  //       return {          
+  //         widgetIdToVehicleListMap,
+  //         lastUpdatedWidgetId
+  //       };      
+  //   }));
+  
   public initializeAppData() {
     this.setLoadingFlag(true);
     forkJoin(
@@ -110,7 +117,7 @@ export class FinderFacadeService {
             vehicleList,
             searchMap : this.getInitializedSearchMap(planetList, vehicleList),
             availablePlanetListMap : this.getMapWithAllPlanets(planetList),
-            availableVehicleListMap : this.getMapWithAllVehicles(vehicleList)
+            availableVehicleListMap : this.getMapWithAllVehicles(vehicleList)            
         });          
     },
       (error) => {

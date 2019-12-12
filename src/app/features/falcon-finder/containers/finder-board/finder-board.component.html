@@ -8,16 +8,15 @@
             Time Taken : {{timeTaken}}
         </div>
 
-        <app-destination-widget-list
-            [vehicleList]="vehicleList"
-            [planetList]="planetList"
-            [countPlanetsToBeSearched] = "countPlanetsToBeSearched"
-            [planetListChanged] = "planetsUpdated"
-            [vehicleListChanged] = "vehiclesUpdated"
-            (onPlanetSelected)="planetSelected($event)"
-            (onVehicleSelected)="vehicleSelected($event)">
+        <app-destination-widget-list            
+            [countPlanetsToBeSearched] = "countPlanetsToBeSearched"            
+        >
         </app-destination-widget-list>
+<!--
 
+    (onPlanetSelected)="planetSelected($event)"
+            (onVehicleSelected)="vehicleSelected($event)"
+-->
         <input [disabled]="!isReadyToSearch" type="button" value="Find Falcone!" (click)="findFalcone()">
     </div>
 </div>

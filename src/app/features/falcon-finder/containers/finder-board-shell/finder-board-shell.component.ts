@@ -1,10 +1,4 @@
-import { Component, OnInit } from '@angular/core';
-import { FinderFacadeService } from 'src/app/core/finder-facade.service';
-import { IPlanet } from 'src/app/core/models/planet';
-import { Observable } from 'rxjs';
-import { IVehicle } from 'src/app/core/models/vehicle';
-import { IFindFalconRequest } from 'src/app/core/models/find-falcon-request';
-import { IFindFalconResponse } from 'src/app/core/models/find-falcon-response';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-finder-board-shell',
