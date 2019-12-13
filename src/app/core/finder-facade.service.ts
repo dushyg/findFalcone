@@ -329,7 +329,7 @@ export class FinderFacadeService {
     // update vehicle list with available vehicle units
     let updatedVehicleList : IVehicle[] = vehicleList.map(vehicle => {  
       const totalNumUnits = vehicle.totalNumUnits;            
-      return <IVehicle>{...vehicle, availNumUnits: totalNumUnits - (usedVehicleMap.get(vehicle.name) || vehicle.totalNumUnits)};                            
+      return <IVehicle>{...vehicle, availNumUnits: totalNumUnits - (usedVehicleMap.get(vehicle.name) || 0)};                            
     });            
     
     return this.getWidgetIdToUpdatedVehiclesMap(widgetIdToVehiclesMap, lastUpdatedWidgetId, updatedVehicleList);
