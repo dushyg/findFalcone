@@ -297,12 +297,9 @@ export class FinderFacadeService {
           return;
         }
         const planet : IPlanet = searchAttempt.searchedPlanet;   
-        if(!planet) {
-          return;
-        }     
-        
+                     
         const widgetId = +key;
-        if(widgetId < lastUpdatedWidgetId) {
+        if(widgetId <= lastUpdatedWidgetId) {
 
           updatedPlanetsMap.set(key, [...value]);  
         }
@@ -313,7 +310,9 @@ export class FinderFacadeService {
           updatedPlanetsMap.set(key, [...availablePlanets]);
         }
              
-        usedPlanets.add(planet.name);
+        if(planet) {
+          usedPlanets.add(planet.name); 
+        }        
         
     });
 
@@ -346,10 +345,10 @@ export class FinderFacadeService {
         if (vehicle) {
           let count: number = usedVehicleMap.get(vehicle.name);
           if (Number(count)) {
-            usedVehicleMap.set(vehicle.name, count++);
+            usedVehicleMap.set(vehicle.name, ++count);
           }
           else {
-            usedVehicleMap.set(vehicle.name, 0);
+            usedVehicleMap.set(vehicle.name, 1);
           }
         }
       }
@@ -366,7 +365,7 @@ export class FinderFacadeService {
     const usedVehicleMap = new Map<string, IVehicle[]>();
     // update the search map with the updatedVehicleList
     widgetIdToVehiclesMap.forEach((value: IVehicle[], key: string) => {
-      const currentlyLoopedWidgetId = Number(lastUpdatedWidgetId);
+      const currentlyLoopedWidgetId = Number(key);
       if (currentlyLoopedWidgetId >= lastUpdatedWidgetId) {
         usedVehicleMap.set(key, [...updatedVehicleList]);
       }
