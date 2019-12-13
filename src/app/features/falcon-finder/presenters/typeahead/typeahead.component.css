@@ -1,3 +1,11 @@
+div.typeahead-container div.resultList {
+    width: 150px;
+    position: absolute;
+    z-index: 100;
+    background-color: white;
+    border: 1px solid black;
+}
+
 div.typeahead-container input.typeAhead {
     width: 150px;
 }
@@ -20,14 +28,6 @@ ul li.resultItem:hover {
     background-color: lightsalmon;
 }
 
-ul li.resultItem:last-child {
+div.resultList ul li.resultItem:last-child {
     border-bottom: none;
-}
-
-div.resultList {
-    width: 150px;
-    position: absolute;
-    z-index: 10;
-    background-color: white;
-    border: 1px solid black;
 }
