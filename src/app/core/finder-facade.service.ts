@@ -71,6 +71,10 @@ export class FinderFacadeService {
 
   private isLoading$ = this.store$.pipe(map(state => state.isLoading), distinctUntilChanged());  
 
+  public getCountOfWidgetsDisplayed() {
+    return this._state.maxSearchAttemptAllowed;
+  }
+
   public dashboardVm$ = combineLatest([this.error$,  this.totalTimeTaken$, this.readyToSearch$, this.isLoading$, this.maxCountPlanetsToBeSearched$])
       .pipe(map(([error, totalTimeTaken, isReadyForSearch, isLoading, maxCountPlanetsToBeSearched]) => {
         return {
@@ -510,7 +514,7 @@ private getSearchMap(state : IFalconAppState) : Map<string, ISearchAttempt> {
   return state.searchMap;
 }
   
-  resetApp(){
+  resetApp(){    
     this.router.navigate(['/finderboard/reset']);
   }
 

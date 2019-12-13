@@ -26,7 +26,7 @@ export class DestinationWidgetComponent implements OnInit, OnDestroy {
   // @Output() public onPlanetSelected  = new EventEmitter<PlanetChange>();
   // @Output() public onVehicleSelected = new EventEmitter<VehicleChange>();  
   
-  private static createdWidgetCount : number = 1;
+  private static createdWidgetCount : number = 0;
   public destinationDistance : number = 0 ;  
   public widgetId : number; 
   public lastSelectedPlanet : string = "Select";
@@ -37,8 +37,10 @@ export class DestinationWidgetComponent implements OnInit, OnDestroy {
 
   constructor(private finderFacadeService : FinderFacadeService) { 
     
-    this.widgetId = DestinationWidgetComponent.createdWidgetCount++;  
-    // console.log(this.widgetId);
+    // using modulo operator to cycle the widget ids from 1 to max widget count
+    this.widgetId = DestinationWidgetComponent.createdWidgetCount % this.finderFacadeService.getCountOfWidgetsDisplayed() + 1;
+    DestinationWidgetComponent.createdWidgetCount++;
+    
   }
 
   ngOnInit(): void {
