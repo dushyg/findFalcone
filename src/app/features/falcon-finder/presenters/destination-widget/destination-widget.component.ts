@@ -127,18 +127,14 @@ export class DestinationWidgetComponent implements OnInit, OnDestroy {
     this.resetTypeAheadSubject.next();
   }
  
-  public planetSelected(planetName: string) {
+  public planetSelected(selectedPlanet: IPlanet) {    
+       
+    this.destinationDistance = selectedPlanet.distance;
 
-    // console.log(planetName);
+    this.lastSelectedPlanet = selectedPlanet.name;
 
-    let planet : IPlanet = this.planetList.find( p => p.name === planetName);
-        
-    this.destinationDistance = planet.distance;
-
-    this.lastSelectedPlanet = planetName;
-
-    this.finderFacadeService.planetChanged(new PlanetChange(this.widgetId, {name : this.lastSelectedPlanet, distance : null, includedInSearch : false}, planet));
-    
+    this.finderFacadeService.planetChanged(new PlanetChange(this.widgetId, null, selectedPlanet));
+   
   }
 
   // public vehicleSelected(vehicleChange : VehicleChange) {

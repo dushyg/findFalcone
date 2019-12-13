@@ -168,7 +168,7 @@ export class FinderFacadeService {
 
     let updatedSearchAttempt = <ISearchAttempt>{        
       ...existingSearchAttempt,
-      searchedPlanet : {...planetChange.newPlanet}, 
+      searchedPlanet : planetChange.newPlanet.name!='Select' ? {...planetChange.newPlanet} : null, 
       vehicleUsed : null        
     }
     searchMap.set(changedWidgetId, updatedSearchAttempt);

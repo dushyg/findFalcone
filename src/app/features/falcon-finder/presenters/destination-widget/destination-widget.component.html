@@ -1,7 +1,7 @@
 <div>      
     <app-typeahead [sourceArray]="planetList"
                    [resetTypeAhead$]="resetTypeAhead$"
-                (itemSelected)="planetSelected($event.name)">        
+                (itemSelected)="planetSelected($event)">        
     </app-typeahead>
     <br>
     <app-vehicle-list *ngIf="lastSelectedPlanet!='Select'"        

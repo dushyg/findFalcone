@@ -61,15 +61,16 @@ export class Typeahead implements OnInit, OnDestroy {
         });
 
         if(planetName==='Select') {
-            selectedPlanet = <IPlanet>{ name : 'Select'};
+            selectedPlanet = <IPlanet>{ name : 'Select', distance : 0};
+            this.lastSelection = "";
+            this.inputTextControl.setValue("", {emitEvent : false});
         }
+        else {
+            this.lastSelection = selectedPlanet.name;
+            this.inputTextControl.setValue(this.lastSelection);
+        }      
 
-        this.lastSelection = selectedPlanet.name;
-
-        this.itemSelected.emit(selectedPlanet);
-        
-        this.inputTextControl.setValue(this.lastSelection);
-       
+        this.itemSelected.emit(selectedPlanet);                           
     }
 
     public showResultsList() {
