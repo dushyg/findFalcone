@@ -105,8 +105,7 @@ export class FinderFacadeService {
       this.planetService.getAllPlanets(),
       this.finderService.getFalconFinderApiToken()
     )
-    .subscribe( response => {
-      this.setLoadingFlag(false);
+    .subscribe( response => {      
         this.finderApiToken = response[2].token;
         const vehicleList : IVehicle[] = response[0];
         const planetList : IPlanet[] = response[1];
@@ -117,7 +116,13 @@ export class FinderFacadeService {
             vehicleList,
             searchMap : this.getInitializedSearchMap(planetList, vehicleList),
             availablePlanetListMap : this.getMapWithAllPlanets(planetList),
-            availableVehicleListMap : this.getMapWithAllVehicles(vehicleList)            
+            availableVehicleListMap : this.getMapWithAllVehicles(vehicleList),
+            errorMsg : "",
+            isLoading : false,
+            isReadyToSearch : false,
+            planetFoundOn : null,
+            lastUpdatedWidgetId : null,
+            totalTimeTaken : 0            
         });          
     },
       (error) => {
