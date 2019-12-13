@@ -17,8 +17,7 @@ export class Typeahead implements OnInit, OnDestroy {
 
     public filteredSourceArray : IPlanet[];
     public inputTextControl =  new FormControl('');
-    public doShowResults = false;
-    private selectionMade = false;
+    public doShowResults = false;    
     private lastSelection : string= "";
     private isComponentActive = true;
 
@@ -37,13 +36,10 @@ export class Typeahead implements OnInit, OnDestroy {
     private reset() {
         this.filteredSourceArray = this.sourceArray;
         this.lastSelection = "";
+        this.inputTextControl.setValue("", {emitEvent : false});
     }
 
-    private performSearch = (value) => {
-            
-        if(this.selectionMade) {
-            return;
-        }
+    private performSearch = (value) => {                    
 
         let trimmedValue = value.trim().toLowerCase();
         if(!trimmedValue) {
@@ -71,14 +67,13 @@ export class Typeahead implements OnInit, OnDestroy {
         this.lastSelection = selectedPlanet.name;
 
         this.itemSelected.emit(selectedPlanet);
-        this.selectionMade = true;
+        
         this.inputTextControl.setValue(this.lastSelection);
        
     }
 
     public showResultsList() {
-
-        this.selectionMade = false;
+        
         this.doShowResults = true;
         this.performSearch(this.inputTextControl.value);
     }    
@@ -91,18 +86,14 @@ export class Typeahead implements OnInit, OnDestroy {
     }   
 
     private hideResults = () =>{
-        this.doShowResults = false;
-
-        if(this.selectionMade) {
-            return;
-        }
+        this.doShowResults = false;        
 
         let currentText = this.inputTextControl.value;
         if(currentText === this.lastSelection) {
             return;
         }
-        this.selectionMade = true;
-        this.inputTextControl.setValue(this.lastSelection);
+        
+        this.inputTextControl.setValue(this.lastSelection), {emitEvent : false};
     }
 
     ngOnDestroy(): void {

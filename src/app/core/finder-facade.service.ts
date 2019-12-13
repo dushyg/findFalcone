@@ -211,11 +211,7 @@ export class FinderFacadeService {
     });
 
     this.widgetInputChangedEvent$.next();
-  }  
-  
-  private updatePlanetFoundOn(planetFoundOn : string) {
-    this.updateState({...this._state, planetFoundOn});
-  }     
+  }         
 
   private widgetChangesSubscription = this.widgetInputChangedEvent$.pipe(
     withLatestFrom(this.searchAttemptMap$, this.availablePlanetListUpdated$, this.availableVehicleListUpdated$, this.planetList$, this.vehicleList$, this.lastUpdatedWidgetId$)    
