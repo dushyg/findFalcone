@@ -291,8 +291,16 @@ export class FinderFacadeService {
     const usedPlanets = new Set<string>();
     const updatedPlanetsMap = new Map<string, IPlanet[]>();
     widgetIdToPlanetListMap.forEach((value: IPlanet[], key: string) => {
+        const searchAttempt : ISearchAttempt = searchMap.get(key);
+        if(!searchAttempt)
+        {
+          return;
+        }
+        const planet : IPlanet = searchAttempt.searchedPlanet;   
+        if(!planet) {
+          return;
+        }     
         
-        const planet : IPlanet = searchMap.get(key).searchedPlanet;        
         const widgetId = +key;
         if(widgetId < lastUpdatedWidgetId) {
 
@@ -319,8 +327,9 @@ export class FinderFacadeService {
     const usedVehicleMap = this.getUsedVehicleMap(searchMap); 
 
     // update vehicle list with available vehicle units
-    let updatedVehicleList : IVehicle[] = vehicleList.map(vehicle => {              
-      return <IVehicle>{...vehicle, availNumUnits: usedVehicleMap.get(vehicle.name)};                            
+    let updatedVehicleList : IVehicle[] = vehicleList.map(vehicle => {  
+      const totalNumUnits = vehicle.totalNumUnits;            
+      return <IVehicle>{...vehicle, availNumUnits: totalNumUnits - (usedVehicleMap.get(vehicle.name) || vehicle.totalNumUnits)};                            
     });            
     
     return this.getWidgetIdToUpdatedVehiclesMap(widgetIdToVehiclesMap, lastUpdatedWidgetId, updatedVehicleList);
@@ -340,7 +349,7 @@ export class FinderFacadeService {
             usedVehicleMap.set(vehicle.name, count++);
           }
           else {
-            usedVehicleMap.set(vehicle.name, 1);
+            usedVehicleMap.set(vehicle.name, 0);
           }
         }
       }
