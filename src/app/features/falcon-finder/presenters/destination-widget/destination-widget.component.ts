@@ -29,7 +29,7 @@ export class DestinationWidgetComponent implements OnInit, OnDestroy {
   private static createdWidgetCount : number = 1;
   public destinationDistance : number = 0 ;  
   public widgetId : number; 
-  public lastSelectedPlanet : string ;
+  public lastSelectedPlanet : string = "Select";
   
   private resetTypeAheadSubject = new Subject<void>();
   public resetTypeAhead$ : Observable<void> = this.resetTypeAheadSubject.asObservable();
