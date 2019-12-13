@@ -228,7 +228,7 @@ export class FinderFacadeService {
 
     // update the cloned search map with vehicle list to be shown for each widget
     const updatedWidgetIdToAvailableVehiclesMap : Map<string, IVehicle[]> = 
-      this.updateWidgetIdToAvailableVehicleMap(updatedSearchMapAfterWidgetResets, widgetIdToVehicleListMap, lastUpdatedWidgetId, vehicleList);    
+      this.updateWidgetIdToAvailableVehicleMap(updatedSearchMapAfterWidgetResets, widgetIdToVehicleListMap, vehicleList, lastUpdatedWidgetId);    
     
     // calculate the total time taken to search planets with vehicles selected
     const totalTimeTakenForSearch : number = this.getTotalTimeTakenForSearch(updatedSearchMapAfterWidgetResets);
