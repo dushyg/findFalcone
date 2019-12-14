@@ -69,7 +69,7 @@ export class FinderFacadeService {
   private maxCountPlanetsToBeSearched$ = this.store$.pipe( map(state => state.maxSearchAttemptAllowed), distinctUntilChanged());
   private widgetInputChangedEvent$ = new Subject<void>();        
 
-  private isLoading$ = this.store$.pipe(map(state => state.isLoading), distinctUntilChanged());  
+  public isLoading$ = this.store$.pipe(map(state => state.isLoading), distinctUntilChanged());  
 
   public getCountOfWidgetsDisplayed() {
     return this._state.maxSearchAttemptAllowed;

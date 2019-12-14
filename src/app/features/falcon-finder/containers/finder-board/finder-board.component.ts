@@ -16,7 +16,7 @@ import VehicleChange from 'src/app/core/models/vehicleChange';
 })
 export class FinderBoardComponent implements OnInit, OnDestroy { 
     
-  constructor(private finderFacadeService : FinderFacadeService,
+  constructor(public finderFacadeService : FinderFacadeService,
               private router : Router) {
     
    }

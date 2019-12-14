@@ -1,5 +1,19 @@
-<h2> Finding Falcone! </h2>
-<span class='float-left'>
-    <a (click)='reset()' class='hyperlink'>Reset</a> &nbsp;&nbsp;|&nbsp;&nbsp;
-    <a href='https://www.geektrust.in' target="_blank">GeekTrust</a>
-</span>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container">
+        <span class="mx-auto" style="width: 240px;"><a class="navbar-brand" href="/finderboard"><h2> Finding Falcone! </h2></a></span>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>    
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto">
+                <li>
+                    <button class="btn btn-sm btn-link border-right border-dark" type="button" (click)='reset()'>Reset</button>
+                </li>
+                <li class="nav-item">
+                <!-- <button class="btn btn-sm btn-link"  type="button" href='https://www.geektrust.in' target="_blank">Reset</button> -->
+                <a class="btn btn-sm btn-link" href='https://www.geektrust.in' target="_blank">GeekTrust</a>
+                </li>              
+            </ul>
+        </div>  
+    </div>
+</nav>    
