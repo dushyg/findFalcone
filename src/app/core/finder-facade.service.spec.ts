@@ -1,4 +1,4 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed, fakeAsync, flush } from '@angular/core/testing';
 
 import { FinderFacadeService } from './finder-facade.service';
 import { PlanetsService } from './planets.service';
@@ -28,5 +28,30 @@ describe('FinderFacadeService', () => {
     const service: FinderFacadeService = TestBed.get(FinderFacadeService);
     expect(service).toBeTruthy();
   });
-  
+
+  it('should setup dashboardVm$ to return expected initial values', () => {
+
+    const service: FinderFacadeService = TestBed.get(FinderFacadeService);
+    service.dashboardVm$.subscribe( (vm) => {
+       expect(vm.error).toEqual("");
+       expect(vm.isLoading).toBeFalsy();
+       expect(vm.isReadyForSearch).toBeFalsy();
+       expect(vm.maxCountPlanetsToBeSearched).toEqual(service.getCountOfWidgetsDisplayed());
+       expect(vm.totalTimeTaken).toEqual(0);
+    });
+
+  });
+
+  it('should setup dashboardVm$ to return expected initial values - async', fakeAsync( () => {
+
+    const service: FinderFacadeService = TestBed.get(FinderFacadeService);
+    service.dashboardVm$.subscribe( (vm) => {
+       expect(vm.error).toEqual("");
+       expect(vm.isLoading).toBeFalsy();
+       expect(vm.isReadyForSearch).toBeFalsy();
+       expect(vm.maxCountPlanetsToBeSearched).toEqual(service.getCountOfWidgetsDisplayed());
+       expect(vm.totalTimeTaken).toEqual(0);
+    });
+    flush();
+  }));
 });
