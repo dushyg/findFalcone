@@ -118,7 +118,7 @@ export class FinderFacadeService {
         this.updateState({...this._state,
             planetList,
             vehicleList,
-            searchMap : this.getInitializedSearchMap(planetList, vehicleList),
+            searchMap : this.getInitializedSearchMap(),
             availablePlanetListMap : this.getMapWithAllPlanets(planetList),
             availableVehicleListMap : this.getMapWithAllVehicles(vehicleList),
             errorMsg : "",
@@ -136,7 +136,7 @@ export class FinderFacadeService {
     );
   }       
      
-  private getInitializedSearchMap(planetList, vehicleList) : Map<string, ISearchAttempt> {
+  private getInitializedSearchMap() : Map<string, ISearchAttempt> {
     const searchMap = new Map<string, ISearchAttempt>();
 
     for(let index = 1; index < this.MAX_SEARCH_ATTEMPTS_ALLOWED+1; index++) {
