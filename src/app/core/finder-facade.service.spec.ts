@@ -26,12 +26,14 @@ describe('FinderFacadeService', () => {
 
   it('should be created', () => {
     const service: FinderFacadeService = TestBed.get(FinderFacadeService);
+    
     expect(service).toBeTruthy();
   });
 
   it('should setup dashboardVm$ to return expected initial values', () => {
 
     const service: FinderFacadeService = TestBed.get(FinderFacadeService);
+    
     service.dashboardVm$.subscribe( (vm) => {
        expect(vm.error).toEqual("");
        expect(vm.isLoading).toBeFalsy();
@@ -45,6 +47,7 @@ describe('FinderFacadeService', () => {
   it('should setup dashboardVm$ to return expected initial values - async', fakeAsync( () => {
 
     const service: FinderFacadeService = TestBed.get(FinderFacadeService);
+    
     service.dashboardVm$.subscribe( (vm) => {
        expect(vm.error).toEqual("");
        expect(vm.isLoading).toBeFalsy();
@@ -54,4 +57,30 @@ describe('FinderFacadeService', () => {
     });
     flush();
   }));
+
+  it('should set isLoading to true when setLoadingFlag is called with true', () => {
+
+    const service : FinderFacadeService = TestBed.get(FinderFacadeService);
+
+    service["setLoadingFlag"](true);
+
+    service.isLoading$.subscribe( (isLoading) => {
+
+      expect(isLoading).toBeTruthy();
+
+    });
+  });
+
+  it('should set isLoading to false when setLoadingFlag is called with false', () => {
+
+    const service : FinderFacadeService = TestBed.get(FinderFacadeService);
+
+    service["setLoadingFlag"](false);
+
+    service.isLoading$.subscribe( (isLoading) => {
+
+      expect(isLoading).toBeFalsy();
+      
+    });
+  });
 });
