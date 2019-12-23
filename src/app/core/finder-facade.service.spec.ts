@@ -1,4 +1,4 @@
-import { fakeAsync, flush, tick } from '@angular/core/testing';
+import { fakeAsync, tick } from '@angular/core/testing';
 import { of, asyncScheduler } from 'rxjs';
 
 import { IPlanet } from './models/planet';
@@ -8,23 +8,28 @@ import VehicleChange from './models/vehicleChange';
 import PlanetChange from './models/planetChange';
 import { IFalconAppState } from './models/falconApp.state';
 import { ISearchAttempt } from './models/searchAttempt';
+import { createSpyObj } from './utitlity';
 
 // Isolated unit tests
 describe('FinderFacadeService', () => {
 
-  let planetServiceMock, vehiclesServiceMock, falconFinderServiceMock, routerServiceMock;
+  let planetServiceMock , vehiclesServiceMock , falconFinderServiceMock , routerServiceMock ;
   let planetListToBeReturned : IPlanet[],  vehicleListToBeReturned : IVehicle[];
   const apiTokenToBeReturned : string = "plmVHX"; 
   
   beforeEach(() => {
     
-    planetServiceMock = jasmine.createSpyObj(['getAllPlanets']);
+    /*planetServiceMock = jasmine.createSpyObj(['getAllPlanets']);
 
     vehiclesServiceMock = jasmine.createSpyObj(['getAllVehicles']);
 
     falconFinderServiceMock = jasmine.createSpyObj(['getFalconFinderApiToken', 'findFalcon']);
 
-    routerServiceMock = jasmine.createSpyObj(['navigate']);
+    routerServiceMock = jasmine.createSpyObj(['navigate']);*/
+    planetServiceMock = createSpyObj(['getAllPlanets']);     
+    vehiclesServiceMock = createSpyObj(['getAllVehicles']);
+    falconFinderServiceMock = createSpyObj(['getFalconFinderApiToken', 'findFalcon']);
+    routerServiceMock = createSpyObj(['navigate']);
     
     planetListToBeReturned  = [
       {name : 'Donlon', distance: 100, includedInSearch : false},
@@ -100,9 +105,12 @@ describe('FinderFacadeService', () => {
       //const service : FinderFacadeService = TestBed.get(FinderFacadeService);
       const service: FinderFacadeService = new FinderFacadeService(planetServiceMock, vehiclesServiceMock, falconFinderServiceMock, routerServiceMock);
       
-      planetServiceMock.getAllPlanets.and.returnValue(of(planetListToBeReturned, asyncScheduler));
-      vehiclesServiceMock.getAllVehicles.and.returnValue(of(vehicleListToBeReturned, asyncScheduler));
-      falconFinderServiceMock.getFalconFinderApiToken.and.returnValue(of(apiTokenToBeReturned, asyncScheduler));
+      // planetServiceMock.getAllPlanets.and.returnValue(of(planetListToBeReturned, asyncScheduler));
+      // vehiclesServiceMock.getAllVehicles.and.returnValue(of(vehicleListToBeReturned, asyncScheduler));
+      // falconFinderServiceMock.getFalconFinderApiToken.and.returnValue(of(apiTokenToBeReturned, asyncScheduler));
+      planetServiceMock.getAllPlanets.mockReturnValue(of(planetListToBeReturned, asyncScheduler));
+      vehiclesServiceMock.getAllVehicles.mockReturnValue(of(vehicleListToBeReturned, asyncScheduler));
+      falconFinderServiceMock.getFalconFinderApiToken.mockReturnValue(of(apiTokenToBeReturned, asyncScheduler));
   
       service.initializeAppData();
       
@@ -163,9 +171,9 @@ describe('FinderFacadeService', () => {
         "lastUpdatedWidgetId": null
       };
 
-      planetServiceMock.getAllPlanets.and.returnValue(of(planetListToBeReturned, asyncScheduler));
-      vehiclesServiceMock.getAllVehicles.and.returnValue(of(vehicleListToBeReturned, asyncScheduler));
-      falconFinderServiceMock.getFalconFinderApiToken.and.returnValue(of(apiTokenToBeReturned, asyncScheduler));
+      planetServiceMock.getAllPlanets.mockReturnValue(of(planetListToBeReturned, asyncScheduler));
+      vehiclesServiceMock.getAllVehicles.mockReturnValue(of(vehicleListToBeReturned, asyncScheduler));
+      falconFinderServiceMock.getFalconFinderApiToken.mockReturnValue(of(apiTokenToBeReturned, asyncScheduler));
     });
 
     it('should set expected state when a planet is set for the first time', fakeAsync(()=>{
@@ -216,7 +224,8 @@ describe('FinderFacadeService', () => {
       service.vehicleChanged(new VehicleChange(1, null, <IVehicle>{name: 'Space pod', availNumUnits : 2, maxDistance : 200 , speed : 2, totalNumUnits : 2 }));
 
       // assert
-      expect(service['_state']).toEqual(expectedState);
+      //expect(service['_state']).toEqual(expectedState);
+      (<any>expect(service['_state'])).toMatchSnapshot();
             
     }));
   });
