@@ -7,7 +7,7 @@
     "build": "ng build --prod",
     "test-commented": "ng test --code-coverage",
     "test": "jest --coverage",
-    "test:watch" : "jest --watch --coverage",
+    "test:watch" : "jest --coverage --watch",
     "lint": "ng lint",
     "e2e": "ng e2e"
   },

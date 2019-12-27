@@ -1,4 +1,5 @@
 
+
 import { fakeAsync, tick } from '@angular/core/testing';
 import { of, asyncScheduler } from 'rxjs';
 
@@ -10,6 +11,7 @@ import PlanetChange from './models/planetChange';
 import { IFalconAppState } from './models/falconApp.state';
 import { ISearchAttempt } from './models/searchAttempt';
 import { createSpyObj } from './utitlity';
+import { IFindFalconResponse } from './models/find-falcon-response';
 
 // Isolated unit tests
 describe('FinderFacadeService', () => {
@@ -349,10 +351,711 @@ describe('FinderFacadeService', () => {
       // act      
       service.planetChanged(new PlanetChange(4, null, newPlanet));
       service.vehicleChanged(new VehicleChange(4, null, newVehicle));  
-      debugger;
+      
       // assert
       expect(service['_state']).toEqual(expectedState);
-   }));
+    }));
+
+    
+    it('should reset widgets to the right when 1st widget planet is updated', fakeAsync( () => {
+
+      // arrange
+      const service: FinderFacadeService = new FinderFacadeService(planetServiceMock, vehiclesServiceMock, falconFinderServiceMock, routerServiceMock);      
+      service.initializeAppData();
+      tick();
+      let newPlanet : IPlanet;   
+      let newVehicle : IVehicle;      
+      
+      let availablePlanetListMapForLast3Widgets = [      
+        {name : 'Enchai', distance: 200, includedInSearch : false},
+        {name : 'Jebing', distance: 300, includedInSearch : false},
+        {name : 'Sapir', distance: 400, includedInSearch : false}
+      ];
+      expectedState.availablePlanetListMap.set('1', [
+        {name : 'Donlon', distance: 100, includedInSearch : false},
+        {name : 'Enchai', distance: 200, includedInSearch : false},
+        {name : 'Jebing', distance: 300, includedInSearch : false},
+        {name : 'Sapir', distance: 400, includedInSearch : false}
+      ]);
+      expectedState.availablePlanetListMap.set('2', availablePlanetListMapForLast3Widgets);
+      expectedState.availablePlanetListMap.set('3', availablePlanetListMapForLast3Widgets);
+      expectedState.availablePlanetListMap.set('4', availablePlanetListMapForLast3Widgets);
+
+      expectedState.lastUpdatedWidgetId = 1;
+      expectedState.totalTimeTaken = 0;
+      expectedState.isReadyToSearch = false;
+      
+      const availableVehicleList = [
+        {name: 'Space pod', availNumUnits : 2, maxDistance : 200 , speed : 2, totalNumUnits : 2 },
+        {name: 'Space rocket', availNumUnits : 1, maxDistance : 300 , speed : 4, totalNumUnits : 1 },
+        {name: 'Space shuttle', availNumUnits : 1, maxDistance : 400 , speed : 5, totalNumUnits : 1 },
+        {name: 'Space ship', availNumUnits : 2, maxDistance : 600 , speed : 10, totalNumUnits : 2 },
+      ];
+
+      expectedState.availableVehicleListMap.set('1', availableVehicleList);
+      expectedState.availableVehicleListMap.set('2', availableVehicleList);
+      expectedState.availableVehicleListMap.set('3', availableVehicleList);
+      expectedState.availableVehicleListMap.set('4',  availableVehicleList);
+
+      //set first widet
+      newPlanet = <IPlanet>{name : 'Donlon', distance: 100, includedInSearch : false};
+      newVehicle = <IVehicle>{name: 'Space pod', availNumUnits : 2, maxDistance : 200 , speed : 2, totalNumUnits : 2 };    
+      service.planetChanged(new PlanetChange(1, null, newPlanet));
+      service.vehicleChanged(new VehicleChange(1, null, <IVehicle>{name: 'Space pod', availNumUnits : 2, maxDistance : 200 , speed : 2, totalNumUnits : 2 }));
+      
+      //set 2nd widget
+      newPlanet = <IPlanet>{name : 'Enchai', distance: 200, includedInSearch : false};
+      newVehicle = <IVehicle>{name: 'Space pod', availNumUnits : 1, maxDistance : 200 , speed : 2, totalNumUnits : 2 };    
+      service.planetChanged(new PlanetChange(2, null, newPlanet));
+      service.vehicleChanged(new VehicleChange(2, null, newVehicle));
+
+      //set 3rd widget
+      newPlanet = <IPlanet>{name : 'Jebing', distance: 300, includedInSearch : false};
+      newVehicle = <IVehicle>{name: 'Space rocket', availNumUnits : 1, maxDistance : 300 , speed : 4, totalNumUnits : 1 };    
+      service.planetChanged(new PlanetChange(3, null, newPlanet));
+      service.vehicleChanged(new VehicleChange(3, null, newVehicle));
+      
+      //set 4th widget
+      newPlanet = <IPlanet>{name : 'Sapir', distance: 400, includedInSearch : false};
+      newVehicle = <IVehicle>{name: 'Space shuttle', availNumUnits : 1, maxDistance : 400 , speed : 5, totalNumUnits : 1 };    
+      service.planetChanged(new PlanetChange(4, null, newPlanet));
+      service.vehicleChanged(new VehicleChange(4, null, newVehicle));   
+
+      // act      
+      // update planet in first widget
+      newPlanet = <IPlanet>{name : 'Donlon', distance: 100, includedInSearch : false};    
+      expectedState.searchMap.set('1', <ISearchAttempt>{searchedPlanet: newPlanet, vehicleUsed: null});
+      expectedState.searchMap.set('2', <ISearchAttempt>{searchedPlanet: null, vehicleUsed: null});
+      expectedState.searchMap.set('3',<ISearchAttempt>{searchedPlanet: null, vehicleUsed: null});
+      expectedState.searchMap.set('4', <ISearchAttempt>{searchedPlanet: null, vehicleUsed: null});
+      service.planetChanged(new PlanetChange(1, null, newPlanet));
+      
+      // assert
+      expect(service['_state']).toEqual(expectedState);
+    }));
+
+    it('should reset widgets to the right when 1st widget vehicle is updated', fakeAsync( () => {
+
+      // arrange
+      const service: FinderFacadeService = new FinderFacadeService(planetServiceMock, vehiclesServiceMock, falconFinderServiceMock, routerServiceMock);      
+      service.initializeAppData();
+      tick();
+      let newPlanet : IPlanet;   
+      let newVehicle : IVehicle;      
+      
+      let availablePlanetListMapForLast3Widgets = [      
+        {name : 'Enchai', distance: 200, includedInSearch : false},
+        {name : 'Jebing', distance: 300, includedInSearch : false},
+        {name : 'Sapir', distance: 400, includedInSearch : false}
+      ];
+      expectedState.availablePlanetListMap.set('1', [
+        {name : 'Donlon', distance: 100, includedInSearch : false},
+        {name : 'Enchai', distance: 200, includedInSearch : false},
+        {name : 'Jebing', distance: 300, includedInSearch : false},
+        {name : 'Sapir', distance: 400, includedInSearch : false}
+      ]);
+    
+      expectedState.availablePlanetListMap.set('2', availablePlanetListMapForLast3Widgets);
+      expectedState.availablePlanetListMap.set('3', availablePlanetListMapForLast3Widgets);
+      expectedState.availablePlanetListMap.set('4', availablePlanetListMapForLast3Widgets);
+
+      expectedState.lastUpdatedWidgetId = 1;
+      expectedState.totalTimeTaken = 25;
+      expectedState.isReadyToSearch = false;
+      
+      const availableVehicleList = [
+        {name: 'Space pod', availNumUnits : 2, maxDistance : 200 , speed : 2, totalNumUnits : 2 },
+        {name: 'Space rocket', availNumUnits : 0, maxDistance : 300 , speed : 4, totalNumUnits : 1 },
+        {name: 'Space shuttle', availNumUnits : 1, maxDistance : 400 , speed : 5, totalNumUnits : 1 },
+        {name: 'Space ship', availNumUnits : 2, maxDistance : 600 , speed : 10, totalNumUnits : 2 },
+      ];
+      const availableVehicleListForLast3Widgets = [
+        {name: 'Space pod', availNumUnits : 2, maxDistance : 200 , speed : 2, totalNumUnits : 2 },
+        {name: 'Space rocket', availNumUnits : 0, maxDistance : 300 , speed : 4, totalNumUnits : 1 },
+        {name: 'Space shuttle', availNumUnits : 1, maxDistance : 400 , speed : 5, totalNumUnits : 1 },
+        {name: 'Space ship', availNumUnits : 2, maxDistance : 600 , speed : 10, totalNumUnits : 2 },
+      ];
+      expectedState.availableVehicleListMap.set('1', availableVehicleList);
+      expectedState.availableVehicleListMap.set('2', availableVehicleList);
+      expectedState.availableVehicleListMap.set('3', availableVehicleList);
+      expectedState.availableVehicleListMap.set('4',  availableVehicleList);
+
+      //set first widet
+      newPlanet = <IPlanet>{name : 'Donlon', distance: 100, includedInSearch : false};
+      newVehicle = <IVehicle>{name: 'Space pod', availNumUnits : 2, maxDistance : 200 , speed : 2, totalNumUnits : 2 };    
+      service.planetChanged(new PlanetChange(1, null, newPlanet));
+      service.vehicleChanged(new VehicleChange(1, null, <IVehicle>{name: 'Space pod', availNumUnits : 2, maxDistance : 200 , speed : 2, totalNumUnits : 2 }));
+      
+      //set 2nd widget
+      newPlanet = <IPlanet>{name : 'Enchai', distance: 200, includedInSearch : false};
+      newVehicle = <IVehicle>{name: 'Space pod', availNumUnits : 1, maxDistance : 200 , speed : 2, totalNumUnits : 2 };    
+      service.planetChanged(new PlanetChange(2, null, newPlanet));
+      service.vehicleChanged(new VehicleChange(2, null, newVehicle));
+
+      //set 3rd widget
+      newPlanet = <IPlanet>{name : 'Jebing', distance: 300, includedInSearch : false};
+      newVehicle = <IVehicle>{name: 'Space rocket', availNumUnits : 1, maxDistance : 300 , speed : 4, totalNumUnits : 1 };    
+      service.planetChanged(new PlanetChange(3, null, newPlanet));
+      service.vehicleChanged(new VehicleChange(3, null, newVehicle));
+      
+      //set 4th widget
+      newPlanet = <IPlanet>{name : 'Sapir', distance: 400, includedInSearch : false};
+      newVehicle = <IVehicle>{name: 'Space shuttle', availNumUnits : 1, maxDistance : 400 , speed : 5, totalNumUnits : 1 };    
+      service.planetChanged(new PlanetChange(4, null, newPlanet));
+      service.vehicleChanged(new VehicleChange(4, null, newVehicle));   
+
+      // act      
+      // update vehicle in first widget
+      newPlanet = <IPlanet>{name : 'Donlon', distance: 100, includedInSearch : false}; 
+      newVehicle = <IVehicle>{name: 'Space rocket', availNumUnits : 0, maxDistance : 300 , speed : 4, totalNumUnits : 1 };       
+      expectedState.searchMap.set('1', <ISearchAttempt>{searchedPlanet: newPlanet, vehicleUsed: newVehicle});
+      expectedState.searchMap.set('2', <ISearchAttempt>{searchedPlanet: null, vehicleUsed: null});
+      expectedState.searchMap.set('3',<ISearchAttempt>{searchedPlanet: null, vehicleUsed: null});
+      expectedState.searchMap.set('4', <ISearchAttempt>{searchedPlanet: null, vehicleUsed: null});
+      service.vehicleChanged(new VehicleChange(1, null, newVehicle)); 
+      
+      // assert
+      expect(service['_state']).toEqual(expectedState);
+    }));
+
+    it('should reset widgets to the right (but not the 1st and 2nd widget) when 3rd widget planet is updated', fakeAsync( () => {
+
+      // arrange
+      const service: FinderFacadeService = new FinderFacadeService(planetServiceMock, vehiclesServiceMock, falconFinderServiceMock, routerServiceMock);      
+      service.initializeAppData();
+      tick();
+      let newPlanet : IPlanet;   
+      let newVehicle : IVehicle;      
+      
+      expectedState.availablePlanetListMap.set('1', [
+        {name : 'Donlon', distance: 100, includedInSearch : false},
+        {name : 'Enchai', distance: 200, includedInSearch : false},
+        {name : 'Jebing', distance: 300, includedInSearch : false},
+        {name : 'Sapir', distance: 400, includedInSearch : false}
+      ]);
+      expectedState.availablePlanetListMap.set('2', [        
+        {name : 'Enchai', distance: 200, includedInSearch : false},
+        {name : 'Jebing', distance: 300, includedInSearch : false},
+        {name : 'Sapir', distance: 400, includedInSearch : false}
+      ]);
+      expectedState.availablePlanetListMap.set('3', [     
+        {name : 'Jebing', distance: 300, includedInSearch : false},
+        {name : 'Sapir', distance: 400, includedInSearch : false}
+      ]);
+      expectedState.availablePlanetListMap.set('4', [             
+        {name : 'Jebing', distance: 300, includedInSearch : false}
+      ]);
+
+      expectedState.lastUpdatedWidgetId = 3;
+      expectedState.totalTimeTaken = 150;
+      expectedState.isReadyToSearch = false;
+          
+      expectedState.availableVehicleListMap.set('1', [
+        {name: 'Space pod', availNumUnits : 1, maxDistance : 200 , speed : 2, totalNumUnits : 2 },
+        {name: 'Space rocket', availNumUnits : 1, maxDistance : 300 , speed : 4, totalNumUnits : 1 },
+        {name: 'Space shuttle', availNumUnits : 1, maxDistance : 400 , speed : 5, totalNumUnits : 1 },
+        {name: 'Space ship', availNumUnits : 2, maxDistance : 600 , speed : 10, totalNumUnits : 2 },
+      ]);
+      expectedState.availableVehicleListMap.set('2', [
+        {name: 'Space pod', availNumUnits : 0, maxDistance : 200 , speed : 2, totalNumUnits : 2 },
+        {name: 'Space rocket', availNumUnits : 1, maxDistance : 300 , speed : 4, totalNumUnits : 1 },
+        {name: 'Space shuttle', availNumUnits : 1, maxDistance : 400 , speed : 5, totalNumUnits : 1 },
+        {name: 'Space ship', availNumUnits : 2, maxDistance : 600 , speed : 10, totalNumUnits : 2 },
+      ]);
+      expectedState.availableVehicleListMap.set('3', [
+        {name: 'Space pod', availNumUnits : 0, maxDistance : 200 , speed : 2, totalNumUnits : 2 },
+        {name: 'Space rocket', availNumUnits : 1, maxDistance : 300 , speed : 4, totalNumUnits : 1 },
+        {name: 'Space shuttle', availNumUnits : 1, maxDistance : 400 , speed : 5, totalNumUnits : 1 },
+        {name: 'Space ship', availNumUnits : 2, maxDistance : 600 , speed : 10, totalNumUnits : 2 },
+      ]);
+      expectedState.availableVehicleListMap.set('4',  [
+        {name: 'Space pod', availNumUnits : 0, maxDistance : 200 , speed : 2, totalNumUnits : 2 },
+        {name: 'Space rocket', availNumUnits : 1, maxDistance : 300 , speed : 4, totalNumUnits : 1 },
+        {name: 'Space shuttle', availNumUnits : 1, maxDistance : 400 , speed : 5, totalNumUnits : 1 },
+        {name: 'Space ship', availNumUnits : 2, maxDistance : 600 , speed : 10, totalNumUnits : 2 },
+      ]);
+
+      //set first widet
+      newPlanet = <IPlanet>{name : 'Donlon', distance: 100, includedInSearch : false};
+      newVehicle = <IVehicle>{name: 'Space pod', availNumUnits : 2, maxDistance : 200 , speed : 2, totalNumUnits : 2 };
+      expectedState.searchMap.set('1', <ISearchAttempt>{searchedPlanet: newPlanet, vehicleUsed: newVehicle});
+      service.planetChanged(new PlanetChange(1, null, newPlanet));
+      service.vehicleChanged(new VehicleChange(1, null, <IVehicle>{name: 'Space pod', availNumUnits : 2, maxDistance : 200 , speed : 2, totalNumUnits : 2 }));
+      
+      //set 2nd widget
+      newPlanet = <IPlanet>{name : 'Enchai', distance: 200, includedInSearch : false};
+      newVehicle = <IVehicle>{name: 'Space pod', availNumUnits : 1, maxDistance : 200 , speed : 2, totalNumUnits : 2 };
+      expectedState.searchMap.set('2', <ISearchAttempt>{searchedPlanet: newPlanet, vehicleUsed: newVehicle});
+      service.planetChanged(new PlanetChange(2, null, newPlanet));
+      service.vehicleChanged(new VehicleChange(2, null, newVehicle));
+
+      //set 3rd widget
+      newPlanet = <IPlanet>{name : 'Jebing', distance: 300, includedInSearch : false};
+      newVehicle = <IVehicle>{name: 'Space rocket', availNumUnits : 1, maxDistance : 300 , speed : 4, totalNumUnits : 1 };    
+      service.planetChanged(new PlanetChange(3, null, newPlanet));
+      service.vehicleChanged(new VehicleChange(3, null, newVehicle));
+      
+      //set 4th widget
+      newPlanet = <IPlanet>{name : 'Sapir', distance: 400, includedInSearch : false};
+      newVehicle = <IVehicle>{name: 'Space shuttle', availNumUnits : 1, maxDistance : 400 , speed : 5, totalNumUnits : 1 };    
+      service.planetChanged(new PlanetChange(4, null, newPlanet));
+      service.vehicleChanged(new VehicleChange(4, null, newVehicle)); 
+
+      newPlanet = <IPlanet>{name : 'Sapir', distance: 400, includedInSearch : false};
+      expectedState.searchMap.set('3',<ISearchAttempt>{searchedPlanet: newPlanet, vehicleUsed: null});
+      expectedState.searchMap.set('4', <ISearchAttempt>{searchedPlanet: null, vehicleUsed: null});
+
+      // act  
+      // updated planet for 3rd widget    
+      newPlanet = <IPlanet>{name : 'Sapir', distance: 400, includedInSearch : false};
+      service.planetChanged(new PlanetChange(3, null, newPlanet));    
+      
+      // assert
+      expect(service['_state']).toEqual(expectedState);
+    }));
+
+    it('should reset widgets to the right (but not the 1st and 2nd widget) when 3rd widget vehicle is updated', fakeAsync( () => {
+
+      // arrange
+      const service: FinderFacadeService = new FinderFacadeService(planetServiceMock, vehiclesServiceMock, falconFinderServiceMock, routerServiceMock);      
+      service.initializeAppData();
+      tick();
+      let newPlanet : IPlanet;   
+      let newVehicle : IVehicle;      
+      
+      expectedState.availablePlanetListMap.set('1', [
+        {name : 'Donlon', distance: 100, includedInSearch : false},
+        {name : 'Enchai', distance: 200, includedInSearch : false},
+        {name : 'Jebing', distance: 300, includedInSearch : false},
+        {name : 'Sapir', distance: 400, includedInSearch : false}
+      ]);
+      expectedState.availablePlanetListMap.set('2', [        
+        {name : 'Enchai', distance: 200, includedInSearch : false},
+        {name : 'Jebing', distance: 300, includedInSearch : false},
+        {name : 'Sapir', distance: 400, includedInSearch : false}
+      ]);
+      expectedState.availablePlanetListMap.set('3', [     
+        {name : 'Jebing', distance: 300, includedInSearch : false},
+        {name : 'Sapir', distance: 400, includedInSearch : false}
+      ]);
+      expectedState.availablePlanetListMap.set('4', [             
+        {name : 'Sapir', distance: 400, includedInSearch : false}
+      ]);
+
+      expectedState.lastUpdatedWidgetId = 3;
+      expectedState.totalTimeTaken = 210;
+      expectedState.isReadyToSearch = false;
+          
+      expectedState.availableVehicleListMap.set('1', [
+        {name: 'Space pod', availNumUnits : 1, maxDistance : 200 , speed : 2, totalNumUnits : 2 },
+        {name: 'Space rocket', availNumUnits : 1, maxDistance : 300 , speed : 4, totalNumUnits : 1 },
+        {name: 'Space shuttle', availNumUnits : 1, maxDistance : 400 , speed : 5, totalNumUnits : 1 },
+        {name: 'Space ship', availNumUnits : 2, maxDistance : 600 , speed : 10, totalNumUnits : 2 },
+      ]);
+      expectedState.availableVehicleListMap.set('2', [
+        {name: 'Space pod', availNumUnits : 0, maxDistance : 200 , speed : 2, totalNumUnits : 2 },
+        {name: 'Space rocket', availNumUnits : 1, maxDistance : 300 , speed : 4, totalNumUnits : 1 },
+        {name: 'Space shuttle', availNumUnits : 1, maxDistance : 400 , speed : 5, totalNumUnits : 1 },
+        {name: 'Space ship', availNumUnits : 2, maxDistance : 600 , speed : 10, totalNumUnits : 2 },
+      ]);
+      expectedState.availableVehicleListMap.set('3', [
+        {name: 'Space pod', availNumUnits : 0, maxDistance : 200 , speed : 2, totalNumUnits : 2 },
+        {name: 'Space rocket', availNumUnits : 1, maxDistance : 300 , speed : 4, totalNumUnits : 1 },
+        {name: 'Space shuttle', availNumUnits : 0, maxDistance : 400 , speed : 5, totalNumUnits : 1 },
+        {name: 'Space ship', availNumUnits : 2, maxDistance : 600 , speed : 10, totalNumUnits : 2 },
+      ]);
+      expectedState.availableVehicleListMap.set('4',  [
+        {name: 'Space pod', availNumUnits : 0, maxDistance : 200 , speed : 2, totalNumUnits : 2 },
+        {name: 'Space rocket', availNumUnits : 1, maxDistance : 300 , speed : 4, totalNumUnits : 1 },
+        {name: 'Space shuttle', availNumUnits : 0, maxDistance : 400 , speed : 5, totalNumUnits : 1 },
+        {name: 'Space ship', availNumUnits : 2, maxDistance : 600 , speed : 10, totalNumUnits : 2 },
+      ]);
+
+      //set first widet
+      newPlanet = <IPlanet>{name : 'Donlon', distance: 100, includedInSearch : false};
+      newVehicle = <IVehicle>{name: 'Space pod', availNumUnits : 2, maxDistance : 200 , speed : 2, totalNumUnits : 2 };
+      expectedState.searchMap.set('1', <ISearchAttempt>{searchedPlanet: newPlanet, vehicleUsed: newVehicle});
+      service.planetChanged(new PlanetChange(1, null, newPlanet));
+      service.vehicleChanged(new VehicleChange(1, null, <IVehicle>{name: 'Space pod', availNumUnits : 2, maxDistance : 200 , speed : 2, totalNumUnits : 2 }));
+      
+      //set 2nd widget
+      newPlanet = <IPlanet>{name : 'Enchai', distance: 200, includedInSearch : false};
+      newVehicle = <IVehicle>{name: 'Space pod', availNumUnits : 1, maxDistance : 200 , speed : 2, totalNumUnits : 2 };
+      expectedState.searchMap.set('2', <ISearchAttempt>{searchedPlanet: newPlanet, vehicleUsed: newVehicle});
+      service.planetChanged(new PlanetChange(2, null, newPlanet));
+      service.vehicleChanged(new VehicleChange(2, null, newVehicle));
+
+      //set 3rd widget
+      newPlanet = <IPlanet>{name : 'Jebing', distance: 300, includedInSearch : false};
+      newVehicle = <IVehicle>{name: 'Space rocket', availNumUnits : 1, maxDistance : 300 , speed : 4, totalNumUnits : 1 };    
+      service.planetChanged(new PlanetChange(3, null, newPlanet));
+      service.vehicleChanged(new VehicleChange(3, null, newVehicle));
+      
+      //set 4th widget
+      newPlanet = <IPlanet>{name : 'Sapir', distance: 400, includedInSearch : false};
+      newVehicle = <IVehicle>{name: 'Space shuttle', availNumUnits : 1, maxDistance : 400 , speed : 5, totalNumUnits : 1 };    
+      service.planetChanged(new PlanetChange(4, null, newPlanet));
+      service.vehicleChanged(new VehicleChange(4, null, newVehicle)); 
+
+      newPlanet = <IPlanet>{name : 'Jebing', distance: 300, includedInSearch : false};
+      newVehicle = {name: 'Space shuttle', availNumUnits : 1, maxDistance : 400 , speed : 5, totalNumUnits : 1 };
+      expectedState.searchMap.set('3',<ISearchAttempt>{searchedPlanet: newPlanet, vehicleUsed: newVehicle});
+      expectedState.searchMap.set('4', <ISearchAttempt>{searchedPlanet: null, vehicleUsed: null});
+
+      // act  
+      // updated planet for 3rd widget    
+      
+      service.vehicleChanged(new VehicleChange(3, null, newVehicle)); 
+      
+      // assert
+      expect(service['_state']).toEqual(expectedState);
+    }));
+
+  });
+
+  describe('FindFalcone api Tests', () => {
+
+    let expectedState : IFalconAppState ;    
+    let searchAttemptMap : Map<string, ISearchAttempt>;
+    let availablePlanetListMap : Map<string, IPlanet[]>;
+    let availableVehicleListMap : Map<string, IVehicle[]>;
+
+    beforeEach(() => {
+      
+      searchAttemptMap = new Map<string, ISearchAttempt>([['1', <ISearchAttempt>{searchedPlanet: null, vehicleUsed : null}],['2', <ISearchAttempt>{searchedPlanet: null, vehicleUsed : null}],['3', <ISearchAttempt>{searchedPlanet: null, vehicleUsed : null}],['4', <ISearchAttempt>{searchedPlanet: null, vehicleUsed : null}]]);
+
+      availablePlanetListMap = new Map<string, IPlanet[]>([['1', planetListToBeReturned], ['2', planetListToBeReturned], ['3', planetListToBeReturned], ['4', planetListToBeReturned]]);
+
+      availableVehicleListMap = new Map<string, IVehicle[]>([['1', vehicleListToBeReturned], ['2', vehicleListToBeReturned], ['3', vehicleListToBeReturned], ['4', vehicleListToBeReturned]]);
+
+      expectedState = {
+        "errorMsg": "",
+        "isLoading": false,
+        "maxSearchAttemptAllowed": 4,
+        "planetList": planetListToBeReturned,
+        "searchMap": searchAttemptMap,
+        "availablePlanetListMap": availablePlanetListMap,
+        "availableVehicleListMap": availableVehicleListMap,
+        "totalTimeTaken": 0,
+        "vehicleList": vehicleListToBeReturned,
+        "planetFoundOn": null,
+        "isReadyToSearch": false,
+        "lastUpdatedWidgetId": null
+      };
+
+      planetServiceMock.getAllPlanets.mockReturnValue(of(planetListToBeReturned, asyncScheduler));
+      vehiclesServiceMock.getAllVehicles.mockReturnValue(of(vehicleListToBeReturned, asyncScheduler));
+      falconFinderServiceMock.getFalconFinderApiToken.mockReturnValue(of(apiTokenToBeReturned, asyncScheduler));
+      
+    });
+
+    it('should set in state, name of planet falcon was found on, when falcon is found', fakeAsync( () => {
+        const findFalconApiResponse = <IFindFalconResponse>{
+          error : "",
+          planetName : "Donlon",
+          status : "success"
+        };
+
+        falconFinderServiceMock.findFalcon.mockReturnValue(of(findFalconApiResponse, asyncScheduler));
+
+        // arrange
+        const service: FinderFacadeService = new FinderFacadeService(planetServiceMock, vehiclesServiceMock, falconFinderServiceMock, routerServiceMock);      
+        service.initializeAppData();
+        tick();
+        let newPlanet : IPlanet;   
+        let newVehicle : IVehicle;      
+        
+        expectedState.availablePlanetListMap.set('1', [
+          {name : 'Donlon', distance: 100, includedInSearch : false},
+          {name : 'Enchai', distance: 200, includedInSearch : false},
+          {name : 'Jebing', distance: 300, includedInSearch : false},
+          {name : 'Sapir', distance: 400, includedInSearch : false}
+        ]);
+        expectedState.availablePlanetListMap.set('2', [        
+          {name : 'Enchai', distance: 200, includedInSearch : false},
+          {name : 'Jebing', distance: 300, includedInSearch : false},
+          {name : 'Sapir', distance: 400, includedInSearch : false}
+        ]);
+        expectedState.availablePlanetListMap.set('3', [     
+          {name : 'Jebing', distance: 300, includedInSearch : false},
+          {name : 'Sapir', distance: 400, includedInSearch : false}
+        ]);
+        expectedState.availablePlanetListMap.set('4', [             
+          {name : 'Sapir', distance: 400, includedInSearch : false}
+        ]);
+
+        expectedState.lastUpdatedWidgetId = 4;
+        expectedState.totalTimeTaken = 305;
+        expectedState.isReadyToSearch = true;
+        
+        expectedState.availableVehicleListMap.set('1', [
+          {name: 'Space pod', availNumUnits : 1, maxDistance : 200 , speed : 2, totalNumUnits : 2 },
+          {name: 'Space rocket', availNumUnits : 1, maxDistance : 300 , speed : 4, totalNumUnits : 1 },
+          {name: 'Space shuttle', availNumUnits : 1, maxDistance : 400 , speed : 5, totalNumUnits : 1 },
+          {name: 'Space ship', availNumUnits : 2, maxDistance : 600 , speed : 10, totalNumUnits : 2 },
+        ]);
+        expectedState.availableVehicleListMap.set('2', [
+          {name: 'Space pod', availNumUnits : 0, maxDistance : 200 , speed : 2, totalNumUnits : 2 },
+          {name: 'Space rocket', availNumUnits : 1, maxDistance : 300 , speed : 4, totalNumUnits : 1 },
+          {name: 'Space shuttle', availNumUnits : 1, maxDistance : 400 , speed : 5, totalNumUnits : 1 },
+          {name: 'Space ship', availNumUnits : 2, maxDistance : 600 , speed : 10, totalNumUnits : 2 },
+        ]);
+        expectedState.availableVehicleListMap.set('3', [
+          {name: 'Space pod', availNumUnits : 0, maxDistance : 200 , speed : 2, totalNumUnits : 2 },
+          {name: 'Space rocket', availNumUnits : 0, maxDistance : 300 , speed : 4, totalNumUnits : 1 },
+          {name: 'Space shuttle', availNumUnits : 1, maxDistance : 400 , speed : 5, totalNumUnits : 1 },
+          {name: 'Space ship', availNumUnits : 2, maxDistance : 600 , speed : 10, totalNumUnits : 2 },
+        ]);
+        expectedState.availableVehicleListMap.set('4',  [
+          {name: 'Space pod', availNumUnits : 0, maxDistance : 200 , speed : 2, totalNumUnits : 2 },
+          {name: 'Space rocket', availNumUnits : 0, maxDistance : 300 , speed : 4, totalNumUnits : 1 },
+          {name: 'Space shuttle', availNumUnits : 0, maxDistance : 400 , speed : 5, totalNumUnits : 1 },
+          {name: 'Space ship', availNumUnits : 2, maxDistance : 600 , speed : 10, totalNumUnits : 2 },
+        ]);
+
+        //set first widet
+        newPlanet = <IPlanet>{name : 'Donlon', distance: 100, includedInSearch : false};
+        newVehicle = <IVehicle>{name: 'Space pod', availNumUnits : 2, maxDistance : 200 , speed : 2, totalNumUnits : 2 };
+        expectedState.searchMap.set('1', <ISearchAttempt>{searchedPlanet: newPlanet, vehicleUsed: newVehicle});
+        service.planetChanged(new PlanetChange(1, null, newPlanet));
+        service.vehicleChanged(new VehicleChange(1, null, <IVehicle>{name: 'Space pod', availNumUnits : 2, maxDistance : 200 , speed : 2, totalNumUnits : 2 }));
+        
+        //set 2nd widget
+        newPlanet = <IPlanet>{name : 'Enchai', distance: 200, includedInSearch : false};
+        newVehicle = <IVehicle>{name: 'Space pod', availNumUnits : 1, maxDistance : 200 , speed : 2, totalNumUnits : 2 };
+        expectedState.searchMap.set('2', <ISearchAttempt>{searchedPlanet: newPlanet, vehicleUsed: newVehicle});
+        service.planetChanged(new PlanetChange(2, null, newPlanet));
+        service.vehicleChanged(new VehicleChange(2, null, newVehicle));
+
+        //set 3rd widget
+        newPlanet = <IPlanet>{name : 'Jebing', distance: 300, includedInSearch : false};
+        newVehicle = <IVehicle>{name: 'Space rocket', availNumUnits : 1, maxDistance : 300 , speed : 4, totalNumUnits : 1 };
+        expectedState.searchMap.set('3',<ISearchAttempt>{searchedPlanet: newPlanet, vehicleUsed: newVehicle});
+        service.planetChanged(new PlanetChange(3, null, newPlanet));
+        service.vehicleChanged(new VehicleChange(3, null, newVehicle));
+        
+        //set 4th widget
+        newPlanet = <IPlanet>{name : 'Sapir', distance: 400, includedInSearch : false};
+        newVehicle = <IVehicle>{name: 'Space shuttle', availNumUnits : 1, maxDistance : 400 , speed : 5, totalNumUnits : 1 };
+        expectedState.searchMap.set('4', <ISearchAttempt>{searchedPlanet: newPlanet, vehicleUsed: newVehicle});
+        service.planetChanged(new PlanetChange(4, null, newPlanet));
+        service.vehicleChanged(new VehicleChange(4, null, newVehicle));
+        expectedState.planetFoundOn = "Donlon";
+        // act      
+        service.findFalcon();  
+        tick();
+
+        // assert
+        expect(service['_state']).toEqual(expectedState);
+        service.planetFoundOn$.subscribe(planetFoundOn => {
+          expect(planetFoundOn).toEqual("Donlon");
+        });
+       
+    }));
+
+    it('should set in state, error message for not being able to find falcon, when falcon is not found', fakeAsync( () => {
+      const findFalconApiResponse = <IFindFalconResponse>{
+        error : "",
+        planetName : "",
+        status : "false"
+      };
+
+      falconFinderServiceMock.findFalcon.mockReturnValue(of(findFalconApiResponse, asyncScheduler));
+
+      // arrange
+      const service: FinderFacadeService = new FinderFacadeService(planetServiceMock, vehiclesServiceMock, falconFinderServiceMock, routerServiceMock);      
+      service.initializeAppData();
+      tick();
+      let newPlanet : IPlanet;   
+      let newVehicle : IVehicle;      
+      
+      expectedState.availablePlanetListMap.set('1', [
+        {name : 'Donlon', distance: 100, includedInSearch : false},
+        {name : 'Enchai', distance: 200, includedInSearch : false},
+        {name : 'Jebing', distance: 300, includedInSearch : false},
+        {name : 'Sapir', distance: 400, includedInSearch : false}
+      ]);
+      expectedState.availablePlanetListMap.set('2', [        
+        {name : 'Enchai', distance: 200, includedInSearch : false},
+        {name : 'Jebing', distance: 300, includedInSearch : false},
+        {name : 'Sapir', distance: 400, includedInSearch : false}
+      ]);
+      expectedState.availablePlanetListMap.set('3', [     
+        {name : 'Jebing', distance: 300, includedInSearch : false},
+        {name : 'Sapir', distance: 400, includedInSearch : false}
+      ]);
+      expectedState.availablePlanetListMap.set('4', [             
+        {name : 'Sapir', distance: 400, includedInSearch : false}
+      ]);
+
+      expectedState.lastUpdatedWidgetId = 4;
+      expectedState.totalTimeTaken = 305;
+      expectedState.isReadyToSearch = true;
+      
+      expectedState.availableVehicleListMap.set('1', [
+        {name: 'Space pod', availNumUnits : 1, maxDistance : 200 , speed : 2, totalNumUnits : 2 },
+        {name: 'Space rocket', availNumUnits : 1, maxDistance : 300 , speed : 4, totalNumUnits : 1 },
+        {name: 'Space shuttle', availNumUnits : 1, maxDistance : 400 , speed : 5, totalNumUnits : 1 },
+        {name: 'Space ship', availNumUnits : 2, maxDistance : 600 , speed : 10, totalNumUnits : 2 },
+      ]);
+      expectedState.availableVehicleListMap.set('2', [
+        {name: 'Space pod', availNumUnits : 0, maxDistance : 200 , speed : 2, totalNumUnits : 2 },
+        {name: 'Space rocket', availNumUnits : 1, maxDistance : 300 , speed : 4, totalNumUnits : 1 },
+        {name: 'Space shuttle', availNumUnits : 1, maxDistance : 400 , speed : 5, totalNumUnits : 1 },
+        {name: 'Space ship', availNumUnits : 2, maxDistance : 600 , speed : 10, totalNumUnits : 2 },
+      ]);
+      expectedState.availableVehicleListMap.set('3', [
+        {name: 'Space pod', availNumUnits : 0, maxDistance : 200 , speed : 2, totalNumUnits : 2 },
+        {name: 'Space rocket', availNumUnits : 0, maxDistance : 300 , speed : 4, totalNumUnits : 1 },
+        {name: 'Space shuttle', availNumUnits : 1, maxDistance : 400 , speed : 5, totalNumUnits : 1 },
+        {name: 'Space ship', availNumUnits : 2, maxDistance : 600 , speed : 10, totalNumUnits : 2 },
+      ]);
+      expectedState.availableVehicleListMap.set('4',  [
+        {name: 'Space pod', availNumUnits : 0, maxDistance : 200 , speed : 2, totalNumUnits : 2 },
+        {name: 'Space rocket', availNumUnits : 0, maxDistance : 300 , speed : 4, totalNumUnits : 1 },
+        {name: 'Space shuttle', availNumUnits : 0, maxDistance : 400 , speed : 5, totalNumUnits : 1 },
+        {name: 'Space ship', availNumUnits : 2, maxDistance : 600 , speed : 10, totalNumUnits : 2 },
+      ]);
+
+      //set first widet
+      newPlanet = <IPlanet>{name : 'Donlon', distance: 100, includedInSearch : false};
+      newVehicle = <IVehicle>{name: 'Space pod', availNumUnits : 2, maxDistance : 200 , speed : 2, totalNumUnits : 2 };
+      expectedState.searchMap.set('1', <ISearchAttempt>{searchedPlanet: newPlanet, vehicleUsed: newVehicle});
+      service.planetChanged(new PlanetChange(1, null, newPlanet));
+      service.vehicleChanged(new VehicleChange(1, null, <IVehicle>{name: 'Space pod', availNumUnits : 2, maxDistance : 200 , speed : 2, totalNumUnits : 2 }));
+      
+      //set 2nd widget
+      newPlanet = <IPlanet>{name : 'Enchai', distance: 200, includedInSearch : false};
+      newVehicle = <IVehicle>{name: 'Space pod', availNumUnits : 1, maxDistance : 200 , speed : 2, totalNumUnits : 2 };
+      expectedState.searchMap.set('2', <ISearchAttempt>{searchedPlanet: newPlanet, vehicleUsed: newVehicle});
+      service.planetChanged(new PlanetChange(2, null, newPlanet));
+      service.vehicleChanged(new VehicleChange(2, null, newVehicle));
+
+      //set 3rd widget
+      newPlanet = <IPlanet>{name : 'Jebing', distance: 300, includedInSearch : false};
+      newVehicle = <IVehicle>{name: 'Space rocket', availNumUnits : 1, maxDistance : 300 , speed : 4, totalNumUnits : 1 };
+      expectedState.searchMap.set('3',<ISearchAttempt>{searchedPlanet: newPlanet, vehicleUsed: newVehicle});
+      service.planetChanged(new PlanetChange(3, null, newPlanet));
+      service.vehicleChanged(new VehicleChange(3, null, newVehicle));
+      
+      //set 4th widget
+      newPlanet = <IPlanet>{name : 'Sapir', distance: 400, includedInSearch : false};
+      newVehicle = <IVehicle>{name: 'Space shuttle', availNumUnits : 1, maxDistance : 400 , speed : 5, totalNumUnits : 1 };
+      expectedState.searchMap.set('4', <ISearchAttempt>{searchedPlanet: newPlanet, vehicleUsed: newVehicle});
+      service.planetChanged(new PlanetChange(4, null, newPlanet));
+      service.vehicleChanged(new VehicleChange(4, null, newVehicle));
+      expectedState.planetFoundOn = null;
+      expectedState.errorMsg = "Failure! You were unable to find Falcone. Better luck next time.";
+
+      // act      
+      service.findFalcon();  
+      tick();
+      
+      // assert
+      expect(service['_state']).toEqual(expectedState);
+    }));
+
+    it('should set in state, error message when falcon api returns error message', fakeAsync( () => {
+      const findFalconApiResponse = <IFindFalconResponse>{
+        error : "Invalid Request",
+        planetName : "",
+        status : "false"
+      };
+
+      falconFinderServiceMock.findFalcon.mockReturnValue(of(findFalconApiResponse, asyncScheduler));
+
+      // arrange
+      const service: FinderFacadeService = new FinderFacadeService(planetServiceMock, vehiclesServiceMock, falconFinderServiceMock, routerServiceMock);      
+      service.initializeAppData();
+      tick();
+      let newPlanet : IPlanet;   
+      let newVehicle : IVehicle;      
+      
+      expectedState.availablePlanetListMap.set('1', [
+        {name : 'Donlon', distance: 100, includedInSearch : false},
+        {name : 'Enchai', distance: 200, includedInSearch : false},
+        {name : 'Jebing', distance: 300, includedInSearch : false},
+        {name : 'Sapir', distance: 400, includedInSearch : false}
+      ]);
+      expectedState.availablePlanetListMap.set('2', [        
+        {name : 'Enchai', distance: 200, includedInSearch : false},
+        {name : 'Jebing', distance: 300, includedInSearch : false},
+        {name : 'Sapir', distance: 400, includedInSearch : false}
+      ]);
+      expectedState.availablePlanetListMap.set('3', [     
+        {name : 'Jebing', distance: 300, includedInSearch : false},
+        {name : 'Sapir', distance: 400, includedInSearch : false}
+      ]);
+      expectedState.availablePlanetListMap.set('4', [             
+        {name : 'Sapir', distance: 400, includedInSearch : false}
+      ]);
+
+      expectedState.lastUpdatedWidgetId = 4;
+      expectedState.totalTimeTaken = 305;
+      expectedState.isReadyToSearch = true;
+      
+      expectedState.availableVehicleListMap.set('1', [
+        {name: 'Space pod', availNumUnits : 1, maxDistance : 200 , speed : 2, totalNumUnits : 2 },
+        {name: 'Space rocket', availNumUnits : 1, maxDistance : 300 , speed : 4, totalNumUnits : 1 },
+        {name: 'Space shuttle', availNumUnits : 1, maxDistance : 400 , speed : 5, totalNumUnits : 1 },
+        {name: 'Space ship', availNumUnits : 2, maxDistance : 600 , speed : 10, totalNumUnits : 2 },
+      ]);
+      expectedState.availableVehicleListMap.set('2', [
+        {name: 'Space pod', availNumUnits : 0, maxDistance : 200 , speed : 2, totalNumUnits : 2 },
+        {name: 'Space rocket', availNumUnits : 1, maxDistance : 300 , speed : 4, totalNumUnits : 1 },
+        {name: 'Space shuttle', availNumUnits : 1, maxDistance : 400 , speed : 5, totalNumUnits : 1 },
+        {name: 'Space ship', availNumUnits : 2, maxDistance : 600 , speed : 10, totalNumUnits : 2 },
+      ]);
+      expectedState.availableVehicleListMap.set('3', [
+        {name: 'Space pod', availNumUnits : 0, maxDistance : 200 , speed : 2, totalNumUnits : 2 },
+        {name: 'Space rocket', availNumUnits : 0, maxDistance : 300 , speed : 4, totalNumUnits : 1 },
+        {name: 'Space shuttle', availNumUnits : 1, maxDistance : 400 , speed : 5, totalNumUnits : 1 },
+        {name: 'Space ship', availNumUnits : 2, maxDistance : 600 , speed : 10, totalNumUnits : 2 },
+      ]);
+      expectedState.availableVehicleListMap.set('4',  [
+        {name: 'Space pod', availNumUnits : 0, maxDistance : 200 , speed : 2, totalNumUnits : 2 },
+        {name: 'Space rocket', availNumUnits : 0, maxDistance : 300 , speed : 4, totalNumUnits : 1 },
+        {name: 'Space shuttle', availNumUnits : 0, maxDistance : 400 , speed : 5, totalNumUnits : 1 },
+        {name: 'Space ship', availNumUnits : 2, maxDistance : 600 , speed : 10, totalNumUnits : 2 },
+      ]);
+
+      //set first widet
+      newPlanet = <IPlanet>{name : 'Donlon', distance: 100, includedInSearch : false};
+      newVehicle = <IVehicle>{name: 'Space pod', availNumUnits : 2, maxDistance : 200 , speed : 2, totalNumUnits : 2 };
+      expectedState.searchMap.set('1', <ISearchAttempt>{searchedPlanet: newPlanet, vehicleUsed: newVehicle});
+      service.planetChanged(new PlanetChange(1, null, newPlanet));
+      service.vehicleChanged(new VehicleChange(1, null, <IVehicle>{name: 'Space pod', availNumUnits : 2, maxDistance : 200 , speed : 2, totalNumUnits : 2 }));
+      
+      //set 2nd widget
+      newPlanet = <IPlanet>{name : 'Enchai', distance: 200, includedInSearch : false};
+      newVehicle = <IVehicle>{name: 'Space pod', availNumUnits : 1, maxDistance : 200 , speed : 2, totalNumUnits : 2 };
+      expectedState.searchMap.set('2', <ISearchAttempt>{searchedPlanet: newPlanet, vehicleUsed: newVehicle});
+      service.planetChanged(new PlanetChange(2, null, newPlanet));
+      service.vehicleChanged(new VehicleChange(2, null, newVehicle));
+
+      //set 3rd widget
+      newPlanet = <IPlanet>{name : 'Jebing', distance: 300, includedInSearch : false};
+      newVehicle = <IVehicle>{name: 'Space rocket', availNumUnits : 1, maxDistance : 300 , speed : 4, totalNumUnits : 1 };
+      expectedState.searchMap.set('3',<ISearchAttempt>{searchedPlanet: newPlanet, vehicleUsed: newVehicle});
+      service.planetChanged(new PlanetChange(3, null, newPlanet));
+      service.vehicleChanged(new VehicleChange(3, null, newVehicle));
+      
+      //set 4th widget
+      newPlanet = <IPlanet>{name : 'Sapir', distance: 400, includedInSearch : false};
+      newVehicle = <IVehicle>{name: 'Space shuttle', availNumUnits : 1, maxDistance : 400 , speed : 5, totalNumUnits : 1 };
+      expectedState.searchMap.set('4', <ISearchAttempt>{searchedPlanet: newPlanet, vehicleUsed: newVehicle});
+      service.planetChanged(new PlanetChange(4, null, newPlanet));
+      service.vehicleChanged(new VehicleChange(4, null, newVehicle));
+      expectedState.planetFoundOn = null;
+      expectedState.errorMsg = "Invalid Request";
+
+      // act      
+      service.findFalcon();  
+      tick();
+      
+      // assert
+      expect(service['_state']).toEqual(expectedState);
+    }));
   });
     
 });
