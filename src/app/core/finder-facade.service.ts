@@ -306,13 +306,13 @@ export class FinderFacadeService {
         const widgetId = +key;
         if(widgetId <= lastUpdatedWidgetId) {
 
-          updatedPlanetsMap.set(key, [...value]);  
+          updatedPlanetsMap.set(key, value);  
         }
         else {
           const availablePlanets = planetList.filter( (currentPlanet: IPlanet) => {
             return !usedPlanets.has(currentPlanet.name);
           });   
-          updatedPlanetsMap.set(key, [...availablePlanets]);
+          updatedPlanetsMap.set(key, availablePlanets);
         }
              
         if(planet) {
@@ -375,7 +375,7 @@ export class FinderFacadeService {
         usedVehicleMap.set(key, [...updatedVehicleList]);
       }
       else {
-        usedVehicleMap.set(key, [...value]);
+        usedVehicleMap.set(key, value);
       }
     });
     return usedVehicleMap;

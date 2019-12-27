@@ -1,4 +1,3 @@
-
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`FinderFacadeService Planet and Vehicle Changes Tests should set expected state when a vehicle is set for the first time 1`] = `
@@ -21,7 +20,7 @@ Object {
         "name": "Jebing",
       },
       Object {
-        "distance": 100,
+        "distance": 400,
         "includedInSearch": false,
         "name": "Sapir",
       },
@@ -38,7 +37,7 @@ Object {
         "name": "Jebing",
       },
       Object {
-        "distance": 100,
+        "distance": 400,
         "includedInSearch": false,
         "name": "Sapir",
       },
@@ -55,7 +54,7 @@ Object {
         "name": "Jebing",
       },
       Object {
-        "distance": 100,
+        "distance": 400,
         "includedInSearch": false,
         "name": "Sapir",
       },
@@ -72,7 +71,7 @@ Object {
         "name": "Jebing",
       },
       Object {
-        "distance": 100,
+        "distance": 400,
         "includedInSearch": false,
         "name": "Sapir",
       },
@@ -223,7 +222,7 @@ Object {
       "name": "Jebing",
     },
     Object {
-      "distance": 100,
+      "distance": 400,
       "includedInSearch": false,
       "name": "Sapir",
     },
