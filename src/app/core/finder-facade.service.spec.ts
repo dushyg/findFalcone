@@ -142,6 +142,19 @@ describe('FinderFacadeService', () => {
       
     }));
 
+    
+    it('should expect router.navigate(["/finderboard/reset"]) to be called when resetApp is called', () => {
+      
+      // arrange
+      const service: FinderFacadeService = new FinderFacadeService(planetServiceMock, vehiclesServiceMock, falconFinderServiceMock, routerServiceMock);      
+      
+      // act      
+      service.resetApp();
+      
+      // assert
+      expect(routerServiceMock.navigate.mock.calls.length).toEqual(1);
+      expect(routerServiceMock.navigate.mock.calls[0][0]).toEqual(["/finderboard/reset"]);
+    });
   });
 
   describe('Planet and Vehicle Changes Tests', () => {
@@ -469,12 +482,7 @@ describe('FinderFacadeService', () => {
         {name: 'Space shuttle', availNumUnits : 1, maxDistance : 400 , speed : 5, totalNumUnits : 1 },
         {name: 'Space ship', availNumUnits : 2, maxDistance : 600 , speed : 10, totalNumUnits : 2 },
       ];
-      const availableVehicleListForLast3Widgets = [
-        {name: 'Space pod', availNumUnits : 2, maxDistance : 200 , speed : 2, totalNumUnits : 2 },
-        {name: 'Space rocket', availNumUnits : 0, maxDistance : 300 , speed : 4, totalNumUnits : 1 },
-        {name: 'Space shuttle', availNumUnits : 1, maxDistance : 400 , speed : 5, totalNumUnits : 1 },
-        {name: 'Space ship', availNumUnits : 2, maxDistance : 600 , speed : 10, totalNumUnits : 2 },
-      ];
+     
       expectedState.availableVehicleListMap.set('1', availableVehicleList);
       expectedState.availableVehicleListMap.set('2', availableVehicleList);
       expectedState.availableVehicleListMap.set('3', availableVehicleList);
