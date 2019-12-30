@@ -526,8 +526,7 @@ private getSearchMap(state : IFalconAppState) : Map<string, ISearchAttempt> {
     this.updateState({...this._state, errorMsg});
   }
 
-  private updateState(state : IFalconAppState) {
-    console.log(state);
+  private updateState(state : IFalconAppState) {    
     this.store.next(this._state = state);
   }     
 }

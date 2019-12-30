@@ -1,8 +1,11 @@
-import { TestBed, async } from '@angular/core/testing';
+import { TestBed, async, ComponentFixture, fakeAsync } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
+import { By } from '@angular/platform-browser';
+import { FinderBoardShellComponent } from './features/falcon-finder/containers/finder-board-shell/finder-board-shell.component';
+import { RouterOutlet } from '@angular/router';
 
-xdescribe('AppComponent', () => {
+describe('AppComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
@@ -20,16 +23,16 @@ xdescribe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have as title 'findingFalcon'`, () => {
+  it(`should have as title 'findingFalcone'`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.debugElement.componentInstance;
-    expect(app.title).toEqual('findingFalcon');
+    expect(app.title).toEqual('findingFalcone');
   });
 
-  it('should render title in a h1 tag', () => {
-    const fixture = TestBed.createComponent(AppComponent);
+  it('should contain app-finder-board-shell component', fakeAsync(() => {
+    const fixture : ComponentFixture<AppComponent> = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
-    const compiled = fixture.debugElement.nativeElement;
-    expect(compiled.querySelector('h1').textContent).toContain('Welcome to findingFalcon!');
-  });
+    const appComponentDebugElement = fixture.debugElement;            
+    expect(appComponentDebugElement.query(By.directive(RouterOutlet))).toBeTruthy();        
+  }));
 });
