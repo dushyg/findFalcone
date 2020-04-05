@@ -4,6 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve --prod --watch",
+    "start:dev": "ng serve --watch",
     "build": "ng build --prod",
     "test-commented": "ng test --code-coverage",
     "test": "jest --coverage",

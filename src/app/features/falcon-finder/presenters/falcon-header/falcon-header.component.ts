@@ -1,20 +1,17 @@
-import { Component, OnInit } from '@angular/core';
-import { FinderFacadeService } from 'src/app/core/finder-facade.service';
+import { Component, OnInit } from "@angular/core";
+import { FinderFacadeService } from "src/app/core/finder-facade.service";
 
 @Component({
-  selector: 'app-falcon-header',
-  templateUrl: './falcon-header.component.html',
-  styleUrls: ['./falcon-header.component.css']
+  selector: "app-falcon-header",
+  templateUrl: "./falcon-header.component.html",
+  styleUrls: ["./falcon-header.component.scss"],
 })
 export class FalconHeaderComponent implements OnInit {
+  constructor(private finderFacadeService: FinderFacadeService) {}
 
-  constructor(private finderFacadeService: FinderFacadeService) { }
+  ngOnInit() {}
 
-  ngOnInit() {
-  }
-
-  reset(){
+  reset() {
     this.finderFacadeService.resetApp();
   }
-
 }

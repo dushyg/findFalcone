@@ -1,0 +1,19 @@
+.falconApp {
+  width: 100%;
+  app-falcon-header {
+    height: 60px;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background-color: white;
+  }
+
+  .appFalconBody {
+    height: 85%;
+    margin-top: 70px;
+  }
+
+  app-falcon-footer {
+    height: 40px;
+  }
+}
