@@ -1,15 +1,19 @@
-<div>      
-    <span>Destination {{widgetId}}</span>
-    <app-typeahead [sourceArray]="planetList"
-                   [resetTypeAhead$]="resetTypeAhead$"
-                (itemSelected)="planetSelected($event)">        
-    </app-typeahead>
-    <br>
-    <app-vehicle-list *ngIf="lastSelectedPlanet!='Select'"        
-        [destinationDistance]="destinationDistance"        
-        [widgetId]="widgetId">
-    </app-vehicle-list>
-    <!--
+<div class="destinationWidget">
+  <span>Destination {{ widgetId }}</span>
+  <app-typeahead
+    [sourceArray]="planetList"
+    [resetTypeAhead$]="resetTypeAhead$"
+    (itemSelected)="planetSelected($event)"
+  >
+  </app-typeahead>
+
+  <app-vehicle-list
+    *ngIf="lastSelectedPlanet != 'Select'"
+    [destinationDistance]="destinationDistance"
+    [widgetId]="widgetId"
+  >
+  </app-vehicle-list>
+  <!--
         [planetListChanged] = "planetListChanged"
         [vehicleListChanged] = "vehicleListChanged"
         (onVehicleSelected)="vehicleSelected($event)"
