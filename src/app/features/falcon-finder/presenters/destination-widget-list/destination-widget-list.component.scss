@@ -1,0 +1,26 @@
+div.widgetListContainer {
+  /*default css for small devices like IPhone 5*/
+
+  @media (min-width: 375px) {
+    /*css for small devices like IPhone 6/7*/
+  }
+
+  @media (min-width: 768px) {
+    /*css for medium devices like IPad*/
+
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    flex-grow: 1;
+    .widgetRow {
+      flex-basis: 50%;
+    }
+  }
+
+  @media (min-width: 1240px) {
+    /*css for large devices like IPad Pro and larger*/
+    .widgetRow {
+      flex-basis: 25%;
+    }
+  }
+}

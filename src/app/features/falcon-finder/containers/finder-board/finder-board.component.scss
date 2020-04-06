@@ -1,0 +1,47 @@
+div.boardContainer {
+  /*default css for small devices like IPhone 5*/
+  text-align: center;
+  margin-top: 10px;
+
+  div.instructionLine,
+  div.timeTaken,
+  app-destination-widget-list,
+  div.findButtonContainer {
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+
+  app-destination-widget-list {
+    min-height: 320px;
+  }
+
+  @media (min-width: 375px) {
+    /*css for small devices like IPhone 6/7*/
+
+    div.boardContainer {
+      app-destination-widget-list {
+        min-height: 400px;
+      }
+    }
+  }
+
+  @media (min-width: 768px) {
+    /*css for medium devices like IPad*/
+
+    div.boardContainer {
+      app-destination-widget-list {
+        min-height: 600px;
+      }
+    }
+  }
+
+  @media (min-width: 1240px) {
+    /*css for large devices like IPad Pro and larger*/
+
+    div.boardContainer {
+      app-destination-widget-list {
+        min-height: 800px;
+      }
+    }
+  }
+}
