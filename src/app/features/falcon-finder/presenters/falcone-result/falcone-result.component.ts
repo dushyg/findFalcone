@@ -1,45 +1,37 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FinderFacadeService } from 'src/app/core/finder-facade.service';
-import { Observable, combineLatest } from 'rxjs';
-import { IFindFalconResponse } from 'src/app/core/models/find-falcon-response';
-import { takeWhile, takeUntil, subscribeOn } from 'rxjs/operators';
-import FalconeFacade from 'src/app/core/facade.service';
-import { IFindFalconRequest } from 'src/app/core/models/find-falcon-request';
+import { Component, OnInit, OnDestroy } from "@angular/core";
+import { FinderFacadeService } from "src/app/core/finder-facade.service";
+import { Observable } from "rxjs";
+import { takeWhile } from "rxjs/operators";
 
 @Component({
-  selector: 'app-falcone-result',
-  templateUrl: './falcone-result.component.html',
-  styleUrls: ['./falcone-result.component.css']
+  selector: "app-falcone-result",
+  templateUrl: "./falcone-result.component.html",
+  styleUrls: ["./falcone-result.component.css"],
 })
 export class FalconeResultComponent implements OnInit, OnDestroy {
-      
-  constructor(private finderFacadeService : FinderFacadeService) { }  
-  
-  public error$ : Observable<string>;
-  public timeTaken$ : Observable<number>;     
-  public planetNameFalconFoundOn : string = "";
+  constructor(private finderFacadeService: FinderFacadeService) {}
+
+  public error$: Observable<string>;
+  public timeTaken$: Observable<number>;
+  public planetNameFalconFoundOn: string = "";
   private isComponentActive: boolean = true;
   public errorMsg: string;
-  public timeTaken : number = 0;  
+  public timeTaken: number = 0;
   public isLoading: boolean;
 
   ngOnInit() {
-
     this.finderFacadeService.dashboardVm$
-    .pipe(takeWhile(() => this.isComponentActive))
-    .subscribe(
-      (vm) => {
+      .pipe(takeWhile(() => this.isComponentActive))
+      .subscribe((vm) => {
         this.errorMsg = vm.error;
-        this.timeTaken = vm.totalTimeTaken;                
+        this.timeTaken = vm.totalTimeTaken;
         this.isLoading = vm.isLoading;
-      }
-  );            
-    
-    this.finderFacadeService.planetFoundOn$.pipe( takeWhile( () => this.isComponentActive))
-            .subscribe(
-              planetName => this.planetNameFalconFoundOn = planetName
-            );
-        
+      });
+
+    this.finderFacadeService.planetFoundOn$
+      .pipe(takeWhile(() => this.isComponentActive))
+      .subscribe((planetName) => (this.planetNameFalconFoundOn = planetName));
+
     this.finderFacadeService.findFalcon();
   }
 
@@ -50,5 +42,4 @@ export class FalconeResultComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.isComponentActive = false;
   }
-
 }

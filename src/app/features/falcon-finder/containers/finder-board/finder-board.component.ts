@@ -55,7 +55,7 @@ export class FinderBoardComponent implements OnInit, OnDestroy {
   // }
 
   public findFalcone() {
-    this.router.navigate(["finderboard", "result"]);
+    this.router.navigate(["result"]);
   }
 
   ngOnDestroy(): void {
