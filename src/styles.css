@@ -2,17 +2,24 @@
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
 @import "~bootstrap/dist/css/bootstrap.min.css";
 
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
-
-.hyperlink {    
-    cursor: pointer; 
-    text-decoration: underline;
+.hyperlink {
+  cursor: pointer;
+  text-decoration: underline;
 }
 
 .float-left {
-    float: left;
+  float: left;
 }
 
-
+body {
+  background: linear-gradient(90deg, #e3ffe7 0%, #d9e7ff 100%);
+}

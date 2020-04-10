@@ -6,7 +6,7 @@ import { takeWhile } from "rxjs/operators";
 @Component({
   selector: "app-falcone-result",
   templateUrl: "./falcone-result.component.html",
-  styleUrls: ["./falcone-result.component.css"],
+  styleUrls: ["./falcone-result.component.scss"],
 })
 export class FalconeResultComponent implements OnInit, OnDestroy {
   constructor(private finderFacadeService: FinderFacadeService) {}

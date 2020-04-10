@@ -1,21 +1,39 @@
-<p>falcone-result works!</p>
+<div class="resultBody">
+  <div class="resultWrapper">
+    <div *ngIf="!errorMsg && planetNameFalconFoundOn">
+      <h2>
+        Success! Congratulations on Finding Falcone. King Shan is mighty
+        pleased.
+      </h2>
+    </div>
 
-<div *ngIf="!errorMsg && planetNameFalconFoundOn">
-        Success! Congratulations on Finding Falcone. King Shan is mighty pleased.
-</div>
+    <div *ngIf="errorMsg">
+      <h3>{{ errorMsg }}</h3>
+    </div>
 
-<div *ngIf="errorMsg">
-        {{errorMsg}}
-</div>
+    <div *ngIf="timeTaken">Time Taken: {{ timeTaken }}</div>
 
-<div *ngIf="timeTaken">
-        Time Taken: {{timeTaken}}
-</div>
-{{isLoading}}
-<div *ngIf="planetNameFalconFoundOn">
-        Planet Found: {{planetNameFalconFoundOn}}
-</div>
+    <div *ngIf="planetNameFalconFoundOn">
+      Planet Found: {{ planetNameFalconFoundOn }}
+    </div>
 
-<div>
-        <input type="button" (click)='reset()' value='Start Again' >
+    <div>
+      <input type="button" (click)="reset()" value="Start Again" />
+    </div>
+
+    <div class="d-flex justify-content-center">
+      <div
+        class="fade show"
+        style="width: 15rem; height: 15rem;"
+        *ngIf="isLoading"
+      >
+        <span>Loading...</span>
+        <div
+          class="spinner-border m-5"
+          style="width: 5rem; height: 5rem;"
+          role="status"
+        ></div>
+      </div>
+    </div>
+  </div>
 </div>
