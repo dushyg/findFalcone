@@ -1,64 +1,72 @@
-div.typeahead-container {
-  div.typeadhead-wrapper {
-    position: relative;
-    width: 200px;
-    margin: 0 auto;
-    input {
-      text-align: center;
-    }
+div.typeahead-container div.typeadhead-wrapper {
+  position: relative;
+  width: 200px;
+  margin: 0 auto;
 
-    div.resultList {
-      text-align: left;
-      width: 180px;
-      position: absolute;
-      left: 10px;
-      z-index: 100;
-      background-color: white;
-      border: 1px solid black;
-    }
+  input {
+    text-align: center;
+  }
 
-    input.typeAhead  {
-      width: 150px;
-    }
+  div.resultList {
+    text-align: left;
+    width: 180px;
+    position: absolute;
+    left: 10px;
+    z-index: 100;
+    background-color: white;
+    border: 1px solid black;
+  }
 
-    div.resultList ul  {
-      list-style-position: inside;
-      margin-left: 0px;
-      padding-left: 0px;
-    }
+  input.typeAhead  {
+    width: 150px;
+  }
 
-    div.resultList ul li.resultItem  {
-      list-style-type: none;
-      border-bottom: 1px solid black;
-      margin-left: 0px;
-      padding-left: 5px;
-      cursor: pointer;
-    }
+  div.resultList {
+    list-style-position: inside;
+    margin-left: 0px;
+    padding-left: 0px;
 
-    div.resultList ul li.resultItem:hover  {
-      background-color: lightsalmon;
-    }
+    ul {
+      padding-inline-start: 0;
 
-    div.resultList ul li.resultItem:last-child  {
-      border-bottom: none;
-    }
-
-    ::-webkit-input-placeholder {
-      text-align: center;
-    }
-
-    :-moz-placeholder {
-      /* Firefox 18- */
-      text-align: center;
-    }
-
-    ::-moz-placeholder {
-      /* Firefox 19+ */
-      text-align: center;
-    }
-
-    :-ms-input-placeholder {
-      text-align: center;
+      li {
+        list-style-type: none;
+        text-decoration: underline;
+        text-align: center;
+        cursor: pointer;
+      }
     }
   }
+
+  ::-webkit-input-placeholder {
+    text-align: center;
+  }
+
+  :-moz-placeholder {
+    /* Firefox 18- */
+    text-align: center;
+  }
+
+  ::-moz-placeholder {
+    /* Firefox 19+ */
+    text-align: center;
+  }
+
+  :-ms-input-placeholder {
+    text-align: center;
+  }
+}
+
+div.typeahead-container div.typeadhead-wrapper div.resultList ul li:hover {
+  font-weight: bold;
+  font-style: italic;
+  background-color: lightsalmon;
+}
+
+div.typeahead-container
+  div.typeadhead-wrapper
+  div.resultList
+  ul
+  li:last-child  {
+  border-bottom: none;
 }
