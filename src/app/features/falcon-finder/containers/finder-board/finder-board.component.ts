@@ -41,19 +41,6 @@ export class FinderBoardComponent implements OnInit, OnDestroy {
     this.finderFacadeService.initializeAppData();
   }
 
-  // planetSelected(planetSelectionParam : PlanetChange) {
-  //   // console.log('finder board - planet selected', planetSelectionParam);
-
-  //   this.finderFacadeService.planetChanged(planetSelectionParam);
-
-  // }
-
-  // vehicleSelected(vehicleSelectionParam : VehicleChange){
-  //   // console.log('finder board - vehicle selected', vehicleSelectionParam);
-
-  //   this.finderFacadeService.vehicleChanged(vehicleSelectionParam);
-  // }
-
   public findFalcone() {
     this.router.navigate(["result"]);
   }

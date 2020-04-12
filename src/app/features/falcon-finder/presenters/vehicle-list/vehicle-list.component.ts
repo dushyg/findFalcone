@@ -15,7 +15,8 @@ import { Observable } from "rxjs";
 import PlanetUpdates from "src/app/core/models/planetUpdates";
 import VehicleUpdates from "src/app/core/models/vehicleUpdates";
 import { FinderFacadeService } from "src/app/core/finder-facade.service";
-import { takeWhile } from "rxjs/operators";
+import { takeWhile, withLatestFrom, take } from "rxjs/operators";
+import PlanetChange from "src/app/core/models/planetChange";
 
 @Component({
   selector: "app-vehicle-list",
@@ -45,6 +46,44 @@ export class VehicleListComponent implements OnInit, OnDestroy {
   };
 
   ngOnInit() {
+    let vehicleListInitialized = false;
+
+    this.finderFacadeService.vehicleInventory$
+      .pipe(takeWhile(() => !vehicleListInitialized))
+      .subscribe((initialVehicles: IVehicle[]) => {
+        if (initialVehicles) {
+          this.vehicleList = initialVehicles;
+          vehicleListInitialized = true;
+        }
+      });
+
+    this.finderFacadeService.vehicleChangedAction$
+      .pipe(
+        withLatestFrom(this.finderFacadeService.vehicleInventory$),
+        takeWhile(() => this.isComponentActive)
+      )
+      .subscribe(([vehicleChange, updatedVehicles]) => {
+        if (vehicleChange && vehicleChange.widgetId < this.widgetId) {
+          this.vehicleList = updatedVehicles;
+        }
+      });
+
+    this.finderFacadeService.planetChangedAction$
+      .pipe(
+        withLatestFrom(this.finderFacadeService.vehicleInventory$),
+        takeWhile(() => this.isComponentActive)
+      )
+      .subscribe(([planetChange, updatedVehicles]) => {
+        // need to refresh the vehicle list even when the planet is chnaged for current widget
+        if (planetChange && planetChange.widgetId <= this.widgetId) {
+          this.vehicleList = updatedVehicles;
+          if (planetChange.widgetId !== this.widgetId) {
+            this.clearLastSelection();
+          }
+        }
+      });
+
+    /*
     this.finderFacadeService.availableVehicleListUpdated$
       .pipe(takeWhile(() => this.isComponentActive))
       .subscribe((widgetIdToVehicleListMap) => {
@@ -68,41 +107,8 @@ export class VehicleListComponent implements OnInit, OnDestroy {
         if (this.widgetId > lastUpdatedWidgetId) {
           this.clearLastSelection();
         }
-      });
-    //this.localVehicleList = [...this.vehicleList];
-    // this.finderFacadeService.vehicleVm$
-    //   .pipe(takeWhile( () => this.isCompnentActive))
-    //   .subscribe( ({widgetIdToVehicleListMap, lastUpdatedWidgetId}) => {
-
-    //     const updatedVehicleList : IVehicle[] = widgetIdToVehicleListMap.get(this.widgetId.toString());
-    //     if(updatedVehicleList !== this.vehicleList){
-    //       this.vehicleList = updatedVehicleList;
-    //     }
-    //     if(this.widgetId > lastUpdatedWidgetId){
-    //       // since there were no updates to the vehicle list, it means some other widget's planet or vehicle changed
-    //       this.clearLastSelection();
-    //     }
-    //   });
+      });*/
   }
-
-  // ngOnChanges(changes: SimpleChanges): void {
-  //   console.log('ngOnchanges VehicleListComponent, widgetId', changes, this.widgetId);
-  //   const planetListChange : SimpleChange = changes['planetListChanged'];
-  //   if(planetListChange){
-  //     let widgetUpdate = planetListChange.currentValue;
-  //     if(widgetUpdate) {
-  //       this.updateVehicleList(widgetUpdate);
-  //     }
-  //   }
-
-  //   const vehicleListChange : SimpleChange = changes['vehicleListChanged'];
-  //   if(vehicleListChange){
-  //     let widgetUpdate = vehicleListChange.currentValue;
-  //     if(widgetUpdate) {
-  //       this.updateVehicleList(widgetUpdate);
-  //     }
-  //   }
-  // }
 
   public vehicleSelected(vehicle: IVehicle) {
     // console.log('vehicle select - ', vehicle);
@@ -110,34 +116,9 @@ export class VehicleListComponent implements OnInit, OnDestroy {
     this.finderFacadeService.vehicleChanged(
       new VehicleChange(this.widgetId, vehicle.name)
     );
-    //this.onVehicleSelected.emit();
 
     this.lastSelectedVehicle = vehicle;
-
-    // // reduce the availNumUnits of local vehicle instance if its not the default vehicle whose name is null
-    // if(this.lastSelectedVehicle.name) {
-    //   this.lastSelectedVehicle.availNumUnits--;
-    // }
   }
-
-  // private setVehicleListWithLatestVehicles() : void {
-  //   this.localVehicleList = [...this.vehicleList];
-  // }
-
-  // updateVehicleList( widgetUpdate : {widgetId : number, changer : string}  ) {
-
-  //   //If planet was changed in an earlier widget then reset the initialPlanetList to currently remaining planets list
-  //   if(widgetUpdate.changer === 'planetUpdate' && widgetUpdate.widgetId <= this.widgetId) {
-
-  //     this.setVehicleListWithLatestVehicles();
-  //     this.clearLastSelection();
-  //   }
-
-  //   if(widgetUpdate.changer === 'vehicleUpdate' && widgetUpdate.widgetId < this.widgetId) {
-  //     this.setVehicleListWithLatestVehicles();
-  //     this.clearLastSelection();
-  //   }
-  // }
 
   clearLastSelection(): void {
     this.lastSelectedVehicle = <IVehicle>{ availNumUnits: 0, name: null };

@@ -18,6 +18,7 @@ import {
 import { Router } from "@angular/router";
 import PlanetChange from "./models/planetChange";
 import VehicleChange from "./models/vehicleChange";
+import { ChangeUtils } from "./ChangeUtils";
 
 @Injectable({
   providedIn: "root",
@@ -37,12 +38,14 @@ export class FinderFacadeService {
     isLoading: false,
     maxSearchAttemptAllowed: this.MAX_SEARCH_ATTEMPTS_ALLOWED,
     planetList: [],
-    searchMap: null,
-    availablePlanetListMap: null,
-    availableVehicleListMap: null,
-    totalTimeTaken: 0,
     vehicleList: [],
-    planetFoundOn: null,
+    unsearchedPlanets: null,
+    vehicleInventory: null,
+    searchMap: null,
+    availablePlanetListMap: null, // not needed, logic to be shifted to destination component
+    availableVehicleListMap: null, // not needed, logic to be shifted to vehicle list component
+    totalTimeTaken: 0,
+    planetFoundOn: null, // not needed, logic to be shifted to result component
     isReadyToSearch: false,
     lastUpdatedWidgetId: null,
   };
@@ -76,6 +79,7 @@ export class FinderFacadeService {
   );
 
   public planetFoundOn$ = this.store$.pipe(
+    // todo refactor move to result component
     map((state) => state.planetFoundOn),
     distinctUntilChanged()
   );
@@ -86,6 +90,7 @@ export class FinderFacadeService {
   );
 
   public lastUpdatedWidgetId$ = this.store$.pipe(
+    // todo refactor will get removed
     map((state) => state.lastUpdatedWidgetId),
     distinctUntilChanged()
   );
@@ -110,6 +115,22 @@ export class FinderFacadeService {
     map((state) => state.isLoading),
     distinctUntilChanged()
   );
+
+  public unsearchedPlanets$ = this.store$.pipe(
+    map((state) => state.unsearchedPlanets),
+    distinctUntilChanged()
+  );
+
+  public vehicleInventory$ = this.store$.pipe(
+    map((state) => state.vehicleInventory),
+    distinctUntilChanged()
+  );
+
+  private planetChangedSubject = new BehaviorSubject<PlanetChange>(null);
+  public planetChangedAction$ = this.planetChangedSubject.asObservable();
+
+  private vehicleChangedSubject = new BehaviorSubject<VehicleChange>(null);
+  public vehicleChangedAction$ = this.vehicleChangedSubject.asObservable();
 
   public getCountOfWidgetsDisplayed() {
     return this._state.maxSearchAttemptAllowed;
@@ -141,22 +162,6 @@ export class FinderFacadeService {
     )
   );
 
-  // public planetVm$ = combineLatest([this.availablePlanetListUpdated$, this.lastUpdatedWidgetId$])
-  //     .pipe(map(([widgetIdToPlanetListMap, lastUpdatedWidgetId]) => {
-  //         return {
-  //           widgetIdToPlanetListMap,
-  //           lastUpdatedWidgetId
-  //         };
-  //     }));
-
-  //   public vehicleVm$ = combineLatest([this.availableVehicleListUpdated$, this.lastUpdatedWidgetId$])
-  //   .pipe(map(([widgetIdToVehicleListMap, lastUpdatedWidgetId]) => {
-  //       return {
-  //         widgetIdToVehicleListMap,
-  //         lastUpdatedWidgetId
-  //       };
-  //   }));
-
   public initializeAppData() {
     this.setLoadingFlag(true);
     forkJoin(
@@ -169,19 +174,21 @@ export class FinderFacadeService {
         const vehicleList: IVehicle[] = response[0];
         const planetList: IPlanet[] = response[1];
 
-        planetList.forEach((planet) => {
-          this.nameToPlanetMap.set(planet.name, planet);
-        });
+        // planetList.forEach((planet) => {
+        //   this.nameToPlanetMap.set(planet.name, planet);
+        // });
 
-        vehicleList.forEach((vehicle) => {
-          this.nameToVehicleMap.set(vehicle.name, vehicle);
-        });
+        // vehicleList.forEach((vehicle) => {
+        //   this.nameToVehicleMap.set(vehicle.name, vehicle);
+        // });
 
         // todo handle error scenarios
         this.updateState({
           ...this._state,
           planetList,
           vehicleList,
+          unsearchedPlanets: [...planetList],
+          vehicleInventory: [...vehicleList],
           searchMap: this.getInitializedSearchMap(),
           availablePlanetListMap: this.getMapWithAllPlanets(planetList),
           availableVehicleListMap: this.getMapWithAllVehicles(vehicleList),
@@ -230,59 +237,83 @@ export class FinderFacadeService {
   }
 
   public planetChanged(planetChange: PlanetChange) {
-    const changedWidgetId = planetChange.widgetId.toString();
-    let existingSearchAttempt: ISearchAttempt = this._state.searchMap.get(
-      changedWidgetId
+    const nextState: IFalconAppState = ChangeUtils.getNextStateAfterChange(
+      planetChange.widgetId,
+      planetChange.newPlanetName,
+      () => {
+        return <ISearchAttempt>{
+          searchedPlanet:
+            planetChange.newPlanetName != "Select"
+              ? planetChange.newPlanetName
+              : null,
+          vehicleUsed: null,
+        };
+      },
+      this._state
     );
-    // shallow copying existing map is just fine, since we will assign a new value object
-    // and value objects for other keys are not changing
-    let searchMap = new Map<string, ISearchAttempt>(this._state.searchMap);
 
-    let updatedSearchAttempt = <ISearchAttempt>{
-      ...existingSearchAttempt,
-      searchedPlanet:
-        planetChange.newPlanetName != "Select"
-          ? planetChange.newPlanetName
-          : null,
-      vehicleUsed: null,
-    };
-    searchMap.set(changedWidgetId, updatedSearchAttempt);
+    this.updateState(nextState);
 
-    this.updateState({
-      ...this._state,
-      lastUpdatedWidgetId: planetChange.widgetId,
-      searchMap: searchMap,
+    //    this.widgetInputChangedEvent$.next();
+    this.planetChangedSubject.next(planetChange);
+  }
+
+  getUnsearchedPlanets(
+    searchMap: Map<string, ISearchAttempt>,
+    planetList: IPlanet[]
+  ): IPlanet[] {
+    const usedPlanetSet = new Set<string>();
+
+    searchMap.forEach((searchAttempt: ISearchAttempt) => {
+      if (searchAttempt && searchAttempt.searchedPlanet) {
+        usedPlanetSet.add(searchAttempt.searchedPlanet);
+      }
     });
 
-    this.widgetInputChangedEvent$.next();
+    return planetList.filter(
+      (planet: IPlanet) => !usedPlanetSet.has(planet.name)
+    );
   }
 
   public vehicleChanged(vehicleChange: VehicleChange) {
     const changedWidgetId = vehicleChange.widgetId.toString();
-    let existingSearchAttempt: ISearchAttempt = this._state.searchMap.get(
-      changedWidgetId
+
+    const nextState: IFalconAppState = ChangeUtils.getNextStateAfterChange(
+      vehicleChange.widgetId,
+      vehicleChange.newVehicleName,
+      () => {
+        return <ISearchAttempt>{
+          searchedPlanet: this._state.searchMap.get(changedWidgetId)
+            .searchedPlanet,
+          vehicleUsed: vehicleChange.newVehicleName,
+        };
+      },
+      this._state
     );
 
-    // shallow copying existing map is just fine, since we will assign a new value object
-    // and value objects for other keys are not changing
-    let searchMap = new Map<string, ISearchAttempt>(this._state.searchMap);
-    const key = vehicleChange.widgetId.toString();
+    this.updateState(nextState);
 
-    let updatedSearchAttempt = <ISearchAttempt>{
-      ...existingSearchAttempt,
-      searchedPlanet: searchMap.get(key).searchedPlanet,
-      vehicleUsed: vehicleChange.newVehicleName,
-    };
+    //this.widgetInputChangedEvent$.next();
+    this.vehicleChangedSubject.next(vehicleChange);
+  }
 
-    searchMap.set(vehicleChange.widgetId.toString(), updatedSearchAttempt);
+  private getupdatedVehicleInventory(
+    searchMap: Map<string, ISearchAttempt>,
+    vehicleList: IVehicle[]
+  ): IVehicle[] {
+    // create a map of vehicle name vs count of vehicles used
+    const usedVehicleMap = this.getUsedVehicleMap(searchMap);
 
-    this.updateState({
-      ...this._state,
-      lastUpdatedWidgetId: vehicleChange.widgetId,
-      searchMap: searchMap,
+    // update vehicle list with available vehicle units
+    let updatedVehicleList: IVehicle[] = vehicleList.map((vehicle) => {
+      const totalNumUnits = vehicle.totalNumUnits;
+      return <IVehicle>{
+        ...vehicle,
+        availNumUnits: totalNumUnits - (usedVehicleMap.get(vehicle.name) || 0),
+      };
     });
 
-    this.widgetInputChangedEvent$.next();
+    return updatedVehicleList;
   }
 
   private widgetChangesSubscription = this.widgetInputChangedEvent$
