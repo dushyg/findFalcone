@@ -1,8 +1,7 @@
-import { IVehicle } from './vehicle';
-import { IPlanet } from './planet';
+import { IVehicle } from "./vehicle";
+import { IPlanet } from "./planet";
 
-export interface ISearchAttempt {  
-    
-    searchedPlanet : IPlanet;
-    vehicleUsed : IVehicle;
+export interface ISearchAttempt {
+  searchedPlanet: string;
+  vehicleUsed: string;
 }

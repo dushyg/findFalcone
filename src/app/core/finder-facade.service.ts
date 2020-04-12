@@ -47,6 +47,8 @@ export class FinderFacadeService {
     lastUpdatedWidgetId: null,
   };
 
+  private nameToPlanetMap: Map<string, IPlanet> = new Map<string, IPlanet>();
+  private nameToVehicleMap: Map<string, IVehicle> = new Map<string, IVehicle>();
   private store = new BehaviorSubject<IFalconAppState>(this._state);
 
   private store$ = this.store.asObservable();
@@ -167,6 +169,14 @@ export class FinderFacadeService {
         const vehicleList: IVehicle[] = response[0];
         const planetList: IPlanet[] = response[1];
 
+        planetList.forEach((planet) => {
+          this.nameToPlanetMap.set(planet.name, planet);
+        });
+
+        vehicleList.forEach((vehicle) => {
+          this.nameToVehicleMap.set(vehicle.name, vehicle);
+        });
+
         // todo handle error scenarios
         this.updateState({
           ...this._state,
@@ -231,8 +241,8 @@ export class FinderFacadeService {
     let updatedSearchAttempt = <ISearchAttempt>{
       ...existingSearchAttempt,
       searchedPlanet:
-        planetChange.newPlanet.name != "Select"
-          ? { ...planetChange.newPlanet }
+        planetChange.newPlanetName != "Select"
+          ? planetChange.newPlanetName
           : null,
       vehicleUsed: null,
     };
@@ -260,8 +270,8 @@ export class FinderFacadeService {
 
     let updatedSearchAttempt = <ISearchAttempt>{
       ...existingSearchAttempt,
-      searchedPlanet: { ...searchMap.get(key).searchedPlanet },
-      vehicleUsed: { ...vehicleChange.newVehicle },
+      searchedPlanet: searchMap.get(key).searchedPlanet,
+      vehicleUsed: vehicleChange.newVehicleName,
     };
 
     searchMap.set(vehicleChange.widgetId.toString(), updatedSearchAttempt);
@@ -376,23 +386,6 @@ export class FinderFacadeService {
     return updatedSearchMap;
   }
 
-  // private updateWidgetIdToAvailablePlanetsMap(searchMap: Map<string, ISearchAttempt>, planetList : IPlanet[])
-  //           : Map<string, IPlanet[]> {
-
-  //   const usedPlanets = new Set<string>();
-  //   const updatedPlanetsMap = new Map<string, IPlanet[]>();
-  //   searchMap.forEach((value: ISearchAttempt, key: string) => {
-  //       const planet : IPlanet = value.searchedPlanet;
-
-  //       const availablePlanets = planetList.filter( (currentPlanet: IPlanet) => {
-  //         return !usedPlanets.has(currentPlanet.name);
-  //       });
-  //       usedPlanets.add(planet.name);
-  //       updatedPlanetsMap.set(key, [...availablePlanets]);
-  //   });
-
-  //   return updatedPlanetsMap;
-  // }
   private updateWidgetIdToAvailablePlanetsMap(
     searchMap: Map<string, ISearchAttempt>,
     widgetIdToPlanetListMap: Map<string, IPlanet[]>,
@@ -406,7 +399,7 @@ export class FinderFacadeService {
       if (!searchAttempt) {
         return;
       }
-      const planet: IPlanet = searchAttempt.searchedPlanet;
+      const planet: string = searchAttempt.searchedPlanet;
 
       const widgetId = +key;
       if (widgetId <= lastUpdatedWidgetId) {
@@ -419,7 +412,7 @@ export class FinderFacadeService {
       }
 
       if (planet) {
-        usedPlanets.add(planet.name);
+        usedPlanets.add(planet);
       }
     });
 
@@ -459,13 +452,13 @@ export class FinderFacadeService {
       const key = index.toString();
       const searchAttempt: ISearchAttempt = searchMap.get(key);
       if (searchAttempt) {
-        const vehicle: IVehicle = searchAttempt.vehicleUsed;
+        const vehicle: string = searchAttempt.vehicleUsed;
         if (vehicle) {
-          let count: number = usedVehicleMap.get(vehicle.name);
+          let count: number = usedVehicleMap.get(vehicle);
           if (Number(count)) {
-            usedVehicleMap.set(vehicle.name, ++count);
+            usedVehicleMap.set(vehicle, ++count);
           } else {
-            usedVehicleMap.set(vehicle.name, 1);
+            usedVehicleMap.set(vehicle, 1);
           }
         }
       }
@@ -505,8 +498,10 @@ export class FinderFacadeService {
         return;
       }
 
-      const planetDistance = value.searchedPlanet.distance;
-      const vehicleSpeed = value.vehicleUsed.speed;
+      const planet: IPlanet = this.nameToPlanetMap.get(value.searchedPlanet);
+      const vehicle: IVehicle = this.nameToVehicleMap.get(value.vehicleUsed);
+      const planetDistance = planet.distance;
+      const vehicleSpeed = vehicle.speed;
       if (!planetDistance || !vehicleSpeed) {
         return;
       }
@@ -552,8 +547,8 @@ export class FinderFacadeService {
       for (let searchAttemptEntry of searchAttemptMap) {
         const searchAttempt = searchAttemptEntry[1];
 
-        request.planet_names[index] = searchAttempt.searchedPlanet.name;
-        request.vehicle_names[index] = searchAttempt.vehicleUsed.name;
+        request.planet_names[index] = searchAttempt.searchedPlanet;
+        request.vehicle_names[index] = searchAttempt.vehicleUsed;
 
         index++;
       }

@@ -146,7 +146,7 @@ export class DestinationWidgetComponent implements OnInit, OnDestroy {
     this.lastSelectedPlanet = selectedPlanet.name;
 
     this.finderFacadeService.planetChanged(
-      new PlanetChange(this.widgetId, null, selectedPlanet)
+      new PlanetChange(this.widgetId, selectedPlanet.name)
     );
   }
 

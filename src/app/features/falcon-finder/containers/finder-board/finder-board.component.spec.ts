@@ -44,10 +44,10 @@ describe("FinderBoardComponent", () => {
     }).compileComponents();
 
     planetListToBeReturned = [
-      { name: "Donlon", distance: 100, includedInSearch: false },
-      { name: "Enchai", distance: 200, includedInSearch: false },
-      { name: "Jebing", distance: 300, includedInSearch: false },
-      { name: "Sapir", distance: 400, includedInSearch: false },
+      { name: "Donlon", distance: 100 },
+      { name: "Enchai", distance: 200 },
+      { name: "Jebing", distance: 300 },
+      { name: "Sapir", distance: 400 },
     ];
 
     vehicleListToBeReturned = [

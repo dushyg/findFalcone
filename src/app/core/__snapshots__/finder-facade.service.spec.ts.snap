@@ -6,73 +6,60 @@ Object {
     "1" => Array [
       Object {
         "distance": 100,
-        "includedInSearch": false,
         "name": "Donlon",
       },
       Object {
         "distance": 200,
-        "includedInSearch": false,
         "name": "Enchai",
       },
       Object {
         "distance": 300,
-        "includedInSearch": false,
         "name": "Jebing",
       },
       Object {
         "distance": 400,
-        "includedInSearch": false,
         "name": "Sapir",
       },
     ],
     "2" => Array [
       Object {
         "distance": 200,
-        "includedInSearch": false,
         "name": "Enchai",
       },
       Object {
         "distance": 300,
-        "includedInSearch": false,
         "name": "Jebing",
       },
       Object {
         "distance": 400,
-        "includedInSearch": false,
         "name": "Sapir",
       },
     ],
     "3" => Array [
       Object {
         "distance": 200,
-        "includedInSearch": false,
         "name": "Enchai",
       },
       Object {
         "distance": 300,
-        "includedInSearch": false,
         "name": "Jebing",
       },
       Object {
         "distance": 400,
-        "includedInSearch": false,
         "name": "Sapir",
       },
     ],
     "4" => Array [
       Object {
         "distance": 200,
-        "includedInSearch": false,
         "name": "Enchai",
       },
       Object {
         "distance": 300,
-        "includedInSearch": false,
         "name": "Jebing",
       },
       Object {
         "distance": 400,
-        "includedInSearch": false,
         "name": "Sapir",
       },
     ],
@@ -208,39 +195,25 @@ Object {
   "planetList": Array [
     Object {
       "distance": 100,
-      "includedInSearch": false,
       "name": "Donlon",
     },
     Object {
       "distance": 200,
-      "includedInSearch": false,
       "name": "Enchai",
     },
     Object {
       "distance": 300,
-      "includedInSearch": false,
       "name": "Jebing",
     },
     Object {
       "distance": 400,
-      "includedInSearch": false,
       "name": "Sapir",
     },
   ],
   "searchMap": Map {
     "1" => Object {
-      "searchedPlanet": Object {
-        "distance": 100,
-        "includedInSearch": false,
-        "name": "Donlon",
-      },
-      "vehicleUsed": Object {
-        "availNumUnits": 2,
-        "maxDistance": 200,
-        "name": "Space pod",
-        "speed": 2,
-        "totalNumUnits": 2,
-      },
+      "searchedPlanet": "Donlon",
+      "vehicleUsed": "Space pod",
     },
     "2" => Object {
       "searchedPlanet": null,

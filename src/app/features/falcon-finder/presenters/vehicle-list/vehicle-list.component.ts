@@ -108,11 +108,7 @@ export class VehicleListComponent implements OnInit, OnDestroy {
     // console.log('vehicle select - ', vehicle);
 
     this.finderFacadeService.vehicleChanged(
-      new VehicleChange(
-        this.widgetId,
-        { ...this.lastSelectedVehicle },
-        { ...vehicle }
-      )
+      new VehicleChange(this.widgetId, vehicle.name)
     );
     //this.onVehicleSelected.emit();
 
