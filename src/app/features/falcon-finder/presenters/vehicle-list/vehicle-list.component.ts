@@ -63,7 +63,7 @@ export class VehicleListComponent implements OnInit, OnDestroy {
         takeWhile(() => this.isComponentActive)
       )
       .subscribe(([vehicleChange, updatedVehicles]) => {
-        if (vehicleChange && vehicleChange.widgetId < this.widgetId) {
+        if (vehicleChange && vehicleChange.widgetId <= this.widgetId) {
           this.vehicleList = updatedVehicles;
         }
       });
