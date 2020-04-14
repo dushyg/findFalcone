@@ -16,7 +16,7 @@ import { IVehicle } from "src/app/core/models/vehicle";
 import { IPlanetSelectionParam } from "src/app/core/models/planetSelectionParam";
 import PlanetChange from "src/app/core/models/planetChange";
 import VehicleChange from "src/app/core/models/vehicleChange";
-import { Observable, Subject } from "rxjs";
+import { Observable, Subject, combineLatest } from "rxjs";
 import PlanetUpdates from "src/app/core/models/planetUpdates";
 import VehicleUpdates from "src/app/core/models/vehicleUpdates";
 import { ISearchAttempt } from "src/app/core/models/searchAttempt";
@@ -55,16 +55,14 @@ export class DestinationWidgetComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    //this.clearLastSelection();
-    //let planetListInitialized = false;
-    this.finderFacadeService.unsearchedPlanets$
-      //.pipe(takeWhile(() => !planetListInitialized))
-      .subscribe((unsearchedPlanets: IPlanet[]) => {
-        if (unsearchedPlanets) {
-          this.planetList = unsearchedPlanets;
-          //planetListInitialized = true;
-        }
-      });
+    combineLatest(
+      this.finderFacadeService.unsearchedPlanets$,
+      this.finderFacadeService.isLoading$
+    ).subscribe(([unsearchedPlanets, isLoading]) => {
+      if (unsearchedPlanets && !isLoading) {
+        this.planetList = unsearchedPlanets;
+      }
+    });
 
     this.finderFacadeService.planetChangedAction$
       .pipe(

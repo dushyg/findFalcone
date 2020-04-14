@@ -24,7 +24,6 @@ export class FinderFacadeService {
     private router: Router
   ) {}
 
-  private allowBroadcast = false;
   private finderApiToken: string;
   private readonly MAX_SEARCH_ATTEMPTS_ALLOWED = 4;
   private _state: IFalconAppState = {
@@ -41,7 +40,7 @@ export class FinderFacadeService {
 
   private store = new BehaviorSubject<IFalconAppState>(this._state);
 
-  private store$ = this.store.pipe(filter(() => this.allowBroadcast));
+  private store$ = this.store.asObservable();
 
   private error$ = this.store$.pipe(map((state) => state.errorMsg));
 
@@ -119,7 +118,6 @@ export class FinderFacadeService {
       this.finderService.getFalconFinderApiToken()
     ).subscribe(
       (response) => {
-        this.allowBroadcast = true;
         this.finderApiToken = response[2].token;
         const vehicleList: IVehicle[] = response[0];
         const planetList: IPlanet[] = response[1];
@@ -139,7 +137,6 @@ export class FinderFacadeService {
         });
       },
       (error) => {
-        this.allowBroadcast = true;
         this.updateError(error);
         this.setLoadingFlag(false);
       }
@@ -213,7 +210,6 @@ export class FinderFacadeService {
   }
 
   resetApp() {
-    this.allowBroadcast = false;
     this.router.navigate(["reset"]);
   }
 
