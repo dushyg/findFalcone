@@ -55,14 +55,19 @@ export class DestinationWidgetComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    let planetListInitialized = false;
+
     combineLatest(
       this.finderFacadeService.unsearchedPlanets$,
       this.finderFacadeService.isLoading$
-    ).subscribe(([unsearchedPlanets, isLoading]) => {
-      if (unsearchedPlanets && !isLoading) {
-        this.planetList = unsearchedPlanets;
-      }
-    });
+    )
+      .pipe(takeWhile(() => !planetListInitialized))
+      .subscribe(([unsearchedPlanets, isLoading]) => {
+        if (unsearchedPlanets && !isLoading) {
+          this.planetList = unsearchedPlanets;
+          planetListInitialized = true;
+        }
+      });
 
     this.finderFacadeService.planetChangedAction$
       .pipe(
