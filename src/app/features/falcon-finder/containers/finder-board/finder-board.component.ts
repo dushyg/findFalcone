@@ -23,18 +23,18 @@ export class FinderBoardComponent implements OnInit, OnDestroy {
   public error: string;
   public timeTaken: number;
   public isReadyToSearch: boolean;
-  public countPlanetsToBeSearched: number;
 
   private isComponentActive = true;
+  private isInitialized = false;
 
   ngOnInit() {
     this.finderFacadeService.dashboardVm$
       .pipe(takeWhile(() => this.isComponentActive))
       .subscribe((vm) => {
+        this.isInitialized = true;
         this.error = vm.error;
         this.timeTaken = vm.totalTimeTaken;
         this.isReadyToSearch = vm.isReadyForSearch;
-        this.countPlanetsToBeSearched = vm.maxCountPlanetsToBeSearched;
         this.isLoading = vm.isLoading;
       });
 

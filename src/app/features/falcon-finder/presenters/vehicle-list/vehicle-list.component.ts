@@ -1,22 +1,8 @@
-import {
-  Component,
-  OnInit,
-  Input,
-  Output,
-  EventEmitter,
-  OnChanges,
-  SimpleChanges,
-  SimpleChange,
-  OnDestroy,
-} from "@angular/core";
+import { Component, OnInit, Input, OnDestroy } from "@angular/core";
 import { IVehicle } from "src/app/core/models/vehicle";
 import VehicleChange from "src/app/core/models/vehicleChange";
-import { Observable } from "rxjs";
-import PlanetUpdates from "src/app/core/models/planetUpdates";
-import VehicleUpdates from "src/app/core/models/vehicleUpdates";
 import { FinderFacadeService } from "src/app/core/finder-facade.service";
-import { takeWhile, withLatestFrom, take } from "rxjs/operators";
-import PlanetChange from "src/app/core/models/planetChange";
+import { takeWhile, withLatestFrom } from "rxjs/operators";
 
 @Component({
   selector: "app-vehicle-list",
@@ -29,16 +15,9 @@ export class VehicleListComponent implements OnInit, OnDestroy {
   constructor(private finderFacadeService: FinderFacadeService) {}
 
   public vehicleList: IVehicle[];
-  // public localVehicleList : IVehicle[];
+
   @Input() public destinationDistance: number;
   @Input() public widgetId: number;
-  // @Input() public planetListChanges$ : Observable<PlanetUpdates>;
-  // @Input() public vehicleListChanges$ : Observable<VehicleUpdates>;
-
-  // @Input() public planetListChanged : {widgetId : number, changer : string} ;
-  // @Input() public vehicleListChanged : {widgetId : number, changer : string} ;
-
-  // @Output() public onVehicleSelected = new EventEmitter<VehicleChange>();
 
   public lastSelectedVehicle: IVehicle = <IVehicle>{
     availNumUnits: 0,
@@ -46,14 +25,16 @@ export class VehicleListComponent implements OnInit, OnDestroy {
   };
 
   ngOnInit() {
-    let vehicleListInitialized = false;
+    //this.clearLastSelection();
+
+    //let vehicleListInitialized = false;
 
     this.finderFacadeService.vehicleInventory$
-      .pipe(takeWhile(() => !vehicleListInitialized))
+      //.pipe(takeWhile(() => !vehicleListInitialized))
       .subscribe((initialVehicles: IVehicle[]) => {
         if (initialVehicles) {
           this.vehicleList = initialVehicles;
-          vehicleListInitialized = true;
+          //  vehicleListInitialized = true;
         }
       });
 

@@ -2,6 +2,10 @@ import { Component, OnInit, OnDestroy } from "@angular/core";
 import { FinderFacadeService } from "src/app/core/finder-facade.service";
 import { Observable } from "rxjs";
 import { takeWhile } from "rxjs/operators";
+import { IFindFalconRequest } from "src/app/core/models/find-falcon-request";
+import { IFindFalconResponse } from "src/app/core/models/find-falcon-response";
+import { FalconFinderService } from "src/app/core/falcon-finder.service";
+import { ISearchAttempt } from "src/app/core/models/searchAttempt";
 
 @Component({
   selector: "app-falcone-result",
@@ -9,7 +13,10 @@ import { takeWhile } from "rxjs/operators";
   styleUrls: ["./falcone-result.component.scss"],
 })
 export class FalconeResultComponent implements OnInit, OnDestroy {
-  constructor(private finderFacadeService: FinderFacadeService) {}
+  constructor(
+    private finderService: FalconFinderService,
+    private finderFacadeService: FinderFacadeService
+  ) {}
 
   public error$: Observable<string>;
   public timeTaken$: Observable<number>;
@@ -18,6 +25,7 @@ export class FalconeResultComponent implements OnInit, OnDestroy {
   public errorMsg: string;
   public timeTaken: number = 0;
   public isLoading: boolean;
+  private searchAttemptMap: Map<string, ISearchAttempt>;
 
   ngOnInit() {
     this.finderFacadeService.dashboardVm$
@@ -26,13 +34,82 @@ export class FalconeResultComponent implements OnInit, OnDestroy {
         this.errorMsg = vm.error;
         this.timeTaken = vm.totalTimeTaken;
         this.isLoading = vm.isLoading;
+        this.searchAttemptMap = vm.searchAttemptMap;
       });
 
-    this.finderFacadeService.planetFoundOn$
-      .pipe(takeWhile(() => this.isComponentActive))
-      .subscribe((planetName) => (this.planetNameFalconFoundOn = planetName));
+    this.findFalcon();
+  }
 
-    this.finderFacadeService.findFalcon();
+  public findFalcon(): void {
+    let findFalconRequest: IFindFalconRequest;
+    const searchAttemptMap = this.searchAttemptMap;
+    const maxSearchAttemptsAllowed = this.finderFacadeService.getCountOfWidgetsDisplayed();
+
+    if (searchAttemptMap) {
+      const request = <IFindFalconRequest>{
+        planet_names: new Array<string>(maxSearchAttemptsAllowed),
+        vehicle_names: new Array<string>(maxSearchAttemptsAllowed),
+      };
+
+      let index = 0;
+      for (let searchAttemptEntry of searchAttemptMap) {
+        const searchAttempt = searchAttemptEntry[1];
+
+        request.planet_names[index] = searchAttempt.searchedPlanet;
+        request.vehicle_names[index] = searchAttempt.vehicleUsed;
+
+        index++;
+      }
+
+      findFalconRequest = request;
+    } else {
+      findFalconRequest = null;
+    }
+
+    if (findFalconRequest) {
+      this.callFindFalconApi(findFalconRequest);
+    }
+  }
+
+  private callFindFalconApi(request: IFindFalconRequest) {
+    request.token = this.finderFacadeService.getFinderApiToken();
+    this.finderFacadeService.setLoadingFlag(true);
+    this.finderService.findFalcon(request).subscribe(
+      (response: IFindFalconResponse) => {
+        this.finderFacadeService.setLoadingFlag(false);
+
+        let errorMsg = null;
+        if (response) {
+          if (response.error) {
+            errorMsg = response.error;
+            this.finderFacadeService.updateError(errorMsg);
+          } else if (response.status) {
+            if (response.status.trim().toLowerCase() === "success") {
+              if (response.planetName) {
+                this.planetNameFalconFoundOn = response.planetName;
+              } else {
+                errorMsg = "Search api returned empty planet name";
+                this.finderFacadeService.updateError(errorMsg);
+              }
+            } else if (response.status.trim().toLocaleLowerCase() === "false") {
+              errorMsg =
+                "Failure! You were unable to find Falcone. Better luck next time.";
+              this.finderFacadeService.updateError(errorMsg);
+            } else {
+              errorMsg = "Search api did not return a response status value.";
+              this.finderFacadeService.updateError(errorMsg);
+            }
+          }
+        } else {
+          errorMsg = "Search api returned invalid response.";
+          this.finderFacadeService.updateError(errorMsg);
+        }
+      },
+      (error) => {
+        this.finderFacadeService.setLoadingFlag(false);
+        this.finderFacadeService.updateError(error);
+      }
+    );
   }
 
   reset() {

@@ -2,196 +2,9 @@
 
 exports[`FinderFacadeService Planet and Vehicle Changes Tests should set expected state when a vehicle is set for the first time 1`] = `
 Object {
-  "availablePlanetListMap": Map {
-    "1" => Array [
-      Object {
-        "distance": 100,
-        "name": "Donlon",
-      },
-      Object {
-        "distance": 200,
-        "name": "Enchai",
-      },
-      Object {
-        "distance": 300,
-        "name": "Jebing",
-      },
-      Object {
-        "distance": 400,
-        "name": "Sapir",
-      },
-    ],
-    "2" => Array [
-      Object {
-        "distance": 200,
-        "name": "Enchai",
-      },
-      Object {
-        "distance": 300,
-        "name": "Jebing",
-      },
-      Object {
-        "distance": 400,
-        "name": "Sapir",
-      },
-    ],
-    "3" => Array [
-      Object {
-        "distance": 200,
-        "name": "Enchai",
-      },
-      Object {
-        "distance": 300,
-        "name": "Jebing",
-      },
-      Object {
-        "distance": 400,
-        "name": "Sapir",
-      },
-    ],
-    "4" => Array [
-      Object {
-        "distance": 200,
-        "name": "Enchai",
-      },
-      Object {
-        "distance": 300,
-        "name": "Jebing",
-      },
-      Object {
-        "distance": 400,
-        "name": "Sapir",
-      },
-    ],
-  },
-  "availableVehicleListMap": Map {
-    "1" => Array [
-      Object {
-        "availNumUnits": 1,
-        "maxDistance": 200,
-        "name": "Space pod",
-        "speed": 2,
-        "totalNumUnits": 2,
-      },
-      Object {
-        "availNumUnits": 1,
-        "maxDistance": 300,
-        "name": "Space rocket",
-        "speed": 4,
-        "totalNumUnits": 1,
-      },
-      Object {
-        "availNumUnits": 1,
-        "maxDistance": 400,
-        "name": "Space shuttle",
-        "speed": 5,
-        "totalNumUnits": 1,
-      },
-      Object {
-        "availNumUnits": 2,
-        "maxDistance": 600,
-        "name": "Space ship",
-        "speed": 10,
-        "totalNumUnits": 2,
-      },
-    ],
-    "2" => Array [
-      Object {
-        "availNumUnits": 1,
-        "maxDistance": 200,
-        "name": "Space pod",
-        "speed": 2,
-        "totalNumUnits": 2,
-      },
-      Object {
-        "availNumUnits": 1,
-        "maxDistance": 300,
-        "name": "Space rocket",
-        "speed": 4,
-        "totalNumUnits": 1,
-      },
-      Object {
-        "availNumUnits": 1,
-        "maxDistance": 400,
-        "name": "Space shuttle",
-        "speed": 5,
-        "totalNumUnits": 1,
-      },
-      Object {
-        "availNumUnits": 2,
-        "maxDistance": 600,
-        "name": "Space ship",
-        "speed": 10,
-        "totalNumUnits": 2,
-      },
-    ],
-    "3" => Array [
-      Object {
-        "availNumUnits": 1,
-        "maxDistance": 200,
-        "name": "Space pod",
-        "speed": 2,
-        "totalNumUnits": 2,
-      },
-      Object {
-        "availNumUnits": 1,
-        "maxDistance": 300,
-        "name": "Space rocket",
-        "speed": 4,
-        "totalNumUnits": 1,
-      },
-      Object {
-        "availNumUnits": 1,
-        "maxDistance": 400,
-        "name": "Space shuttle",
-        "speed": 5,
-        "totalNumUnits": 1,
-      },
-      Object {
-        "availNumUnits": 2,
-        "maxDistance": 600,
-        "name": "Space ship",
-        "speed": 10,
-        "totalNumUnits": 2,
-      },
-    ],
-    "4" => Array [
-      Object {
-        "availNumUnits": 1,
-        "maxDistance": 200,
-        "name": "Space pod",
-        "speed": 2,
-        "totalNumUnits": 2,
-      },
-      Object {
-        "availNumUnits": 1,
-        "maxDistance": 300,
-        "name": "Space rocket",
-        "speed": 4,
-        "totalNumUnits": 1,
-      },
-      Object {
-        "availNumUnits": 1,
-        "maxDistance": 400,
-        "name": "Space shuttle",
-        "speed": 5,
-        "totalNumUnits": 1,
-      },
-      Object {
-        "availNumUnits": 2,
-        "maxDistance": 600,
-        "name": "Space ship",
-        "speed": 10,
-        "totalNumUnits": 2,
-      },
-    ],
-  },
   "errorMsg": "",
   "isLoading": false,
   "isReadyToSearch": false,
-  "lastUpdatedWidgetId": 1,
-  "maxSearchAttemptAllowed": 4,
-  "planetFoundOn": null,
   "planetList": Array [
     Object {
       "distance": 100,
@@ -229,6 +42,50 @@ Object {
     },
   },
   "totalTimeTaken": 50,
+  "unsearchedPlanets": Array [
+    Object {
+      "distance": 200,
+      "name": "Enchai",
+    },
+    Object {
+      "distance": 300,
+      "name": "Jebing",
+    },
+    Object {
+      "distance": 400,
+      "name": "Sapir",
+    },
+  ],
+  "vehicleInventory": Array [
+    Object {
+      "availNumUnits": 1,
+      "maxDistance": 200,
+      "name": "Space pod",
+      "speed": 2,
+      "totalNumUnits": 2,
+    },
+    Object {
+      "availNumUnits": 1,
+      "maxDistance": 300,
+      "name": "Space rocket",
+      "speed": 4,
+      "totalNumUnits": 1,
+    },
+    Object {
+      "availNumUnits": 1,
+      "maxDistance": 400,
+      "name": "Space shuttle",
+      "speed": 5,
+      "totalNumUnits": 1,
+    },
+    Object {
+      "availNumUnits": 2,
+      "maxDistance": 600,
+      "name": "Space ship",
+      "speed": 10,
+      "totalNumUnits": 2,
+    },
+  ],
   "vehicleList": Array [
     Object {
       "availNumUnits": 2,

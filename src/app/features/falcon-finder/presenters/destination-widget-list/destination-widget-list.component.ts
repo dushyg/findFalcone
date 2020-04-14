@@ -6,6 +6,7 @@ import { IPlanetSelectionParam } from "src/app/core/models/planetSelectionParam"
 import { Observable } from "rxjs";
 import PlanetUpdates from "src/app/core/models/planetUpdates";
 import VehicleUpdates from "src/app/core/models/vehicleUpdates";
+import { FinderFacadeService } from "src/app/core/finder-facade.service";
 
 @Component({
   selector: "app-destination-widget-list",
@@ -13,27 +14,13 @@ import VehicleUpdates from "src/app/core/models/vehicleUpdates";
   styleUrls: ["./destination-widget-list.component.scss"],
 })
 export class DestinationWidgetListComponent implements OnInit {
-  constructor() {}
-
-  @Input() countPlanetsToBeSearched: number;
-
-  // @Output() public onPlanetSelected  = new EventEmitter<IPlanetSelectionParam>();
-  // @Output() public onVehicleSelected = new EventEmitter<IVehicleSelectionParam>();
+  constructor(private finderFacadeService: FinderFacadeService) {}
 
   public widgetCountIterator: number[];
 
   ngOnInit() {
     this.widgetCountIterator = new Array<number>(
-      this.countPlanetsToBeSearched
+      this.finderFacadeService.getCountOfWidgetsDisplayed()
     ).fill(0);
   }
-
-  // planetSelected(planetSelectionParam : IPlanetSelectionParam) {
-  //   // console.log('destination widget', planetSelectionParam);
-  //   this.onPlanetSelected.emit(planetSelectionParam);
-  // }
-
-  // vehicleSelected(vehicleSelectionParam : IVehicleSelectionParam){
-  //   this.onVehicleSelected.emit(vehicleSelectionParam);
-  // }
 }

@@ -55,13 +55,14 @@ export class DestinationWidgetComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    let planetListInitialized = false;
+    //this.clearLastSelection();
+    //let planetListInitialized = false;
     this.finderFacadeService.unsearchedPlanets$
-      .pipe(takeWhile(() => !planetListInitialized))
+      //.pipe(takeWhile(() => !planetListInitialized))
       .subscribe((unsearchedPlanets: IPlanet[]) => {
         if (unsearchedPlanets) {
           this.planetList = unsearchedPlanets;
-          planetListInitialized = true;
+          //planetListInitialized = true;
         }
       });
 
@@ -88,33 +89,6 @@ export class DestinationWidgetComponent implements OnInit, OnDestroy {
           this.clearLastSelection();
         }
       });
-
-    /*
-    this.finderFacadeService.availablePlanetListUpdated$
-      .pipe(takeWhile(() => this.isComponentActive))
-      .subscribe((widgetIdToPlanetListMap) => {
-        if (!widgetIdToPlanetListMap) {
-          return;
-        }
-
-        const updatedPlanetList: IPlanet[] = widgetIdToPlanetListMap.get(
-          this.widgetId.toString()
-        );
-        if (updatedPlanetList !== this.planetList) {
-          this.planetList = updatedPlanetList;
-        }
-      });
-
-    this.finderFacadeService.lastUpdatedWidgetId$
-      .pipe(takeWhile(() => this.isComponentActive))
-      .subscribe((lastUpdatedWidgetId) => {
-        if (lastUpdatedWidgetId === null || lastUpdatedWidgetId === undefined) {
-          return;
-        }
-        if (this.widgetId > lastUpdatedWidgetId) {
-          this.clearLastSelection();
-        }
-      });*/
   }
 
   clearLastSelection(): void {
