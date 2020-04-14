@@ -25,7 +25,7 @@ export class FinderBoardComponent implements OnInit, OnDestroy {
   public isReadyToSearch: boolean;
 
   private isComponentActive = true;
-  private isInitialized = false;
+  public isInitialized = false;
 
   ngOnInit() {
     this.finderFacadeService.dashboardVm$
