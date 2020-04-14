@@ -27,14 +27,14 @@ export class VehicleListComponent implements OnInit, OnDestroy {
   ngOnInit() {
     //this.clearLastSelection();
 
-    //let vehicleListInitialized = false;
+    let vehicleListInitialized = false;
 
     this.finderFacadeService.vehicleInventory$
-      //.pipe(takeWhile(() => !vehicleListInitialized))
+      .pipe(takeWhile(() => !vehicleListInitialized))
       .subscribe((initialVehicles: IVehicle[]) => {
         if (initialVehicles) {
           this.vehicleList = initialVehicles;
-          //  vehicleListInitialized = true;
+          vehicleListInitialized = true;
         }
       });
 
