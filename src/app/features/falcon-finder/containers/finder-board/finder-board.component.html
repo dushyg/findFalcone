@@ -1,11 +1,11 @@
 <div class="boardContainer" *ngIf="isInitialized">
+  <div class="timeTaken">Time Taken : {{ timeTaken }}</div>
+
   <div class="instructionLine">
     Select planets you want to search in :
   </div>
 
   <app-destination-widget-list></app-destination-widget-list>
-
-  <div class="timeTaken">Time Taken : {{ timeTaken }}</div>
 
   <div class="findButtonContainer">
     <input
