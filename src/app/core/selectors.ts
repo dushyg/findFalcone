@@ -1,16 +1,22 @@
 //Encapsulating state field access via a getter function.
 // This will insulate other code from changes to state structure.
 
-export const getErrorMsg = (state) => state.errorMsg;
+import { IFalconAppState } from "./models/falconApp.state";
 
-export const getSearchAttemptMap = (state) => state.searchMap;
+export const getErrorMsg = (state: IFalconAppState) => state.errorMsg;
 
-export const getTotalTimeTaken = (state) => state.totalTimeTaken;
+export const getSearchAttemptMap = (state: IFalconAppState) => state.searchMap;
 
-export const getIsReadyToSearch = (state) => state.isReadyToSearch;
+export const getTotalTimeTaken = (state: IFalconAppState) =>
+  state.totalTimeTaken;
 
-export const getIsLoading = (state) => state.isLoading;
+export const getIsReadyToSearch = (state: IFalconAppState) =>
+  state.isReadyToSearch;
 
-export const getUnsearchedPlanets = (state) => state.unsearchedPlanets;
+export const getIsLoading = (state: IFalconAppState) => state.isLoading;
 
-export const getVehicleInventory = (state) => state.vehicleInventory;
+export const getUnsearchedPlanets = (state: IFalconAppState) =>
+  state.unsearchedPlanets;
+
+export const getVehicleInventory = (state: IFalconAppState) =>
+  state.vehicleInventory;
