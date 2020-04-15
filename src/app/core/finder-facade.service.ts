@@ -11,6 +11,7 @@ import { map, distinctUntilChanged, filter } from "rxjs/operators";
 import { Router } from "@angular/router";
 import PlanetChange from "./models/planetChange";
 import VehicleChange from "./models/vehicleChange";
+import * as selectors from "./selectors";
 import { ChangeUtils } from "./ChangeUtils";
 
 @Injectable({
@@ -42,35 +43,35 @@ export class FinderFacadeService {
 
   private store$ = this.store.asObservable();
 
-  private error$ = this.store$.pipe(map((state) => state.errorMsg));
+  private error$ = this.store$.pipe(map(selectors.getErrorMsg));
 
   private searchAttemptMap$ = this.store$.pipe(
-    map((state) => state.searchMap),
+    map(selectors.getSearchAttemptMap),
     distinctUntilChanged()
   );
 
   private totalTimeTaken$ = this.store$.pipe(
-    map((state) => state.totalTimeTaken),
+    map(selectors.getTotalTimeTaken),
     distinctUntilChanged()
   );
 
   private readyToSearch$ = this.store$.pipe(
-    map((state) => state.isReadyToSearch),
+    map(selectors.getIsReadyToSearch),
     distinctUntilChanged()
   );
 
   public isLoading$ = this.store$.pipe(
-    map((state) => state.isLoading),
+    map(selectors.getIsLoading),
     distinctUntilChanged()
   );
 
   public unsearchedPlanets$ = this.store$.pipe(
-    map((state) => state.unsearchedPlanets),
+    map(selectors.getUnsearchedPlanets),
     distinctUntilChanged()
   );
 
   public vehicleInventory$ = this.store$.pipe(
-    map((state) => state.vehicleInventory),
+    map(selectors.getVehicleInventory),
     distinctUntilChanged()
   );
 
@@ -197,8 +198,9 @@ export class FinderFacadeService {
       vehicleChange.newVehicleName,
       () => {
         return <ISearchAttempt>{
-          searchedPlanet: this._state.searchMap.get(changedWidgetId)
-            .searchedPlanet,
+          searchedPlanet: selectors
+            .getSearchAttemptMap(this._state)
+            .get(changedWidgetId).searchedPlanet,
           vehicleUsed: vehicleChange.newVehicleName,
         };
       },
