@@ -9,13 +9,12 @@ import PlanetChange from "./models/planetChange";
 import { IFalconAppState } from "./models/falconApp.state";
 import { ISearchAttempt } from "./models/searchAttempt";
 import { createSpyObj } from "./utitlity";
-import { IFindFalconeResponse } from "./models/findFalconeResponse";
 
 // Isolated unit tests
 describe("FinderFacadeService", () => {
   let planetServiceMock,
     vehiclesServiceMock,
-    falconFinderServiceMock,
+    tokenServiceMock,
     routerServiceMock;
   let planetListToBeReturned: IPlanet[], vehicleListToBeReturned: IVehicle[];
   const apiTokenToBeReturned: string = "plmVHX";
@@ -23,10 +22,7 @@ describe("FinderFacadeService", () => {
   beforeEach(() => {
     planetServiceMock = createSpyObj(["getAllPlanets"]);
     vehiclesServiceMock = createSpyObj(["getAllVehicles"]);
-    falconFinderServiceMock = createSpyObj([
-      "getFalconFinderApiToken",
-      "findFalcon",
-    ]);
+    tokenServiceMock = createSpyObj(["getFalconeFinderApiToken"]);
     routerServiceMock = createSpyObj(["navigate"]);
 
     planetListToBeReturned = [
@@ -73,7 +69,7 @@ describe("FinderFacadeService", () => {
       const service: FinderFacadeService = new FinderFacadeService(
         planetServiceMock,
         vehiclesServiceMock,
-        falconFinderServiceMock,
+        tokenServiceMock,
         routerServiceMock
       );
 
@@ -84,7 +80,7 @@ describe("FinderFacadeService", () => {
       const service: FinderFacadeService = new FinderFacadeService(
         planetServiceMock,
         vehiclesServiceMock,
-        falconFinderServiceMock,
+        tokenServiceMock,
         routerServiceMock
       );
 
@@ -100,7 +96,7 @@ describe("FinderFacadeService", () => {
       const service: FinderFacadeService = new FinderFacadeService(
         planetServiceMock,
         vehiclesServiceMock,
-        falconFinderServiceMock,
+        tokenServiceMock,
         routerServiceMock
       );
 
@@ -115,7 +111,7 @@ describe("FinderFacadeService", () => {
       const service: FinderFacadeService = new FinderFacadeService(
         planetServiceMock,
         vehiclesServiceMock,
-        falconFinderServiceMock,
+        tokenServiceMock,
         routerServiceMock
       );
 
@@ -130,7 +126,7 @@ describe("FinderFacadeService", () => {
       const service: FinderFacadeService = new FinderFacadeService(
         planetServiceMock,
         vehiclesServiceMock,
-        falconFinderServiceMock,
+        tokenServiceMock,
         routerServiceMock
       );
 
@@ -140,7 +136,7 @@ describe("FinderFacadeService", () => {
       vehiclesServiceMock.getAllVehicles.mockReturnValue(
         of(vehicleListToBeReturned, asyncScheduler)
       );
-      falconFinderServiceMock.getFalconFinderApiToken.mockReturnValue(
+      tokenServiceMock.getFalconFinderApiToken.mockReturnValue(
         of(apiTokenToBeReturned, asyncScheduler)
       );
 
@@ -169,7 +165,7 @@ describe("FinderFacadeService", () => {
       const service: FinderFacadeService = new FinderFacadeService(
         planetServiceMock,
         vehiclesServiceMock,
-        falconFinderServiceMock,
+        tokenServiceMock,
         routerServiceMock
       );
 
@@ -228,7 +224,7 @@ describe("FinderFacadeService", () => {
       vehiclesServiceMock.getAllVehicles.mockReturnValue(
         of(vehicleListToBeReturned, asyncScheduler)
       );
-      falconFinderServiceMock.getFalconFinderApiToken.mockReturnValue(
+      tokenServiceMock.getFalconFinderApiToken.mockReturnValue(
         of(apiTokenToBeReturned, asyncScheduler)
       );
     });
@@ -238,7 +234,7 @@ describe("FinderFacadeService", () => {
       const service: FinderFacadeService = new FinderFacadeService(
         planetServiceMock,
         vehiclesServiceMock,
-        falconFinderServiceMock,
+        tokenServiceMock,
         routerServiceMock
       );
       service.initializeAppData();
@@ -265,7 +261,7 @@ describe("FinderFacadeService", () => {
       const service: FinderFacadeService = new FinderFacadeService(
         planetServiceMock,
         vehiclesServiceMock,
-        falconFinderServiceMock,
+        tokenServiceMock,
         routerServiceMock
       );
       service.initializeAppData();
@@ -334,7 +330,7 @@ describe("FinderFacadeService", () => {
       const service: FinderFacadeService = new FinderFacadeService(
         planetServiceMock,
         vehiclesServiceMock,
-        falconFinderServiceMock,
+        tokenServiceMock,
         routerServiceMock
       );
       service.initializeAppData();
@@ -405,7 +401,7 @@ describe("FinderFacadeService", () => {
       const service: FinderFacadeService = new FinderFacadeService(
         planetServiceMock,
         vehiclesServiceMock,
-        falconFinderServiceMock,
+        tokenServiceMock,
         routerServiceMock
       );
       service.initializeAppData();
@@ -499,7 +495,7 @@ describe("FinderFacadeService", () => {
       const service: FinderFacadeService = new FinderFacadeService(
         planetServiceMock,
         vehiclesServiceMock,
-        falconFinderServiceMock,
+        tokenServiceMock,
         routerServiceMock
       );
       service.initializeAppData();
@@ -602,7 +598,7 @@ describe("FinderFacadeService", () => {
       const service: FinderFacadeService = new FinderFacadeService(
         planetServiceMock,
         vehiclesServiceMock,
-        falconFinderServiceMock,
+        tokenServiceMock,
         routerServiceMock
       );
       service.initializeAppData();
@@ -735,7 +731,7 @@ describe("FinderFacadeService", () => {
       const service: FinderFacadeService = new FinderFacadeService(
         planetServiceMock,
         vehiclesServiceMock,
-        falconFinderServiceMock,
+        tokenServiceMock,
         routerServiceMock
       );
       service.initializeAppData();
@@ -832,7 +828,7 @@ describe("FinderFacadeService", () => {
       const service: FinderFacadeService = new FinderFacadeService(
         planetServiceMock,
         vehiclesServiceMock,
-        falconFinderServiceMock,
+        tokenServiceMock,
         routerServiceMock
       );
       service.initializeAppData();

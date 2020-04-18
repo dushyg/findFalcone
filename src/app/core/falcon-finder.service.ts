@@ -12,19 +12,6 @@ import { IFindFalconeResponse } from "./models/findFalconeResponse";
 export class FalconFinderService {
   constructor(private http: HttpClient) {}
 
-  private readonly tokenApiUrl = "https://findfalcone.herokuapp.com/token";
-
-  public getFalconFinderApiToken(): Observable<{ token: string }> {
-    const httpOptions = {
-      headers: new HttpHeaders({
-        Accept: "application/json",
-      }),
-    };
-    return this.http
-      .post<{ token: string }>(this.tokenApiUrl, null, httpOptions)
-      .pipe(catchError(handleError));
-  }
-
   private readonly falconFinderApiUrl =
     "https://findfalcone.herokuapp.com/find";
 

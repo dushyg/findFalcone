@@ -4,7 +4,6 @@ import { VehiclesService } from "./vehicles.service";
 import { IPlanet } from "./models/planet";
 import { BehaviorSubject, forkJoin, combineLatest, Subject } from "rxjs";
 import { IVehicle } from "./models/vehicle";
-import { FalconFinderService } from "./falcon-finder.service";
 import { ISearchAttempt } from "./models/searchAttempt";
 import { IFalconAppState } from "./models/falconApp.state";
 import { map, distinctUntilChanged, filter } from "rxjs/operators";
@@ -13,6 +12,7 @@ import PlanetChange from "./models/planetChange";
 import VehicleChange from "./models/vehicleChange";
 import * as selectors from "./selectors";
 import { ChangeUtils } from "./ChangeUtils";
+import { FalconeTokenService } from "./falconeToken.service";
 
 @Injectable({
   providedIn: "root",
@@ -21,7 +21,7 @@ export class FinderFacadeService {
   constructor(
     private planetService: PlanetsService,
     private vehicleService: VehiclesService,
-    private finderService: FalconFinderService,
+    private tokenService: FalconeTokenService,
     private router: Router
   ) {}
 
@@ -116,7 +116,7 @@ export class FinderFacadeService {
     forkJoin(
       this.vehicleService.getAllVehicles(),
       this.planetService.getAllPlanets(),
-      this.finderService.getFalconFinderApiToken()
+      this.tokenService.getFalconeFinderApiToken()
     ).subscribe(
       (response) => {
         this.finderApiToken = response[2].token;
