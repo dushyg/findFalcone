@@ -11,7 +11,7 @@ import { Router } from "@angular/router";
 import PlanetChange from "./models/planetChange";
 import VehicleChange from "./models/vehicleChange";
 import * as selectors from "./selectors";
-import { ChangeUtils } from "./ChangeUtils";
+import { ChangeUtils } from "./changeUtils";
 import { FalconeTokenService } from "./falconeToken.service";
 
 @Injectable({
