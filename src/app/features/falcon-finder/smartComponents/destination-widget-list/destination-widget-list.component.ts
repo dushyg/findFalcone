@@ -1,11 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
-import { IVehicle } from "src/app/core/models/vehicle";
-import { IPlanet } from "src/app/core/models/planet";
-import { IVehicleSelectionParam } from "src/app/core/models/vehicleSelectionParam";
-import { IPlanetSelectionParam } from "src/app/core/models/planetSelectionParam";
-import { Observable } from "rxjs";
-import PlanetUpdates from "src/app/core/models/planetUpdates";
-import VehicleUpdates from "src/app/core/models/vehicleUpdates";
+import { Component, OnInit } from "@angular/core";
 import { FinderFacadeService } from "src/app/core/finder-facade.service";
 
 @Component({

@@ -1,12 +1,7 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
 import { FinderFacadeService } from "src/app/core/finder-facade.service";
-import { Observable } from "rxjs";
-import { IPlanet } from "src/app/core/models/planet";
-import { IVehicle } from "src/app/core/models/vehicle";
 import { Router } from "@angular/router";
 import { takeWhile } from "rxjs/operators";
-import PlanetChange from "src/app/core/models/planetChange";
-import VehicleChange from "src/app/core/models/vehicleChange";
 
 @Component({
   selector: "app-finder-board",

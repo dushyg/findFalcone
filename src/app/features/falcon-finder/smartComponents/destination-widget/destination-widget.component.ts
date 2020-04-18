@@ -1,27 +1,10 @@
-import {
-  Component,
-  OnInit,
-  Input,
-  Output,
-  EventEmitter,
-  OnChanges,
-  SimpleChanges,
-  SimpleChange,
-  OnDestroy,
-} from "@angular/core";
+import { Component, OnInit, OnDestroy } from "@angular/core";
 
 import { IPlanet } from "src/app/core/models/planet";
-import { IVehicleSelectionParam } from "src/app/core/models/vehicleSelectionParam";
-import { IVehicle } from "src/app/core/models/vehicle";
-import { IPlanetSelectionParam } from "src/app/core/models/planetSelectionParam";
 import PlanetChange from "src/app/core/models/planetChange";
-import VehicleChange from "src/app/core/models/vehicleChange";
 import { Observable, Subject, combineLatest } from "rxjs";
-import PlanetUpdates from "src/app/core/models/planetUpdates";
-import VehicleUpdates from "src/app/core/models/vehicleUpdates";
-import { ISearchAttempt } from "src/app/core/models/searchAttempt";
 import { FinderFacadeService } from "src/app/core/finder-facade.service";
-import { takeWhile, withLatestFrom, take } from "rxjs/operators";
+import { takeWhile, withLatestFrom } from "rxjs/operators";
 
 @Component({
   selector: "app-destination-widget",

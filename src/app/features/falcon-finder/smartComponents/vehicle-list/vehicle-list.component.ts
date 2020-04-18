@@ -25,8 +25,6 @@ export class VehicleListComponent implements OnInit, OnDestroy {
   };
 
   ngOnInit() {
-    //this.clearLastSelection();
-
     let vehicleListInitialized = false;
 
     this.finderFacadeService.vehicleInventory$
@@ -63,37 +61,9 @@ export class VehicleListComponent implements OnInit, OnDestroy {
           }
         }
       });
-
-    /*
-    this.finderFacadeService.availableVehicleListUpdated$
-      .pipe(takeWhile(() => this.isComponentActive))
-      .subscribe((widgetIdToVehicleListMap) => {
-        if (!widgetIdToVehicleListMap) {
-          return;
-        }
-        const updatedVehicleList: IVehicle[] = widgetIdToVehicleListMap.get(
-          this.widgetId.toString()
-        );
-        if (updatedVehicleList !== this.vehicleList) {
-          this.vehicleList = updatedVehicleList;
-        }
-      });
-
-    this.finderFacadeService.lastUpdatedWidgetId$
-      .pipe(takeWhile(() => this.isComponentActive))
-      .subscribe((lastUpdatedWidgetId) => {
-        if (lastUpdatedWidgetId === null || lastUpdatedWidgetId === undefined) {
-          return;
-        }
-        if (this.widgetId > lastUpdatedWidgetId) {
-          this.clearLastSelection();
-        }
-      });*/
   }
 
   public vehicleSelected(vehicle: IVehicle) {
-    // console.log('vehicle select - ', vehicle);
-
     this.finderFacadeService.vehicleChanged(
       new VehicleChange(this.widgetId, vehicle.name)
     );
