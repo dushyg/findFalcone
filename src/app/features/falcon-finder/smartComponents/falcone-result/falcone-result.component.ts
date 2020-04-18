@@ -2,8 +2,8 @@ import { Component, OnInit, OnDestroy } from "@angular/core";
 import { FinderFacadeService } from "src/app/core/finder-facade.service";
 import { Observable } from "rxjs";
 import { takeWhile } from "rxjs/operators";
-import { IFindFalconRequest } from "src/app/core/models/find-falcon-request";
-import { IFindFalconResponse } from "src/app/core/models/find-falcon-response";
+import { IFindFalconeRequest } from "src/app/core/models/findFalconeRequest";
+import { IFindFalconeResponse } from "src/app/core/models/findFalconeResponse";
 import { FalconFinderService } from "src/app/core/falcon-finder.service";
 import { ISearchAttempt } from "src/app/core/models/searchAttempt";
 
@@ -41,12 +41,12 @@ export class FalconeResultComponent implements OnInit, OnDestroy {
   }
 
   public findFalcon(): void {
-    let findFalconRequest: IFindFalconRequest;
+    let findFalconRequest: IFindFalconeRequest;
     const searchAttemptMap = this.searchAttemptMap;
     const maxSearchAttemptsAllowed = this.finderFacadeService.getCountOfWidgetsDisplayed();
 
     if (searchAttemptMap) {
-      const request = <IFindFalconRequest>{
+      const request = <IFindFalconeRequest>{
         planet_names: new Array<string>(maxSearchAttemptsAllowed),
         vehicle_names: new Array<string>(maxSearchAttemptsAllowed),
       };
@@ -71,11 +71,11 @@ export class FalconeResultComponent implements OnInit, OnDestroy {
     }
   }
 
-  private callFindFalconApi(request: IFindFalconRequest) {
+  private callFindFalconApi(request: IFindFalconeRequest) {
     request.token = this.finderFacadeService.getFinderApiToken();
     this.finderFacadeService.setLoadingFlag(true);
     this.finderService.findFalcon(request).subscribe(
-      (response: IFindFalconResponse) => {
+      (response: IFindFalconeResponse) => {
         this.finderFacadeService.setLoadingFlag(false);
 
         let errorMsg = null;

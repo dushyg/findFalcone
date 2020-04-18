@@ -9,7 +9,7 @@ import PlanetChange from "./models/planetChange";
 import { IFalconAppState } from "./models/falconApp.state";
 import { ISearchAttempt } from "./models/searchAttempt";
 import { createSpyObj } from "./utitlity";
-import { IFindFalconResponse } from "./models/find-falcon-response";
+import { IFindFalconeResponse } from "./models/findFalconeResponse";
 
 // Isolated unit tests
 describe("FinderFacadeService", () => {
