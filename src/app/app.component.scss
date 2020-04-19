@@ -14,6 +14,12 @@
   .appFalconBody {
     margin-top: 100px;
     height: 100%;
+
+    .errorMsg {
+      margin: 10px auto;
+      text-align: center;
+      color: red;
+    }
   }
 
   app-falcon-footer {

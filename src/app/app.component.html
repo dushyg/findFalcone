@@ -1,6 +1,9 @@
 <div class="falconApp">
   <app-falcon-header></app-falcon-header>
   <div class="appFalconBody">
+    <div class="errorMsg" *ngIf="errorMessage">
+      {{ errorMessage }}
+    </div>
     <router-outlet></router-outlet>
   </div>
   <app-falcon-footer></app-falcon-footer>
