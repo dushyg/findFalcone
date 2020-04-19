@@ -1,8 +1,7 @@
 import { NgModule } from "@angular/core";
-import { Routes, RouterModule } from "@angular/router";
-import { FinderBoardComponent } from "./features/falcon-finder/smartComponents/finder-board/finder-board.component";
-import { FalconeResultComponent } from "./features/falcon-finder/smartComponents/falcone-result/falcone-result.component";
-import { FalconeResetComponent } from "./features/falcon-finder/presenterComponents/falcone-reset/falcone-reset.component";
+import { Routes, RouterModule, PreloadAllModules } from "@angular/router";
+import { FinderBoardComponent } from "./finder-board/smartComponents/finder-board/finder-board.component";
+import { FalconeResetComponent } from "./shared/presenterComponents/falcone-reset/falcone-reset.component";
 
 const routes: Routes = [
   {
@@ -16,7 +15,10 @@ const routes: Routes = [
   },
   {
     path: "result",
-    component: FalconeResultComponent,
+    loadChildren: () =>
+      import("./finder-result/finderResult.module").then(
+        (m) => m.FinderResultModule
+      ),
   },
   {
     path: "reset",

@@ -5,17 +5,14 @@ import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
 
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { CoreModule } from "./core/core.module";
-import { FinderBoardComponent } from "./features/falcon-finder/smartComponents/finder-board/finder-board.component";
-import { DestinationWidgetListComponent } from "./features/falcon-finder/smartComponents/destination-widget-list/destination-widget-list.component";
-import { DestinationWidgetComponent } from "./features/falcon-finder/smartComponents/destination-widget/destination-widget.component";
-import { VehicleListComponent } from "./features/falcon-finder/smartComponents/vehicle-list/vehicle-list.component";
-import { FalconHeaderComponent } from "./features/falcon-finder/smartComponents/falcon-header/falcon-header.component";
-import { FalconFooterComponent } from "./features/falcon-finder/presenterComponents/falcon-footer/falcon-footer.component";
-import { FalconeResultComponent } from "./features/falcon-finder/smartComponents/falcone-result/falcone-result.component";
-import { FalconeResetComponent } from "./features/falcon-finder/presenterComponents/falcone-reset/falcone-reset.component";
-import { Typeahead } from "./features/falcon-finder/presenterComponents/typeahead/typeahead.component";
+import { FinderBoardComponent } from "./finder-board/smartComponents/finder-board/finder-board.component";
+import { DestinationWidgetListComponent } from "./finder-board/smartComponents/destination-widget-list/destination-widget-list.component";
+import { DestinationWidgetComponent } from "./finder-board/smartComponents/destination-widget/destination-widget.component";
+import { VehicleListComponent } from "./finder-board/smartComponents/vehicle-list/vehicle-list.component";
+import { Typeahead } from "./finder-board/presenterComponents/typeahead/typeahead.component";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { HttpClientModule } from "@angular/common/http";
+import { SharedModule } from "./shared/shared.module";
 
 @NgModule({
   declarations: [
@@ -24,21 +21,17 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
     DestinationWidgetListComponent,
     DestinationWidgetComponent,
     VehicleListComponent,
-    FalconHeaderComponent,
-    FalconFooterComponent,
-    FalconeResultComponent,
-    FalconeResetComponent,
     Typeahead,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    CoreModule,
     FormsModule,
     ReactiveFormsModule,
+    SharedModule,
+    HttpClientModule,
   ],
-  providers: [],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
