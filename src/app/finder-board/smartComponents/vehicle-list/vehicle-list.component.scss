@@ -2,3 +2,20 @@
   display: inline-block;
   text-align: left;
 }
+
+input[type="radio"]:disabled {
+  cursor: not-allowed;
+}
+
+input[type="radio"]:disabled + label {
+  cursor: not-allowed;
+  text-decoration: line-through;
+  color: lightcoral;
+}
+
+input[type="radio"]:checked + label {
+  font-weight: bold;
+  font-style: italic;
+  text-decoration: none;
+  color: black;
+}

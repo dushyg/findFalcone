@@ -1,18 +1,18 @@
 <div class="vehicleList">
   <div *ngFor="let vehicle of vehicleList; let i = index">
+    <input
+      type="radio"
+      name="radio_{{ widgetId }}"
+      [value]="vehicle.name"
+      [ngModel]="lastSelectedVehicle.name"
+      [disabled]="
+        (vehicle && vehicle.maxDistance < destinationDistance) ||
+        vehicle.availNumUnits == 0
+      "
+      id="vehicle_{{ widgetId }}_{{ i }}"
+      (change)="vehicleSelected(vehicle)"
+    />&nbsp;
     <label for="vehicle_{{ widgetId }}_{{ i }}">
-      <input
-        type="radio"
-        name="radio_{{ widgetId }}"
-        [value]="vehicle.name"
-        [ngModel]="lastSelectedVehicle.name"
-        [disabled]="
-          (vehicle && vehicle.maxDistance < destinationDistance) ||
-          vehicle.availNumUnits == 0
-        "
-        id="vehicle_{{ widgetId }}_{{ i }}"
-        (change)="vehicleSelected(vehicle)"
-      />
       {{ vehicle.name + " (" + vehicle.availNumUnits + ")" }}
     </label>
 
