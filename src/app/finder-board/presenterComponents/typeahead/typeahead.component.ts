@@ -54,12 +54,9 @@ export class Typeahead implements OnInit, OnDestroy {
     this.filteredSourceArray = this.sourceArray.filter((item) => {
       return item.name.toLowerCase().includes(trimmedValue);
     });
-
-    this.doShowResults = true;
   };
 
   public planetSelectHandler(planetName) {
-    this.doShowResults = false;
     let selectedPlanet = this.filteredSourceArray.find((planet) => {
       return planet.name === planetName;
     });
@@ -78,12 +75,11 @@ export class Typeahead implements OnInit, OnDestroy {
 
   public showResultsList() {
     this.doShowResults = true;
-    this.performSearch(this.inputTextControl.value);
   }
 
   public hideResultsList() {
     // focusout event on the wrapper div is fired first,
-    // hence we need to call this after some delay so that selectionMade field
+    // hence we need to call this after some delay so that lastSelection field
     // has latest value
     setTimeout(this.hideResults, 250);
   }
