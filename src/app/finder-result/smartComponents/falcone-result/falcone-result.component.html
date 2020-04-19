@@ -1,9 +1,8 @@
 <div class="resultBody">
   <div class="resultWrapper">
-    <div *ngIf="!errorMsg && planetNameFalconFoundOn">
+    <div *ngIf="!errorMsg && messageToBeShown">
       <h2>
-        Success! Congratulations on Finding Falcone. King Shan is mighty
-        pleased.
+        {{ messageToBeShown }}
       </h2>
     </div>
 

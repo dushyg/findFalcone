@@ -26,6 +26,7 @@ export class FalconeResultComponent implements OnInit, OnDestroy {
   public timeTaken: number = 0;
   public isLoading: boolean;
   private searchAttemptMap: Map<string, ISearchAttempt>;
+  public messageToBeShown = "";
 
   ngOnInit() {
     this.finderFacadeService.dashboardVm$
@@ -87,14 +88,15 @@ export class FalconeResultComponent implements OnInit, OnDestroy {
             if (response.status.trim().toLowerCase() === "success") {
               if (response.planetName) {
                 this.planetNameFalconFoundOn = response.planetName;
+                this.messageToBeShown =
+                  "Success! Congratulations on Finding Falcone. King Shan is mighty pleased.";
               } else {
                 errorMsg = "Search api returned empty planet name";
                 this.finderFacadeService.updateError(errorMsg);
               }
             } else if (response.status.trim().toLocaleLowerCase() === "false") {
-              errorMsg =
+              this.messageToBeShown =
                 "Failure! You were unable to find Falcone. Better luck next time.";
-              this.finderFacadeService.updateError(errorMsg);
             } else {
               errorMsg = "Search api did not return a response status value.";
               this.finderFacadeService.updateError(errorMsg);
