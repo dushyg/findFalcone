@@ -27,7 +27,7 @@ export class DestinationWidgetComponent implements OnInit, OnDestroy {
   > = this.resetTypeAheadSubject.asObservable();
 
   private isComponentActive = true;
-
+  public planetListInitialized = false;
   constructor(private finderFacadeService: FinderFacadeService) {
     // using modulo operator to cycle the widget ids from 1 to max widget count
     this.widgetId =
@@ -38,17 +38,15 @@ export class DestinationWidgetComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    let planetListInitialized = false;
-
     combineLatest(
       this.finderFacadeService.unsearchedPlanets$,
       this.finderFacadeService.isLoading$
     )
-      .pipe(takeWhile(() => !planetListInitialized))
+      .pipe(takeWhile(() => !this.planetListInitialized))
       .subscribe(([unsearchedPlanets, isLoading]) => {
         if (unsearchedPlanets && !isLoading) {
           this.planetList = unsearchedPlanets;
-          planetListInitialized = true;
+          this.planetListInitialized = true;
         }
       });
 

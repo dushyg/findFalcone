@@ -1,4 +1,4 @@
-<div class="destinationWidget">
+<div class="destinationWidget" *ngIf="planetListInitialized">
   <span>Destination {{ widgetId }}</span>
   <app-typeahead
     [sourceArray]="planetList"
