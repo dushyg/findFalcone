@@ -254,7 +254,7 @@ describe('FinderFacadeService', () => {
       service.planetChanged(new PlanetChange(1, newPlanet));
 
       // assert
-      expect(service['_state']).toEqual(expectedState);
+      expect(service['state']).toEqual(expectedState);
     }));
 
     it('should set expected state when a vehicle is set for the first time', fakeAsync(() => {
@@ -322,8 +322,8 @@ describe('FinderFacadeService', () => {
       service.vehicleChanged(new VehicleChange(1, 'Space pod'));
 
       // assert
-      expect(service['_state']).toEqual(expectedState);
-      (expect(service['_state']) as any).toMatchSnapshot();
+      expect(service['state']).toEqual(expectedState);
+      (expect(service['state']) as any).toMatchSnapshot();
     }));
 
     it('should set expected state when vehicle is changed in the first widget', fakeAsync(() => {
@@ -394,7 +394,7 @@ describe('FinderFacadeService', () => {
       service.vehicleChanged(new VehicleChange(1, 'Space ship'));
 
       // assert
-      expect(service['_state']).toEqual(expectedState);
+      expect(service['state']).toEqual(expectedState);
     }));
 
     it('should set isReadyForSearch to true when all widgets are set with required inputs', fakeAsync(() => {
@@ -488,7 +488,7 @@ describe('FinderFacadeService', () => {
       service.vehicleChanged(new VehicleChange(4, newVehicle));
 
       // assert
-      expect(service['_state']).toEqual(expectedState);
+      expect(service['state']).toEqual(expectedState);
     }));
 
     it('should reset widgets to the right when 1st widget planet is updated', fakeAsync(() => {
@@ -591,7 +591,7 @@ describe('FinderFacadeService', () => {
       service.planetChanged(new PlanetChange(1, newPlanet));
 
       // assert
-      expect(service['_state']).toEqual(expectedState);
+      expect(service['state']).toEqual(expectedState);
     }));
 
     it('should reset widgets to the right when 1st widget vehicle is updated', fakeAsync(() => {
@@ -724,7 +724,7 @@ describe('FinderFacadeService', () => {
       service.vehicleChanged(new VehicleChange(1, newVehicle));
 
       // assert
-      expect(service['_state']).toEqual(expectedState);
+      expect(service['state']).toEqual(expectedState);
     }));
 
     it('should reset widgets to the right (but not the 1st and 2nd widget) when 3rd widget planet is updated', fakeAsync(() => {
@@ -821,7 +821,7 @@ describe('FinderFacadeService', () => {
       service.planetChanged(new PlanetChange(3, newPlanet));
 
       // assert
-      expect(service['_state']).toEqual(expectedState);
+      expect(service['state']).toEqual(expectedState);
     }));
 
     it('should reset widgets to the right (but not the 1st and 2nd widget) when 3rd widget vehicle is updated', fakeAsync(() => {
@@ -921,7 +921,7 @@ describe('FinderFacadeService', () => {
       service.vehicleChanged(new VehicleChange(3, newVehicle));
 
       // assert
-      expect(service['_state']).toEqual(expectedState);
+      expect(service['state']).toEqual(expectedState);
     }));
   });
 
@@ -1064,7 +1064,7 @@ describe('FinderFacadeService', () => {
       tick();
 
       // assert
-      expect(service['_state']).toEqual(expectedState);
+      expect(service['state']).toEqual(expectedState);
       service.planetFoundOn$.subscribe((planetFoundOn) => {
         expect(planetFoundOn).toEqual('Donlon');
       });
@@ -1176,7 +1176,7 @@ describe('FinderFacadeService', () => {
       tick();
 
       // assert
-      expect(service['_state']).toEqual(expectedState);
+      expect(service['state']).toEqual(expectedState);
     }));
 
     it('should set in state, error message when falcon api returns error message', fakeAsync(() => {
@@ -1285,7 +1285,7 @@ describe('FinderFacadeService', () => {
       tick();
 
       // assert
-      expect(service['_state']).toEqual(expectedState);
+      expect(service['state']).toEqual(expectedState);
     }));
   });*/
 });
