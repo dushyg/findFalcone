@@ -1,10 +1,10 @@
-import { NgModule } from "@angular/core";
-import { RouterModule, Routes } from "@angular/router";
-import { FalconeResultComponent } from "./smartComponents/falcone-result/falcone-result.component";
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { FalconeResultComponent } from './smartComponents/falcone-result/falcone-result.component';
 
 const routes: Routes = [
   {
-    path: "",
+    path: '',
     component: FalconeResultComponent,
   },
 ];

@@ -17,19 +17,15 @@ export class VehiclesService {
     return this.http.get<RawVehicle[]>(this.vehicleApiUrl).pipe(
       map((vehicles: RawVehicle[]) => {
         return vehicles.map((v: RawVehicle) => {
-          return <IVehicle>{
+          return {
             name: v.name,
             availNumUnits: v.total_no,
             maxDistance: v.max_distance,
             speed: v.speed,
             totalNumUnits: v.total_no,
-          };
+          } as IVehicle;
         });
       }),
-      // tap(r => {
-      //   console.log('getAllVehicles',r)
-      // })
-      // ,
       catchError(handleError)
     );
   }

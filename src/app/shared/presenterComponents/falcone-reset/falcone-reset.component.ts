@@ -6,9 +6,9 @@ import { Router } from '@angular/router';
 })
 export class FalconeResetComponent {
 
-    constructor(private router : Router){}
+    constructor(private router: Router) {}
 
-    ngOnInit(){
+    ngOnInit() {
 
         this.router.navigate(['/finderboard']);
     }

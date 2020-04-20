@@ -1,25 +1,25 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
+import { Component, OnInit, OnDestroy } from '@angular/core';
 
-import { IPlanet } from "src/app/finder-board/models/planet";
-import PlanetChange from "src/app/finder-board/models/planetChange";
-import { Observable, Subject, combineLatest } from "rxjs";
-import { FinderFacadeService } from "src/app/finder-board/services/finder-facade.service";
-import { takeWhile, withLatestFrom } from "rxjs/operators";
+import { IPlanet } from 'src/app/finder-board/models/planet';
+import PlanetChange from 'src/app/finder-board/models/planetChange';
+import { Observable, Subject, combineLatest } from 'rxjs';
+import { FinderFacadeService } from 'src/app/finder-board/services/finder-facade.service';
+import { takeWhile, withLatestFrom } from 'rxjs/operators';
 
 @Component({
-  selector: "app-destination-widget",
-  templateUrl: "./destination-widget.component.html",
-  styleUrls: ["./destination-widget.component.scss"],
+  selector: 'app-destination-widget',
+  templateUrl: './destination-widget.component.html',
+  styleUrls: ['./destination-widget.component.scss'],
 })
 export class DestinationWidgetComponent implements OnInit, OnDestroy {
-  private static createdWidgetCount: number = 0;
+  private static createdWidgetCount = 0;
   public widgetId: number;
 
   public planetList: IPlanet[];
 
-  public destinationDistance: number = 0;
+  public destinationDistance = 0;
 
-  public lastSelectedPlanet: string = "Select";
+  public lastSelectedPlanet = 'Select';
 
   private resetTypeAheadSubject = new Subject<void>();
   public resetTypeAhead$: Observable<
@@ -76,7 +76,7 @@ export class DestinationWidgetComponent implements OnInit, OnDestroy {
   }
 
   clearLastSelection(): void {
-    this.lastSelectedPlanet = "Select";
+    this.lastSelectedPlanet = 'Select';
     this.resetTypeAheadSubject.next();
   }
 

@@ -1,16 +1,16 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
-import { FinderFacadeService } from "src/app/finder-board/services/finder-facade.service";
-import { Observable } from "rxjs";
-import { takeWhile } from "rxjs/operators";
-import { IFindFalconeRequest } from "src/app/finder-result/models/findFalconeRequest";
-import { IFindFalconeResponse } from "src/app/finder-result/models/findFalconeResponse";
-import { FalconFinderService } from "src/app/finder-result/services/falcon-finder.service";
-import { ISearchAttempt } from "src/app/finder-board/models/searchAttempt";
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { FinderFacadeService } from 'src/app/finder-board/services/finder-facade.service';
+import { Observable } from 'rxjs';
+import { takeWhile } from 'rxjs/operators';
+import { IFindFalconeRequest } from 'src/app/finder-result/models/findFalconeRequest';
+import { IFindFalconeResponse } from 'src/app/finder-result/models/findFalconeResponse';
+import { FalconFinderService } from 'src/app/finder-result/services/falcon-finder.service';
+import { ISearchAttempt } from 'src/app/finder-board/models/searchAttempt';
 
 @Component({
-  selector: "app-falcone-result",
-  templateUrl: "./falcone-result.component.html",
-  styleUrls: ["./falcone-result.component.scss"],
+  selector: 'app-falcone-result',
+  templateUrl: './falcone-result.component.html',
+  styleUrls: ['./falcone-result.component.scss'],
 })
 export class FalconeResultComponent implements OnInit, OnDestroy {
   constructor(
@@ -20,13 +20,13 @@ export class FalconeResultComponent implements OnInit, OnDestroy {
 
   public error$: Observable<string>;
   public timeTaken$: Observable<number>;
-  public planetNameFalconFoundOn: string = "";
-  private isComponentActive: boolean = true;
+  public planetNameFalconFoundOn = '';
+  private isComponentActive = true;
   public errorMsg: string;
-  public timeTaken: number = 0;
+  public timeTaken = 0;
   public isLoading: boolean;
   private searchAttemptMap: Map<string, ISearchAttempt>;
-  public messageToBeShown = "";
+  public messageToBeShown = '';
 
   ngOnInit() {
     this.finderFacadeService.dashboardVm$
@@ -47,13 +47,13 @@ export class FalconeResultComponent implements OnInit, OnDestroy {
     const maxSearchAttemptsAllowed = this.finderFacadeService.getCountOfWidgetsDisplayed();
 
     if (searchAttemptMap) {
-      const request = <IFindFalconeRequest>{
+      const request = {
         planet_names: new Array<string>(maxSearchAttemptsAllowed),
         vehicle_names: new Array<string>(maxSearchAttemptsAllowed),
-      };
+      } as IFindFalconeRequest;
 
       let index = 0;
-      for (let searchAttemptEntry of searchAttemptMap) {
+      for (const searchAttemptEntry of searchAttemptMap) {
         const searchAttempt = searchAttemptEntry[1];
 
         request.planet_names[index] = searchAttempt.searchedPlanet;
@@ -85,25 +85,25 @@ export class FalconeResultComponent implements OnInit, OnDestroy {
             errorMsg = response.error;
             this.finderFacadeService.updateError(errorMsg);
           } else if (response.status) {
-            if (response.status.trim().toLowerCase() === "success") {
+            if (response.status.trim().toLowerCase() === 'success') {
               if (response.planetName) {
                 this.planetNameFalconFoundOn = response.planetName;
                 this.messageToBeShown =
-                  "Success! Congratulations on Finding Falcone. King Shan is mighty pleased.";
+                  'Success! Congratulations on Finding Falcone. King Shan is mighty pleased.';
               } else {
-                errorMsg = "Search api returned empty planet name";
+                errorMsg = 'Search api returned empty planet name';
                 this.finderFacadeService.updateError(errorMsg);
               }
-            } else if (response.status.trim().toLocaleLowerCase() === "false") {
+            } else if (response.status.trim().toLocaleLowerCase() === 'false') {
               this.messageToBeShown =
-                "Failure! You were unable to find Falcone. Better luck next time.";
+                'Failure! You were unable to find Falcone. Better luck next time.';
             } else {
-              errorMsg = "Search api did not return a response status value.";
+              errorMsg = 'Search api did not return a response status value.';
               this.finderFacadeService.updateError(errorMsg);
             }
           }
         } else {
-          errorMsg = "Search api returned invalid response.";
+          errorMsg = 'Search api returned invalid response.';
           this.finderFacadeService.updateError(errorMsg);
         }
       },

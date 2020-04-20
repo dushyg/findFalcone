@@ -1,21 +1,21 @@
-import { Injectable } from "@angular/core";
-import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { Observable } from "rxjs";
-import { catchError } from "rxjs/operators";
-import { handleError } from "../handleError";
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { handleError } from '../handleError';
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root',
 })
 export class FalconeTokenService {
   constructor(private http: HttpClient) {}
 
-  private readonly tokenApiUrl = "https://findfalcone.herokuapp.com/token";
+  private readonly tokenApiUrl = 'https://findfalcone.herokuapp.com/token';
 
   public getFalconeFinderApiToken(): Observable<{ token: string }> {
     const httpOptions = {
       headers: new HttpHeaders({
-        Accept: "application/json",
+        Accept: 'application/json',
       }),
     };
     return this.http

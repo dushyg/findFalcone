@@ -1,7 +1,7 @@
-import { ISearchAttempt } from "./models/searchAttempt";
-import { IPlanet } from "./models/planet";
-import { IVehicle } from "./models/vehicle";
-import { IFalconAppState } from "./models/falconApp.state";
+import { ISearchAttempt } from './models/searchAttempt';
+import { IPlanet } from './models/planet';
+import { IVehicle } from './models/vehicle';
+import { IFalconAppState } from './models/falconApp.state';
 
 export class ChangeUtils {
   public static getNextStateAfterChange(
@@ -40,14 +40,14 @@ export class ChangeUtils {
       updatedSearchMap
     );
 
-    return <IFalconAppState>{
+    return {
       ...previousState,
       searchMap: updatedSearchMap,
       unsearchedPlanets,
       vehicleInventory: updatedVehicleInventory,
       isReadyToSearch,
       totalTimeTaken: totalTimeTakenForSearch,
-    };
+    } as IFalconAppState;
   }
 
   private static getUpdatedSearchMap(
@@ -56,7 +56,7 @@ export class ChangeUtils {
     changedValue: string,
     changedWidgetSearchAttemptGetter: () => ISearchAttempt
   ): Map<string, ISearchAttempt> {
-    let updatedSearchMap = new Map<string, ISearchAttempt>();
+    const updatedSearchMap = new Map<string, ISearchAttempt>();
 
     searchMap.forEach((value: ISearchAttempt, key: string) => {
       let updatedSearchAttempt: ISearchAttempt;
@@ -64,16 +64,16 @@ export class ChangeUtils {
       // just make a clone for immutability and continue
       const currentlyLoopedWidgetId = Number(key);
       if (currentlyLoopedWidgetId < changedWidgetId) {
-        updatedSearchAttempt = <ISearchAttempt>{ ...value };
+        updatedSearchAttempt = { ...value } as ISearchAttempt;
       } else if (currentlyLoopedWidgetId == changedWidgetId) {
         updatedSearchAttempt = changedWidgetSearchAttemptGetter();
       } else {
         // else if the current widget is to the right of the changed widget then
         // we will need to reset both the existing planet and vehicle selections if any
-        updatedSearchAttempt = <ISearchAttempt>{
+        updatedSearchAttempt = {
           vehicleUsed: null,
           searchedPlanet: null,
-        };
+        } as ISearchAttempt;
       }
 
       updatedSearchMap.set(key, updatedSearchAttempt);
@@ -106,12 +106,12 @@ export class ChangeUtils {
     const usedVehicleMap = this.getUsedVehicleMap(searchMap);
 
     // update vehicle list with available vehicle units
-    let updatedVehicleList: IVehicle[] = vehicleList.map((vehicle) => {
+    const updatedVehicleList: IVehicle[] = vehicleList.map((vehicle) => {
       const totalNumUnits = vehicle.totalNumUnits;
-      return <IVehicle>{
+      return {
         ...vehicle,
         availNumUnits: totalNumUnits - (usedVehicleMap.get(vehicle.name) || 0),
-      };
+      } as IVehicle;
     });
 
     return updatedVehicleList;
@@ -144,7 +144,7 @@ export class ChangeUtils {
     allPlanets: IPlanet[],
     allVehicles: IVehicle[]
   ): number {
-    let totalTimeTakenForSearch: number = 0;
+    let totalTimeTakenForSearch = 0;
 
     const nameToPlanetMap: Map<string, IPlanet> = new Map<string, IPlanet>();
     const nameToVehicleMap: Map<string, IVehicle> = new Map<string, IVehicle>();
@@ -184,7 +184,7 @@ export class ChangeUtils {
   private static isItFineToStartSearching(
     searchMap: Map<string, ISearchAttempt>
   ): boolean {
-    let isReadyForSearch: boolean = true;
+    let isReadyForSearch = true;
 
     searchMap.forEach((value: ISearchAttempt) => {
       if (!value) {

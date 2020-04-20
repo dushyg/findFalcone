@@ -1,12 +1,12 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
-import { FinderFacadeService } from "src/app/finder-board/services/finder-facade.service";
-import { Router } from "@angular/router";
-import { takeWhile } from "rxjs/operators";
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { FinderFacadeService } from 'src/app/finder-board/services/finder-facade.service';
+import { Router } from '@angular/router';
+import { takeWhile } from 'rxjs/operators';
 
 @Component({
-  selector: "app-finder-board",
-  templateUrl: "./finder-board.component.html",
-  styleUrls: ["./finder-board.component.scss"],
+  selector: 'app-finder-board',
+  templateUrl: './finder-board.component.html',
+  styleUrls: ['./finder-board.component.scss'],
 })
 export class FinderBoardComponent implements OnInit, OnDestroy {
   constructor(
@@ -37,7 +37,7 @@ export class FinderBoardComponent implements OnInit, OnDestroy {
   }
 
   public findFalcone() {
-    this.router.navigate(["result"]);
+    this.router.navigate(['result']);
   }
 
   ngOnDestroy(): void {

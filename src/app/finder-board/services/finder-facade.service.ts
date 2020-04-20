@@ -1,21 +1,21 @@
-import { Injectable } from "@angular/core";
-import { PlanetsService } from "./planets.service";
-import { VehiclesService } from "./vehicles.service";
-import { IPlanet } from "../models/planet";
-import { BehaviorSubject, forkJoin, combineLatest, Subject } from "rxjs";
-import { IVehicle } from "../models/vehicle";
-import { ISearchAttempt } from "../models/searchAttempt";
-import { IFalconAppState } from "../models/falconApp.state";
-import { map, distinctUntilChanged, filter } from "rxjs/operators";
-import { Router } from "@angular/router";
-import PlanetChange from "../models/planetChange";
-import VehicleChange from "../models/vehicleChange";
-import * as selectors from "../selectors";
-import { ChangeUtils } from "../changeUtils";
-import { FalconeTokenService } from "./falconeToken.service";
+import { Injectable } from '@angular/core';
+import { PlanetsService } from './planets.service';
+import { VehiclesService } from './vehicles.service';
+import { IPlanet } from '../models/planet';
+import { BehaviorSubject, forkJoin, combineLatest, Subject } from 'rxjs';
+import { IVehicle } from '../models/vehicle';
+import { ISearchAttempt } from '../models/searchAttempt';
+import { IFalconAppState } from '../models/falconApp.state';
+import { map, distinctUntilChanged, filter } from 'rxjs/operators';
+import { Router } from '@angular/router';
+import PlanetChange from '../models/planetChange';
+import VehicleChange from '../models/vehicleChange';
+import * as selectors from '../selectors';
+import { ChangeUtils } from '../changeUtils';
+import { FalconeTokenService } from './falconeToken.service';
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root',
 })
 export class FinderFacadeService {
   constructor(
@@ -28,7 +28,7 @@ export class FinderFacadeService {
   private finderApiToken: string;
   private readonly MAX_SEARCH_ATTEMPTS_ALLOWED = 4;
   private _state: IFalconAppState = {
-    errorMsg: "",
+    errorMsg: '',
     isLoading: false,
     planetList: [],
     vehicleList: [],
@@ -81,10 +81,6 @@ export class FinderFacadeService {
   private vehicleChangedSubject = new Subject<VehicleChange>();
   public vehicleChangedAction$ = this.vehicleChangedSubject.asObservable();
 
-  public getCountOfWidgetsDisplayed() {
-    return this.MAX_SEARCH_ATTEMPTS_ALLOWED;
-  }
-
   public dashboardVm$ = combineLatest([
     this.error$,
     this.totalTimeTaken$,
@@ -111,6 +107,10 @@ export class FinderFacadeService {
     )
   );
 
+  public getCountOfWidgetsDisplayed() {
+    return this.MAX_SEARCH_ATTEMPTS_ALLOWED;
+  }
+
   public initializeAppData() {
     this.setLoadingFlag(true);
     forkJoin(
@@ -131,7 +131,7 @@ export class FinderFacadeService {
           unsearchedPlanets: [...planetList],
           vehicleInventory: [...vehicleList],
           searchMap: this.getInitializedSearchMap(),
-          errorMsg: "",
+          errorMsg: '',
           isLoading: false,
           isReadyToSearch: false,
           totalTimeTaken: 0,
@@ -148,7 +148,7 @@ export class FinderFacadeService {
     const searchMap = new Map<string, ISearchAttempt>();
 
     for (let index = 1; index < this.MAX_SEARCH_ATTEMPTS_ALLOWED + 1; index++) {
-      searchMap.set(index.toString(), <ISearchAttempt>{});
+      searchMap.set(index.toString(), {} as ISearchAttempt);
     }
     return searchMap;
   }
@@ -158,13 +158,13 @@ export class FinderFacadeService {
       planetChange.widgetId,
       planetChange.newPlanetName,
       () => {
-        return <ISearchAttempt>{
+        return {
           searchedPlanet:
-            planetChange.newPlanetName != "Select"
+            planetChange.newPlanetName != 'Select'
               ? planetChange.newPlanetName
               : null,
           vehicleUsed: null,
-        };
+        } as ISearchAttempt;
       },
       this._state
     );
@@ -197,12 +197,12 @@ export class FinderFacadeService {
       vehicleChange.widgetId,
       vehicleChange.newVehicleName,
       () => {
-        return <ISearchAttempt>{
+        return {
           searchedPlanet: selectors
             .getSearchAttemptMap(this._state)
             .get(changedWidgetId).searchedPlanet,
           vehicleUsed: vehicleChange.newVehicleName,
-        };
+        } as ISearchAttempt;
       },
       this._state
     );
@@ -212,7 +212,7 @@ export class FinderFacadeService {
   }
 
   resetApp() {
-    this.router.navigate(["reset"]);
+    this.router.navigate(['reset']);
   }
 
   public setLoadingFlag(isLoading: boolean): void {

@@ -1,16 +1,16 @@
-import { Component, OnInit, Input, OnDestroy } from "@angular/core";
-import { IVehicle } from "src/app/finder-board/models/vehicle";
-import VehicleChange from "src/app/finder-board/models/vehicleChange";
-import { FinderFacadeService } from "src/app/finder-board/services/finder-facade.service";
-import { takeWhile, withLatestFrom } from "rxjs/operators";
+import { Component, OnInit, Input, OnDestroy } from '@angular/core';
+import { IVehicle } from 'src/app/finder-board/models/vehicle';
+import VehicleChange from 'src/app/finder-board/models/vehicleChange';
+import { FinderFacadeService } from 'src/app/finder-board/services/finder-facade.service';
+import { takeWhile, withLatestFrom } from 'rxjs/operators';
 
 @Component({
-  selector: "app-vehicle-list",
-  templateUrl: "./vehicle-list.component.html",
-  styleUrls: ["./vehicle-list.component.scss"],
+  selector: 'app-vehicle-list',
+  templateUrl: './vehicle-list.component.html',
+  styleUrls: ['./vehicle-list.component.scss'],
 })
 export class VehicleListComponent implements OnInit, OnDestroy {
-  private isComponentActive: boolean = true;
+  private isComponentActive = true;
 
   constructor(private finderFacadeService: FinderFacadeService) {}
 
@@ -19,10 +19,10 @@ export class VehicleListComponent implements OnInit, OnDestroy {
   @Input() public destinationDistance: number;
   @Input() public widgetId: number;
 
-  public lastSelectedVehicle: IVehicle = <IVehicle>{
+  public lastSelectedVehicle: IVehicle = {
     availNumUnits: 0,
     name: null,
-  };
+  } as IVehicle;
 
   ngOnInit() {
     let vehicleListInitialized = false;
@@ -72,7 +72,7 @@ export class VehicleListComponent implements OnInit, OnDestroy {
   }
 
   clearLastSelection(): void {
-    this.lastSelectedVehicle = <IVehicle>{ availNumUnits: 0, name: null };
+    this.lastSelectedVehicle = { availNumUnits: 0, name: null } as IVehicle;
   }
 
   ngOnDestroy(): void {
