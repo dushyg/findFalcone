@@ -1,17 +1,17 @@
-import { Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
-import { Observable } from "rxjs";
-import { IVehicle, RawVehicle } from "../models/vehicle";
-import { map, catchError, tap } from "rxjs/operators";
-import { handleError } from "../handleError";
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { IVehicle, RawVehicle } from '../models/vehicle';
+import { map, catchError, tap } from 'rxjs/operators';
+import { handleError } from '../handleError';
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root',
 })
 export class VehiclesService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
-  readonly vehicleApiUrl = "https://findfalcone.herokuapp.com/vehicles";
+  readonly vehicleApiUrl = 'https://findfalcone.herokuapp.com/vehicles';
 
   public getAllVehicles(): Observable<IVehicle[]> {
     return this.http.get<RawVehicle[]>(this.vehicleApiUrl).pipe(

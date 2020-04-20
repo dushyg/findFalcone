@@ -9,7 +9,7 @@ import { FinderBoardComponent } from './finder-board/smartComponents/finder-boar
 import { DestinationWidgetListComponent } from './finder-board/smartComponents/destination-widget-list/destination-widget-list.component';
 import { DestinationWidgetComponent } from './finder-board/smartComponents/destination-widget/destination-widget.component';
 import { VehicleListComponent } from './finder-board/smartComponents/vehicle-list/vehicle-list.component';
-import { Typeahead } from './finder-board/presenterComponents/typeahead/typeahead.component';
+import { TypeaheadComponent } from './finder-board/presenterComponents/typeahead/typeahead.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { SharedModule } from './shared/shared.module';
@@ -21,7 +21,7 @@ import { SharedModule } from './shared/shared.module';
     DestinationWidgetListComponent,
     DestinationWidgetComponent,
     VehicleListComponent,
-    Typeahead,
+    TypeaheadComponent,
   ],
   imports: [
     BrowserModule,
@@ -34,4 +34,4 @@ import { SharedModule } from './shared/shared.module';
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }

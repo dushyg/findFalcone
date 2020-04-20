@@ -16,7 +16,7 @@ import { takeWhile } from 'rxjs/operators';
   templateUrl: './typeahead.component.html',
   styleUrls: ['./typeahead.component.scss'],
 })
-export class Typeahead implements OnInit, OnDestroy {
+export class TypeaheadComponent implements OnInit, OnDestroy {
   @Input() sourceArray: IPlanet[];
   @Input() resetTypeAhead$: Observable<void>;
   @Output() itemSelected = new EventEmitter<IPlanet>();
@@ -92,7 +92,7 @@ export class Typeahead implements OnInit, OnDestroy {
       return;
     }
 
-    this.inputTextControl.setValue(this.lastSelection), { emitEvent: false };
+    this.inputTextControl.setValue(this.lastSelection, { emitEvent: false });
   }
 
   ngOnDestroy(): void {

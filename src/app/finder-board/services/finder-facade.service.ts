@@ -23,11 +23,11 @@ export class FinderFacadeService {
     private vehicleService: VehiclesService,
     private tokenService: FalconeTokenService,
     private router: Router
-  ) {}
+  ) { }
 
   private finderApiToken: string;
   private readonly MAX_SEARCH_ATTEMPTS_ALLOWED = 4;
-  private _state: IFalconAppState = {
+  private state: IFalconAppState = {
     errorMsg: '',
     isLoading: false,
     planetList: [],
@@ -39,7 +39,7 @@ export class FinderFacadeService {
     isReadyToSearch: false,
   };
 
-  private store = new BehaviorSubject<IFalconAppState>(this._state);
+  private store = new BehaviorSubject<IFalconAppState>(this.state);
 
   private store$ = this.store.asObservable();
 
@@ -125,7 +125,7 @@ export class FinderFacadeService {
 
         // todo handle error scenarios
         this.updateState({
-          ...this._state,
+          ...this.state,
           planetList,
           vehicleList,
           unsearchedPlanets: [...planetList],
@@ -160,13 +160,13 @@ export class FinderFacadeService {
       () => {
         return {
           searchedPlanet:
-            planetChange.newPlanetName != 'Select'
+            planetChange.newPlanetName !== 'Select'
               ? planetChange.newPlanetName
               : null,
           vehicleUsed: null,
         } as ISearchAttempt;
       },
-      this._state
+      this.state
     );
 
     this.updateState(nextState);
@@ -199,12 +199,12 @@ export class FinderFacadeService {
       () => {
         return {
           searchedPlanet: selectors
-            .getSearchAttemptMap(this._state)
+            .getSearchAttemptMap(this.state)
             .get(changedWidgetId).searchedPlanet,
           vehicleUsed: vehicleChange.newVehicleName,
         } as ISearchAttempt;
       },
-      this._state
+      this.state
     );
 
     this.updateState(nextState);
@@ -216,15 +216,15 @@ export class FinderFacadeService {
   }
 
   public setLoadingFlag(isLoading: boolean): void {
-    this.updateState({ ...this._state, isLoading: isLoading || false });
+    this.updateState({ ...this.state, isLoading: isLoading || false });
   }
 
   public updateError(errorMsg: string) {
-    this.updateState({ ...this._state, errorMsg });
+    this.updateState({ ...this.state, errorMsg });
   }
 
   private updateState(state: IFalconAppState) {
-    this.store.next((this._state = state));
+    this.store.next((this.state = state));
   }
 
   public getFinderApiToken(): string {

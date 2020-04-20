@@ -65,7 +65,7 @@ export class ChangeUtils {
       const currentlyLoopedWidgetId = Number(key);
       if (currentlyLoopedWidgetId < changedWidgetId) {
         updatedSearchAttempt = { ...value } as ISearchAttempt;
-      } else if (currentlyLoopedWidgetId == changedWidgetId) {
+      } else if (currentlyLoopedWidgetId === changedWidgetId) {
         updatedSearchAttempt = changedWidgetSearchAttemptGetter();
       } else {
         // else if the current widget is to the right of the changed widget then

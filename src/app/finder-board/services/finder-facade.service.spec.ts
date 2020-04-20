@@ -10,6 +10,7 @@ import { createSpyObj } from '../utitlity';
 import { FinderFacadeService } from './finder-facade.service';
 
 // Isolated unit tests
+// tslint:disable: no-string-literal
 describe('FinderFacadeService', () => {
   let planetServiceMock;
   let vehiclesServiceMock;
@@ -144,7 +145,6 @@ describe('FinderFacadeService', () => {
 
       tick();
 
-      // tslint:disable-next-line: no-string-literal
       service['store$'].subscribe((state) => {
         expect(state.errorMsg).toEqual('');
         expect(state.isLoading).toBeFalsy();
@@ -254,7 +254,6 @@ describe('FinderFacadeService', () => {
       service.planetChanged(new PlanetChange(1, newPlanet));
 
       // assert
-      // tslint:disable-next-line: no-string-literal
       expect(service['_state']).toEqual(expectedState);
     }));
 
@@ -323,9 +322,7 @@ describe('FinderFacadeService', () => {
       service.vehicleChanged(new VehicleChange(1, 'Space pod'));
 
       // assert
-      // tslint:disable-next-line: no-string-literal
       expect(service['_state']).toEqual(expectedState);
-      // tslint:disable-next-line: no-string-literal
       (expect(service['_state']) as any).toMatchSnapshot();
     }));
 

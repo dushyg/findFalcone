@@ -1,3 +1,4 @@
+// tslint:disable: indent
 export interface IVehicle {
 	name: string;
 	totalNumUnits: number;
