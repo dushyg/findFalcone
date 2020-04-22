@@ -1,3 +1,4 @@
+// tslint:disable: max-line-length
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
@@ -6,7 +7,7 @@ import { AppComponent } from './app.component';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FinderBoardComponent } from './finder-board/smartComponents/finder-board/finder-board.component';
-import { DestinationWidgetListComponent } from './finder-board/smartComponents/destination-widget-list/destination-widget-list.component';
+import { DestinationWidgetListComponent } from './finder-board/presenterComponents/destination-widget-list/destination-widget-list.component';
 import { DestinationWidgetComponent } from './finder-board/smartComponents/destination-widget/destination-widget.component';
 import { VehicleListComponent } from './finder-board/smartComponents/vehicle-list/vehicle-list.component';
 import { TypeaheadComponent } from './finder-board/presenterComponents/typeahead/typeahead.component';
@@ -34,4 +35,4 @@ import { SharedModule } from './shared/shared.module';
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

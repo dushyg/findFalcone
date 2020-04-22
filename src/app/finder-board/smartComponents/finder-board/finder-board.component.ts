@@ -14,33 +14,15 @@ export class FinderBoardComponent implements OnInit, OnDestroy {
     private router: Router
   ) {}
 
-  public isLoading: boolean;
-  public error: string;
-  public timeTaken: number;
-  public isReadyToSearch: boolean;
-
-  private isComponentActive = true;
-  public isInitialized = false;
-
+  public maxWidgetCount = 0;
   ngOnInit() {
-    this.finderFacadeService.dashboardVm$
-      .pipe(takeWhile(() => this.isComponentActive))
-      .subscribe((vm) => {
-        this.isInitialized = true;
-        this.error = vm.error;
-        this.timeTaken = vm.totalTimeTaken;
-        this.isReadyToSearch = vm.isReadyForSearch;
-        this.isLoading = vm.isLoading;
-      });
-
     this.finderFacadeService.initializeAppData();
+    this.maxWidgetCount = this.finderFacadeService.getCountOfWidgetsDisplayed();
   }
 
   public findFalcone() {
     this.router.navigate(['result']);
   }
 
-  ngOnDestroy(): void {
-    this.isComponentActive = false;
-  }
+  ngOnDestroy(): void {}
 }

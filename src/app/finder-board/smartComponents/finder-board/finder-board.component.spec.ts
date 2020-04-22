@@ -9,7 +9,7 @@ import { VehiclesService } from 'src/app/finder-board/services/vehicles.service'
 import { FinderFacadeService } from 'src/app/finder-board/services/finder-facade.service';
 import { Router } from '@angular/router';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { FalconeTokenService } from '../../services/falconeToken.service';
+import { FalconeTokenService } from '../../services/falcone-token.service';
 
 describe('FinderBoardComponent', () => {
   let component: FinderBoardComponent;

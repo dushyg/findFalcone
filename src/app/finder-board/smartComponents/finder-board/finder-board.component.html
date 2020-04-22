@@ -1,32 +1,40 @@
-<div class="boardContainer" *ngIf="isInitialized">
-  <div class="timeTaken">Time Taken : {{ timeTaken }}</div>
+<div
+  class="boardContainer"
+  *ngIf="finderFacadeService.dashboardVm$ | async as vm"
+>
+  <div>
+    <div class="timeTaken">Time Taken : {{ vm.timeTaken }}</div>
 
-  <div class="instructionLine">
-    Select planets you want to search in :
-  </div>
+    <div class="instructionLine">
+      Select planets you want to search in :
+    </div>
 
-  <app-destination-widget-list></app-destination-widget-list>
+    <app-destination-widget-list
+      [maxWidgetCount]="maxWidgetCount"
+    ></app-destination-widget-list>
 
-  <div class="findButtonContainer">
-    <input
-      [disabled]="!isReadyToSearch"
-      type="button"
-      value="Find Falcone!"
-      (click)="findFalcone()"
-    />
-  </div>
-</div>
-<div class="d-flex justify-content-center my-spinner">
-  <div
-    class="fade show"
-    style="width: 15rem; height: 15rem;"
-    *ngIf="finderFacadeService.isLoading$ | async"
-  >
-    <span>Loading...</span>
-    <div
-      class="spinner-border m-5"
-      style="width: 5rem; height: 5rem;"
-      role="status"
-    ></div>
+    <div class="findButtonContainer">
+      <input
+        [disabled]="!vm.isReadyForSearch"
+        type="button"
+        value="Find Falcone!"
+        (click)="findFalcone()"
+      />
+    </div>
+
+    <div class="d-flex justify-content-center my-spinner">
+      <div
+        class="fade show"
+        style="width: 15rem; height: 15rem;"
+        *ngIf="vm.isLoading"
+      >
+        <span>Loading...</span>
+        <div
+          class="spinner-border m-5"
+          style="width: 5rem; height: 5rem;"
+          role="status"
+        ></div>
+      </div>
+    </div>
   </div>
 </div>
