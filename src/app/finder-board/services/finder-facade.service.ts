@@ -12,7 +12,7 @@ import PlanetChange from '../models/planetChange';
 import VehicleChange from '../models/vehicleChange';
 import * as selectors from '../selectors';
 import { ChangeUtils } from '../changeUtils';
-import { FalconeTokenService } from './falconeToken.service';
+import { FalconeTokenService } from './falcone-token.service';
 
 @Injectable({
   providedIn: 'root',
@@ -23,7 +23,7 @@ export class FinderFacadeService {
     private vehicleService: VehiclesService,
     private tokenService: FalconeTokenService,
     private router: Router
-  ) { }
+  ) {}
 
   private finderApiToken: string;
   private readonly MAX_SEARCH_ATTEMPTS_ALLOWED = 4;
