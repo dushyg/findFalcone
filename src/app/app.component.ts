@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FinderFacadeService } from './finder-board/services/finder-facade.service';
 import { takeWhile } from 'rxjs/operators';
+import { constants } from './shared/constants';
 
 @Component({
   selector: 'app-root',
@@ -10,11 +11,11 @@ import { takeWhile } from 'rxjs/operators';
 export class AppComponent implements OnInit {
   title = 'findingFalcone';
   constructor(public finderFacadeService: FinderFacadeService) {}
-  errorMessage = null;
-  isComponentActive = true;
-  ngOnInit() {
-    this.finderFacadeService.dashboardVm$
-      .pipe(takeWhile(() => this.isComponentActive))
-      .subscribe((vm) => (this.errorMessage = vm.error));
+  ngOnInit() {}
+
+  public headerLinkClicked(linkName: string): void {
+    if (linkName === constants.resetLink) {
+      this.finderFacadeService.resetApp();
+    }
   }
 }
