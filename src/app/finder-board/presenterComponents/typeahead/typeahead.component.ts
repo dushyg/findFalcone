@@ -5,8 +5,6 @@ import {
   EventEmitter,
   OnInit,
   OnDestroy,
-  OnChanges,
-  SimpleChanges,
 } from '@angular/core';
 import { IPlanet } from 'src/app/finder-board/models/planet';
 import { FormControl } from '@angular/forms';
@@ -18,7 +16,7 @@ import { takeWhile } from 'rxjs/operators';
   templateUrl: './typeahead.component.html',
   styleUrls: ['./typeahead.component.scss'],
 })
-export class TypeaheadComponent implements OnInit, OnChanges, OnDestroy {
+export class TypeaheadComponent implements OnInit, OnDestroy {
   @Input() sourceArray: IPlanet[];
   @Input() resetTypeAhead$: Observable<void>;
   @Output() itemSelected = new EventEmitter<IPlanet>();
@@ -46,12 +44,7 @@ export class TypeaheadComponent implements OnInit, OnChanges, OnDestroy {
       });
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    console.log('TypeAhead component onchanges', changes);
-  }
-
   private reset() {
-    console.log('Typeahead component reset, sourcearray', this.sourceArray);
     this.filteredSourceArray = this.sourceArray;
     this.lastSelection = '';
     this.inputTextControl.setValue('', { emitEvent: false });
