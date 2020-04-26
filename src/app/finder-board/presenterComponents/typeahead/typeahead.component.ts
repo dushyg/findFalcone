@@ -11,6 +11,7 @@ import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { takeWhile } from 'rxjs/operators';
 
+// tslint:disable: semicolon
 @Component({
   selector: 'app-typeahead',
   templateUrl: './typeahead.component.html',
