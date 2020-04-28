@@ -5,6 +5,8 @@ import {
   EventEmitter,
   OnInit,
   OnDestroy,
+  ChangeDetectorRef,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import { IPlanet } from 'src/app/finder-board/models/planet';
 import { FormControl } from '@angular/forms';
@@ -16,10 +18,12 @@ import { takeWhile } from 'rxjs/operators';
   selector: 'app-typeahead',
   templateUrl: './typeahead.component.html',
   styleUrls: ['./typeahead.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TypeaheadComponent implements OnInit, OnDestroy {
   @Input() sourceArray: IPlanet[];
   @Input() resetTypeAhead$: Observable<void>;
+  @Input() private widgetId: number;
   @Output() itemSelected = new EventEmitter<IPlanet>();
 
   public filteredSourceArray: IPlanet[];
@@ -27,7 +31,7 @@ export class TypeaheadComponent implements OnInit, OnDestroy {
   public doShowResults = false;
   private lastSelection = '';
   private isComponentActive = true;
-
+  constructor(private changeDetector: ChangeDetectorRef) {}
   ngOnInit(): void {
     this.filteredSourceArray = this.sourceArray;
 
@@ -49,6 +53,7 @@ export class TypeaheadComponent implements OnInit, OnDestroy {
     this.filteredSourceArray = this.sourceArray;
     this.lastSelection = '';
     this.inputTextControl.setValue('', { emitEvent: false });
+    this.changeDetector.detectChanges();
   }
 
   private performSearch = (value) => {
@@ -92,7 +97,7 @@ export class TypeaheadComponent implements OnInit, OnDestroy {
 
   private hideResults = () => {
     this.doShowResults = false;
-
+    this.changeDetector.detectChanges();
     const currentText = this.inputTextControl.value;
     if (currentText === this.lastSelection) {
       return;
@@ -103,5 +108,10 @@ export class TypeaheadComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.isComponentActive = false;
+  }
+
+  // tslint:disable-next-line: use-lifecycle-interface
+  ngAfterViewChecked(): void {
+    console.log('TypeAheadComponent ngAfterViewChecked', this.widgetId);
   }
 }

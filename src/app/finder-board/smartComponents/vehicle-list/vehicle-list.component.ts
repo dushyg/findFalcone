@@ -1,4 +1,11 @@
-import { Component, OnInit, Input, OnDestroy } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  OnDestroy,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { IVehicle } from 'src/app/finder-board/models/vehicle';
 import VehicleChange from 'src/app/finder-board/models/vehicleChange';
 import { FinderFacadeService } from 'src/app/finder-board/services/finder-facade.service';
@@ -8,11 +15,15 @@ import { takeWhile, withLatestFrom } from 'rxjs/operators';
   selector: 'app-vehicle-list',
   templateUrl: './vehicle-list.component.html',
   styleUrls: ['./vehicle-list.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VehicleListComponent implements OnInit, OnDestroy {
   private isComponentActive = true;
 
-  constructor(private finderFacadeService: FinderFacadeService) {}
+  constructor(
+    private finderFacadeService: FinderFacadeService,
+    private changeDetector: ChangeDetectorRef
+  ) {}
 
   public vehicleList: IVehicle[];
 
@@ -33,6 +44,7 @@ export class VehicleListComponent implements OnInit, OnDestroy {
         if (initialVehicles) {
           this.vehicleList = initialVehicles;
           vehicleListInitialized = true;
+          this.changeDetector.detectChanges();
         }
       });
 
@@ -44,6 +56,7 @@ export class VehicleListComponent implements OnInit, OnDestroy {
       .subscribe(([vehicleChange, updatedVehicles]) => {
         if (vehicleChange && vehicleChange.widgetId <= this.widgetId) {
           this.vehicleList = updatedVehicles;
+          this.changeDetector.detectChanges();
         }
       });
 
@@ -58,17 +71,18 @@ export class VehicleListComponent implements OnInit, OnDestroy {
           this.vehicleList = updatedVehicles;
           if (planetChange.widgetId !== this.widgetId) {
             this.clearLastSelection();
+            this.changeDetector.detectChanges();
           }
         }
       });
   }
 
   public vehicleSelected(vehicle: IVehicle) {
+    this.lastSelectedVehicle = vehicle;
+
     this.finderFacadeService.vehicleChanged(
       new VehicleChange(this.widgetId, vehicle.name)
     );
-
-    this.lastSelectedVehicle = vehicle;
   }
 
   clearLastSelection(): void {
@@ -77,5 +91,9 @@ export class VehicleListComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.isComponentActive = false;
+  }
+  // tslint:disable-next-line: use-lifecycle-interface
+  ngAfterViewChecked(): void {
+    console.log('VehicleListComponent ngAfterViewChecked', this.widgetId);
   }
 }

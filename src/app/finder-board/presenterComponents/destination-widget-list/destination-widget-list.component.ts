@@ -1,13 +1,20 @@
-import { Component, OnInit, Input } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 
 @Component({
   selector: 'app-destination-widget-list',
   templateUrl: './destination-widget-list.component.html',
   styleUrls: ['./destination-widget-list.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DestinationWidgetListComponent implements OnInit {
   constructor() {}
-  @Input() private maxWidgetCount = 0;
+
+  @Input() private maxWidgetCount;
   public widgetCountIterator: number[];
 
   ngOnInit() {

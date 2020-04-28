@@ -1,4 +1,10 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+} from '@angular/core';
 
 import { IPlanet } from 'src/app/finder-board/models/planet';
 import PlanetChange from 'src/app/finder-board/models/planetChange';
@@ -10,6 +16,7 @@ import { takeWhile, withLatestFrom } from 'rxjs/operators';
   selector: 'app-destination-widget',
   templateUrl: './destination-widget.component.html',
   styleUrls: ['./destination-widget.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DestinationWidgetComponent implements OnInit, OnDestroy {
   private static createdWidgetCount = 0;
@@ -28,7 +35,10 @@ export class DestinationWidgetComponent implements OnInit, OnDestroy {
 
   private isComponentActive = true;
   public planetListInitialized = false;
-  constructor(private finderFacadeService: FinderFacadeService) {
+  constructor(
+    private finderFacadeService: FinderFacadeService,
+    private changeDetector: ChangeDetectorRef
+  ) {
     // using modulo operator to cycle the widget ids from 1 to max widget count
     this.widgetId =
       (DestinationWidgetComponent.createdWidgetCount %
@@ -47,6 +57,7 @@ export class DestinationWidgetComponent implements OnInit, OnDestroy {
         if (unsearchedPlanets && !isLoading) {
           this.planetList = unsearchedPlanets;
           this.planetListInitialized = true;
+          this.changeDetector.detectChanges();
         }
       });
 
@@ -59,6 +70,7 @@ export class DestinationWidgetComponent implements OnInit, OnDestroy {
         if (planetChange && planetChange.widgetId < this.widgetId) {
           this.planetList = unsearchedPlanets;
           this.clearLastSelection();
+          this.changeDetector.detectChanges();
         }
       });
 
@@ -71,6 +83,7 @@ export class DestinationWidgetComponent implements OnInit, OnDestroy {
         if (vehicleChange && vehicleChange.widgetId < this.widgetId) {
           this.planetList = unsearchedPlanets;
           this.clearLastSelection();
+          this.changeDetector.detectChanges();
         }
       });
   }
@@ -92,5 +105,9 @@ export class DestinationWidgetComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.isComponentActive = false;
+  }
+  // tslint:disable-next-line: use-lifecycle-interface
+  ngAfterViewChecked(): void {
+    console.log('DestinationWidgetComponent ngAfterViewChecked', this.widgetId);
   }
 }
