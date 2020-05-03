@@ -1,11 +1,4 @@
-import {
-  async,
-  ComponentFixture,
-  TestBed,
-  fakeAsync,
-  tick,
-  flush,
-} from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { FinderBoardComponent } from './finder-board.component';
 import { IPlanet } from 'src/app/finder-board/models/planet';
@@ -18,7 +11,6 @@ import { Router } from '@angular/router';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { FalconeTokenService } from '../../services/falcone-token.service';
 import { By } from '@angular/platform-browser';
-import { of, asyncScheduler } from 'rxjs';
 import { DestinationWidgetListComponent } from '../../presenterComponents/destination-widget-list/destination-widget-list.component';
 
 describe('FinderBoardComponent', () => {
@@ -88,6 +80,12 @@ describe('FinderBoardComponent', () => {
       },
     ];
 
+    planetServiceMock.getAllPlanets.mockReturnValue(planetListToBeReturned);
+    vehiclesServiceMock.getAllVehicles.mockReturnValue(vehicleListToBeReturned);
+    apiTokenServiceMock.getFalconeFinderApiToken.mockReturnValue(
+      apiTokenToBeReturned
+    );
+
     fixture = TestBed.createComponent(FinderBoardComponent);
     component = fixture.componentInstance;
   });
@@ -98,11 +96,6 @@ describe('FinderBoardComponent', () => {
   });
 
   it('should render time taken with initial value of 0', () => {
-    planetServiceMock.getAllPlanets.mockReturnValue(planetListToBeReturned);
-    vehiclesServiceMock.getAllVehicles.mockReturnValue(vehicleListToBeReturned);
-    apiTokenServiceMock.getFalconeFinderApiToken.mockReturnValue(
-      apiTokenToBeReturned
-    );
     fixture.detectChanges();
     const divTimeTaken = fixture.debugElement.query(By.css('.timeTaken'))
       .nativeElement as HTMLElement;
@@ -111,12 +104,6 @@ describe('FinderBoardComponent', () => {
   });
 
   it('should render app-destination-widget-list', () => {
-    planetServiceMock.getAllPlanets.mockReturnValue(planetListToBeReturned);
-    vehiclesServiceMock.getAllVehicles.mockReturnValue(vehicleListToBeReturned);
-    apiTokenServiceMock.getFalconeFinderApiToken.mockReturnValue(
-      apiTokenToBeReturned
-    );
-
     fixture.detectChanges();
 
     const widgetList = fixture.debugElement.query(
@@ -131,15 +118,6 @@ describe('FinderBoardComponent', () => {
   });
 
   it('should render disabled find button', () => {
-    planetServiceMock.getAllPlanets.mockReturnValue(
-      of(planetListToBeReturned, asyncScheduler)
-    );
-    vehiclesServiceMock.getAllVehicles.mockReturnValue(
-      of(vehicleListToBeReturned, asyncScheduler)
-    );
-    apiTokenServiceMock.getFalconeFinderApiToken.mockReturnValue(
-      of(apiTokenToBeReturned, asyncScheduler)
-    );
     fixture.detectChanges();
     const findButton = fixture.debugElement.query(
       By.css('div.findButtonContainer input[type=button]:disabled')
