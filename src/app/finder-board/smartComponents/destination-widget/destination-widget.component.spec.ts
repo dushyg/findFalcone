@@ -94,6 +94,7 @@ describe('DestinationWidgetComponent', () => {
     );
 
     fixture = TestBed.createComponent(DestinationWidgetComponent);
+
     component = fixture.componentInstance;
   });
 
@@ -145,4 +146,29 @@ describe('DestinationWidgetComponent', () => {
 
     expect(vehicleListDebugElement).toBeTruthy();
   });
+
+  // it('should render vehicle list component when planet is selected', () => {
+  //   // use this in beforeEach
+  //   // fixture = TestBed.overrideComponent(DestinationWidgetComponent, {
+  //   //   set: { host: { '(click)': 'dummy' } },
+  //   // }).createComponent(DestinationWidgetComponent);
+
+  //   fixture.detectChanges();
+  //   const facadeService = fixture.componentRef.injector.get(
+  //     FinderFacadeService
+  //   );
+
+  //   facadeService.initializeAppData();
+  //   component.planetSelected({ name: 'Donlon', distance: 100 });
+
+  //   // fake a click event so thta onpush component triggers change detection
+  //   fixture.debugElement.triggerEventHandler('click', null);
+  //   fixture.detectChanges();
+
+  //   const vehicleListDebugElement = fixture.debugElement.query(
+  //     By.directive(VehicleListComponent)
+  //   );
+
+  //   expect(vehicleListDebugElement).toBeTruthy();
+  // });
 });
