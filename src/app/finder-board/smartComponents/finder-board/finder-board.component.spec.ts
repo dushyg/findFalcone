@@ -12,6 +12,7 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { FalconeTokenService } from '../../services/falcone-token.service';
 import { By } from '@angular/platform-browser';
 import { DestinationWidgetListComponent } from '../../presenterComponents/destination-widget-list/destination-widget-list.component';
+import { of } from 'rxjs';
 
 describe('FinderBoardComponent', () => {
   let component: FinderBoardComponent;
@@ -80,10 +81,12 @@ describe('FinderBoardComponent', () => {
       },
     ];
 
-    planetServiceMock.getAllPlanets.mockReturnValue(planetListToBeReturned);
-    vehiclesServiceMock.getAllVehicles.mockReturnValue(vehicleListToBeReturned);
+    planetServiceMock.getAllPlanets.mockReturnValue(of(planetListToBeReturned));
+    vehiclesServiceMock.getAllVehicles.mockReturnValue(
+      of(vehicleListToBeReturned)
+    );
     apiTokenServiceMock.getFalconeFinderApiToken.mockReturnValue(
-      apiTokenToBeReturned
+      of(apiTokenToBeReturned)
     );
 
     fixture = TestBed.createComponent(FinderBoardComponent);
