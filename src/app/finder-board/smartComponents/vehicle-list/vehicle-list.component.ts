@@ -94,6 +94,6 @@ export class VehicleListComponent implements OnInit, OnDestroy {
   }
   // tslint:disable-next-line: use-lifecycle-interface
   ngAfterViewChecked(): void {
-    console.log('VehicleListComponent ngAfterViewChecked', this.widgetId);
+    // console.log('VehicleListComponent ngAfterViewChecked', this.widgetId);
   }
 }

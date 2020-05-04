@@ -112,6 +112,6 @@ export class TypeaheadComponent implements OnInit, OnDestroy {
 
   // tslint:disable-next-line: use-lifecycle-interface
   ngAfterViewChecked(): void {
-    console.log('TypeAheadComponent ngAfterViewChecked', this.widgetId);
+    // console.log('TypeAheadComponent ngAfterViewChecked', this.widgetId);
   }
 }

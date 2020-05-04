@@ -108,6 +108,6 @@ export class DestinationWidgetComponent implements OnInit, OnDestroy {
   }
   // tslint:disable-next-line: use-lifecycle-interface
   ngAfterViewChecked(): void {
-    console.log('DestinationWidgetComponent ngAfterViewChecked', this.widgetId);
+    // console.log('DestinationWidgetComponent ngAfterViewChecked', this.widgetId);
   }
 }
