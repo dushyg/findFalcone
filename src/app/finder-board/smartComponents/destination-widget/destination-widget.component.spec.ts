@@ -147,6 +147,10 @@ describe('DestinationWidgetComponent', () => {
     expect(vehicleListDebugElement).toBeTruthy();
     const vehicleListComponent = vehicleListDebugElement.componentInstance as VehicleListComponent;
     expect(vehicleListComponent.vehicleList === vehicleListToBeReturned);
+    expect(vehicleListComponent.widgetId).toBe(component.widgetId);
+    expect(vehicleListComponent.destinationDistance).toBe(
+      component.destinationDistance
+    );
   });
 
   // it('should render vehicle list component when planet is selected', () => {
