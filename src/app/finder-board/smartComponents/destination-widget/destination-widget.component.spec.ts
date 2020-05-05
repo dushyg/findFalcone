@@ -45,7 +45,7 @@ describe('DestinationWidgetComponent', () => {
         { provide: Router, useValue: routerServiceMock },
       ],
       schemas: [NO_ERRORS_SCHEMA],
-    }).compileComponents();
+    });
 
     planetListToBeReturned = [
       { name: 'Donlon', distance: 100 },

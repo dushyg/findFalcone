@@ -8,9 +8,8 @@ xdescribe('DestinationWidgetListComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ DestinationWidgetListComponent ]
-    })
-    .compileComponents();
+      declarations: [DestinationWidgetListComponent],
+    });
   }));
 
   beforeEach(() => {

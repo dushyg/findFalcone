@@ -40,7 +40,7 @@ describe('VehicleListComponent', () => {
         { provide: Router, useValue: routerServiceMock },
       ],
       schemas: [NO_ERRORS_SCHEMA],
-    }).compileComponents();
+    });
 
     vehicleListToBeReturned = [
       {

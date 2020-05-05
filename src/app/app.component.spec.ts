@@ -19,13 +19,13 @@ describe('AppComponent', () => {
     selector: 'app-falcon-header',
     template: '',
   })
-  class FakeFalconHeaderComponent { }
+  class FakeFalconHeaderComponent {}
 
   @Component({
     selector: 'app-falcon-footer',
     template: '',
   })
-  class FakeFalconFooterComponent { }
+  class FakeFalconFooterComponent {}
 
   let finderFacadeServiceMock;
 
@@ -36,8 +36,8 @@ describe('AppComponent', () => {
         totalTimeTaken: 0,
         isReadyForSearch: false,
         isLoading: false,
-        searchAttemptMap: null
-      })
+        searchAttemptMap: null,
+      }),
     };
     TestBed.configureTestingModule({
       imports: [RouterTestingModule],
@@ -46,8 +46,10 @@ describe('AppComponent', () => {
         FakeFalconHeaderComponent,
         FakeFalconFooterComponent,
       ],
-      providers: [{ provide: FinderFacadeService, useValue: finderFacadeServiceMock }]
-    }).compileComponents();
+      providers: [
+        { provide: FinderFacadeService, useValue: finderFacadeServiceMock },
+      ],
+    });
   }));
 
   it('should create the app', () => {

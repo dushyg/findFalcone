@@ -8,9 +8,8 @@ xdescribe('FalconHeaderComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ FalconHeaderComponent ]
-    })
-    .compileComponents();
+      declarations: [FalconHeaderComponent],
+    });
   }));
 
   beforeEach(() => {

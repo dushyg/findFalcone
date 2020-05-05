@@ -8,9 +8,8 @@ xdescribe('FalconFooterComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ FalconFooterComponent ]
-    })
-    .compileComponents();
+      declarations: [FalconFooterComponent],
+    });
   }));
 
   beforeEach(() => {
