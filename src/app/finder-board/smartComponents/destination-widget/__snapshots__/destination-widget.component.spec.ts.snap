@@ -1,0 +1,108 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DestinationWidgetComponent should render vehicle list component when planet is selected 1`] = `
+<app-destination-widget
+  changeDetector={[Function ViewRef_]}
+  destinationDistance={[Function Number]}
+  finderFacadeService={[Function FinderFacadeService]}
+  isComponentActive={[Function Boolean]}
+  lastSelectedPlanet={[Function String]}
+  planetList={[Function Array]}
+  planetListInitialized={[Function Boolean]}
+  resetTypeAhead$={[Function Observable]}
+  resetTypeAheadSubject={[Function Subject]}
+  widgetId={[Function Number]}
+>
+  <div
+    class="destinationWidget"
+  >
+    <span>
+      Destination 3
+    </span>
+    <app-typeahead>
+      <div
+        class="typeahead-container"
+      >
+        <div
+          class="typeadhead-wrapper"
+        >
+          <input
+            class="typeAhead"
+            placeholder="Type to search..."
+            type="text"
+          />
+          
+        </div>
+      </div>
+    </app-typeahead>
+    
+    <app-vehicle-list>
+      <div
+        class="vehicleList"
+      >
+        
+        <div>
+          <input
+            id="vehicle_3_0"
+            name="radio_3"
+            type="radio"
+            value="Space pod"
+          />
+            
+          <label
+            for="vehicle_3_0"
+          >
+             Space pod (2) 
+          </label>
+          <br />
+        </div>
+        <div>
+          <input
+            id="vehicle_3_1"
+            name="radio_3"
+            type="radio"
+            value="Space rocket"
+          />
+            
+          <label
+            for="vehicle_3_1"
+          >
+             Space rocket (1) 
+          </label>
+          <br />
+        </div>
+        <div>
+          <input
+            id="vehicle_3_2"
+            name="radio_3"
+            type="radio"
+            value="Space shuttle"
+          />
+            
+          <label
+            for="vehicle_3_2"
+          >
+             Space shuttle (1) 
+          </label>
+          <br />
+        </div>
+        <div>
+          <input
+            id="vehicle_3_3"
+            name="radio_3"
+            type="radio"
+            value="Space ship"
+          />
+            
+          <label
+            for="vehicle_3_3"
+          >
+             Space ship (2) 
+          </label>
+          <br />
+        </div>
+      </div>
+    </app-vehicle-list>
+  </div>
+</app-destination-widget>
+`;

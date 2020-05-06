@@ -1,0 +1,64 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TypeAhead Component shows result list if input text box recieves focus 1`] = `
+<app-typeahead
+  changeDetector={[Function ViewRef_]}
+  doShowResults={[Function Boolean]}
+  filteredSourceArray={[Function Array]}
+  hideResults={[Function Function]}
+  inputTextControl={[Function FormControl]}
+  isComponentActive={[Function Boolean]}
+  itemSelected={[Function EventEmitter]}
+  lastSelection=""
+  performSearch={[Function Function]}
+  resetTypeAhead$={[Function Observable]}
+  sourceArray={[Function Array]}
+>
+  <div
+    class="typeahead-container"
+  >
+    <div
+      class="typeadhead-wrapper"
+    >
+      <input
+        class="typeAhead ng-untouched ng-pristine ng-valid"
+        placeholder="Type to search..."
+        type="text"
+      />
+      
+      <div
+        class="resultList"
+      >
+        <ul>
+          <li
+            class="resultItem"
+          >
+             None 
+          </li>
+          
+          <li
+            class="resultItem"
+          >
+             Donlon 
+          </li>
+          <li
+            class="resultItem"
+          >
+             Enchai 
+          </li>
+          <li
+            class="resultItem"
+          >
+             Jebing 
+          </li>
+          <li
+            class="resultItem"
+          >
+             Sapir 
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</app-typeahead>
+`;

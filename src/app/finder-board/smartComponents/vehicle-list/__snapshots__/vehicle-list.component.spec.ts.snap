@@ -1,0 +1,77 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`VehicleListComponent should render radio buttons equal to number of vehicles 1`] = `
+<app-vehicle-list
+  changeDetector={[Function ViewRef_]}
+  finderFacadeService={[Function FinderFacadeService]}
+  isComponentActive={[Function Boolean]}
+  lastSelectedVehicle={[Function Object]}
+  vehicleList={[Function Array]}
+>
+  <div
+    class="vehicleList"
+  >
+    
+    <div>
+      <input
+        id="vehicle__0"
+        name="radio_"
+        type="radio"
+        value="Space pod"
+      />
+        
+      <label
+        for="vehicle__0"
+      >
+         Space pod (2) 
+      </label>
+      <br />
+    </div>
+    <div>
+      <input
+        id="vehicle__1"
+        name="radio_"
+        type="radio"
+        value="Space rocket"
+      />
+        
+      <label
+        for="vehicle__1"
+      >
+         Space rocket (1) 
+      </label>
+      <br />
+    </div>
+    <div>
+      <input
+        id="vehicle__2"
+        name="radio_"
+        type="radio"
+        value="Space shuttle"
+      />
+        
+      <label
+        for="vehicle__2"
+      >
+         Space shuttle (1) 
+      </label>
+      <br />
+    </div>
+    <div>
+      <input
+        id="vehicle__3"
+        name="radio_"
+        type="radio"
+        value="Space ship"
+      />
+        
+      <label
+        for="vehicle__3"
+      >
+         Space ship (2) 
+      </label>
+      <br />
+    </div>
+  </div>
+</app-vehicle-list>
+`;

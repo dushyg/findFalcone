@@ -1,0 +1,20 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DestinationWidgetListComponent should create 1`] = `
+<app-destination-widget-list
+  widgetCountIterator={[Function Array]}
+>
+  <div
+    class="widgetListContainer"
+  >
+    
+    <div
+      class="widgetRow"
+    >
+      <app-destination-widget>
+        
+      </app-destination-widget>
+    </div>
+  </div>
+</app-destination-widget-list>
+`;

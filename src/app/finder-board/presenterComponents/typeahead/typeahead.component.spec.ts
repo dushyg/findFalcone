@@ -71,6 +71,7 @@ describe('TypeAhead Component', () => {
     );
 
     expect(resultListUlDebugElement).toBeTruthy();
+    (expect(fixture) as any).toMatchSnapshot();
   });
 
   it('hides result list if typeahead loses focus', fakeAsync(() => {
@@ -243,6 +244,35 @@ describe('TypeAhead Component', () => {
 
     expect(resultListLiElements).toBeTruthy();
     expect(resultListLiElements.length).toEqual(4);
+  });
+
+  it('No planets are shown result list if no match is found', () => {
+    component.sourceArray = planets;
+    component.resetTypeAhead$ = of();
+
+    fixture.detectChanges();
+
+    const inputElement: HTMLInputElement = fixture.nativeElement.querySelector(
+      'input.typeAhead[type=text]'
+    );
+
+    const inputDebugElement = fixture.debugElement.query(
+      By.css('input.typeAhead[type=text]')
+    );
+    inputDebugElement.triggerEventHandler('focus', null);
+    inputDebugElement.nativeElement.value = 'flabbegaster';
+    inputDebugElement.triggerEventHandler('input', {
+      target: inputDebugElement.nativeElement,
+    });
+    fixture.detectChanges();
+
+    const resultListLiElements = (fixture.nativeElement as HTMLElement).querySelectorAll(
+      'div.resultList ul li'
+    );
+
+    expect(resultListLiElements).toBeTruthy();
+    expect(resultListLiElements.length).toEqual(1);
+    expect(resultListLiElements[0].textContent).toContain('None');
   });
 
   it('shows all planets in result list when input text has whitespace', () => {

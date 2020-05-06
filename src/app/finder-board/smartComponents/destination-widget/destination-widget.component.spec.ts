@@ -151,6 +151,7 @@ describe('DestinationWidgetComponent', () => {
     expect(vehicleListComponent.destinationDistance).toBe(
       component.destinationDistance
     );
+    (expect(fixture) as any).toMatchSnapshot();
   });
 
   // it('should render vehicle list component when planet is selected', () => {

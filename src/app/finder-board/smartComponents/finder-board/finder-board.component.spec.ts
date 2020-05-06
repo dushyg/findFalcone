@@ -96,6 +96,7 @@ describe('FinderBoardComponent', () => {
   it('should create', () => {
     fixture.detectChanges();
     expect(component).toBeTruthy();
+    (expect(fixture) as any).toMatchSnapshot();
   });
 
   it('should render time taken with initial value of 0', () => {

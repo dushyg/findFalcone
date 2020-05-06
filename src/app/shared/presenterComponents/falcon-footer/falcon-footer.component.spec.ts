@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { FalconFooterComponent } from './falcon-footer.component';
 
-xdescribe('FalconFooterComponent', () => {
+describe('FalconFooterComponent', () => {
   let component: FalconFooterComponent;
   let fixture: ComponentFixture<FalconFooterComponent>;
 

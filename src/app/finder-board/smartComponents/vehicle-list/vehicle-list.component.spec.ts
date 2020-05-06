@@ -109,6 +109,7 @@ describe('VehicleListComponent', () => {
     radioBtns.forEach((radioBtn) => {
       expect(nameSet.has((radioBtn as HTMLInputElement).value)).toBeTruthy();
     });
+    (expect(fixture) as any).toMatchSnapshot();
   });
 
   it('should render labels equal to number of vehicles', () => {

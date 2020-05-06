@@ -1,0 +1,67 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FinderBoardComponent should create 1`] = `
+<app-finder-board
+  finderFacadeService={[Function FinderFacadeService]}
+  maxWidgetCount={[Function Number]}
+  router={[Function Object]}
+>
+  <div
+    class="boardContainer"
+  >
+    <div>
+      <div
+        class="timeTaken"
+      >
+        Time Taken : 0
+      </div>
+      <div
+        class="instructionLine"
+      >
+         Select planets you want to search in : 
+      </div>
+      <app-destination-widget-list>
+        <div
+          class="widgetListContainer"
+        >
+          
+          <div
+            class="widgetRow"
+          >
+            <app-destination-widget />
+          </div>
+          <div
+            class="widgetRow"
+          >
+            <app-destination-widget />
+          </div>
+          <div
+            class="widgetRow"
+          >
+            <app-destination-widget />
+          </div>
+          <div
+            class="widgetRow"
+          >
+            <app-destination-widget />
+          </div>
+        </div>
+      </app-destination-widget-list>
+      <div
+        class="findButtonContainer"
+      >
+        <input
+          disabled=""
+          type="button"
+          value="Find Falcone!"
+        />
+      </div>
+      <div
+        class="d-flex justify-content-center my-spinner"
+      >
+        
+      </div>
+    </div>
+  </div>
+</app-finder-board>
+`;
