@@ -1,7 +1,12 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {
+  ComponentFixture,
+  TestBed,
+  fakeAsync,
+  flush,
+} from '@angular/core/testing';
 import { TypeaheadComponent } from './typeahead.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { of } from 'rxjs';
+import { of, Subject } from 'rxjs';
 import { IPlanet } from '../../models/planet';
 import { By } from '@angular/platform-browser';
 import { ChangeDetectorRef, Type } from '@angular/core';
@@ -30,7 +35,7 @@ describe('TypeAhead Component', () => {
 
   it('is created', () => {
     component.sourceArray = [];
-    component.resetTypeAhead$ = of(null);
+    component.resetTypeAhead$ = of();
 
     fixture.detectChanges();
 
@@ -39,7 +44,7 @@ describe('TypeAhead Component', () => {
 
   it('renders typeahaed input text box', () => {
     component.sourceArray = [];
-    component.resetTypeAhead$ = of(null);
+    component.resetTypeAhead$ = of();
 
     fixture.detectChanges();
 
@@ -50,7 +55,7 @@ describe('TypeAhead Component', () => {
 
   it('shows result list if input text box recieves focus', () => {
     component.sourceArray = planets;
-    component.resetTypeAhead$ = of(null);
+    component.resetTypeAhead$ = of();
 
     fixture.detectChanges();
 
@@ -68,9 +73,49 @@ describe('TypeAhead Component', () => {
     expect(resultListUlDebugElement).toBeTruthy();
   });
 
+  it('hides result list if typeahead loses focus', fakeAsync(() => {
+    component.sourceArray = planets;
+    component.resetTypeAhead$ = of();
+
+    fixture.detectChanges();
+
+    const inputDebugElement = fixture.debugElement.query(
+      By.css('input.typeAhead[type=text]')
+    );
+    inputDebugElement.triggerEventHandler('focus', null);
+
+    fixture.detectChanges();
+
+    let resultListUlDebugElement = fixture.debugElement.query(
+      By.css('div.resultList ul')
+    );
+
+    expect(resultListUlDebugElement).toBeTruthy();
+
+    const typeAheadContainerDebugElement = fixture.debugElement.query(
+      By.css('div.typeahead-container')
+    );
+    expect(typeAheadContainerDebugElement).toBeTruthy();
+
+    typeAheadContainerDebugElement.triggerEventHandler('focusout', null);
+    // typeAheadContainerDebugElement.nativeElement.dispatchEvent(
+    //   new Event('focusout')
+    // );
+
+    fixture.detectChanges();
+
+    flush();
+
+    resultListUlDebugElement = fixture.debugElement.query(
+      By.css('div.resultList ul')
+    );
+
+    expect(resultListUlDebugElement).toBeFalsy();
+  }));
+
   it('result list has expected values', () => {
     component.sourceArray = planets;
-    component.resetTypeAhead$ = of(null);
+    component.resetTypeAhead$ = of();
 
     fixture.detectChanges();
 
@@ -102,7 +147,7 @@ describe('TypeAhead Component', () => {
 
   it('filters based on input text', () => {
     component.sourceArray = planets;
-    component.resetTypeAhead$ = of(null);
+    component.resetTypeAhead$ = of();
 
     fixture.detectChanges();
 
@@ -131,9 +176,50 @@ describe('TypeAhead Component', () => {
     expect(resultListLiElements[1].textContent).toContain('Donlon');
   });
 
+  it(`sets previously selected planet in text box
+    if user discards his search results by clicking out`, fakeAsync(() => {
+    component.sourceArray = planets;
+    component.resetTypeAhead$ = of();
+
+    fixture.detectChanges();
+
+    const inputDebugElement = fixture.debugElement.query(
+      By.css('input.typeAhead[type=text]')
+    );
+    inputDebugElement.triggerEventHandler('focus', null);
+    fixture.detectChanges();
+
+    const resultListLiElements = (fixture.nativeElement as HTMLElement).querySelectorAll(
+      'div.resultList ul li'
+    );
+
+    const spy = jest.spyOn(component.itemSelected, 'emit');
+    resultListLiElements[1].dispatchEvent(new Event('click'));
+    fixture.detectChanges();
+    expect(spy).toHaveBeenCalledWith(planets[0]);
+
+    inputDebugElement.nativeElement.value = 'i';
+    inputDebugElement.triggerEventHandler('input', {
+      target: inputDebugElement.nativeElement,
+    });
+    fixture.detectChanges();
+
+    const typeAheadContainerDebugElement = fixture.debugElement.query(
+      By.css('div.typeahead-container')
+    );
+    expect(typeAheadContainerDebugElement).toBeTruthy();
+
+    typeAheadContainerDebugElement.triggerEventHandler('focusout', null);
+
+    flush();
+    fixture.detectChanges();
+
+    expect(inputDebugElement.nativeElement.value).toBe(planets[0].name);
+  }));
+
   it('filters even for partial planet name in input text', () => {
     component.sourceArray = planets;
-    component.resetTypeAhead$ = of(null);
+    component.resetTypeAhead$ = of();
 
     fixture.detectChanges();
 
@@ -159,9 +245,37 @@ describe('TypeAhead Component', () => {
     expect(resultListLiElements.length).toEqual(4);
   });
 
+  it('shows all planets in result list when input text has whitespace', () => {
+    component.sourceArray = planets;
+    component.resetTypeAhead$ = of();
+
+    fixture.detectChanges();
+
+    const inputElement: HTMLInputElement = fixture.nativeElement.querySelector(
+      'input.typeAhead[type=text]'
+    );
+
+    const inputDebugElement = fixture.debugElement.query(
+      By.css('input.typeAhead[type=text]')
+    );
+    inputDebugElement.triggerEventHandler('focus', null);
+    inputDebugElement.nativeElement.value = '   ';
+    inputDebugElement.triggerEventHandler('input', {
+      target: inputDebugElement.nativeElement,
+    });
+    fixture.detectChanges();
+
+    const resultListLiElements = (fixture.nativeElement as HTMLElement).querySelectorAll(
+      'div.resultList ul li'
+    );
+
+    expect(resultListLiElements).toBeTruthy();
+    expect(resultListLiElements.length).toEqual(5);
+  });
+
   it('emits selected planet when result item is clicked', () => {
     component.sourceArray = planets;
-    component.resetTypeAhead$ = of(null);
+    component.resetTypeAhead$ = of();
 
     fixture.detectChanges();
 
@@ -186,4 +300,64 @@ describe('TypeAhead Component', () => {
     // this gives the value emitted by the itemSelected event emitter
     // console.log(spy.mock.calls[0][0]);
   });
+
+  it('emits dummy planet when result item "None" is clicked', () => {
+    component.sourceArray = planets;
+    component.resetTypeAhead$ = of();
+
+    fixture.detectChanges();
+
+    const inputElement: HTMLInputElement = fixture.nativeElement.querySelector(
+      'input.typeAhead[type=text]'
+    );
+
+    const inputDebugElement = fixture.debugElement.query(
+      By.css('input.typeAhead[type=text]')
+    );
+    inputDebugElement.triggerEventHandler('focus', null);
+    fixture.detectChanges();
+
+    const resultListLiElements = (fixture.nativeElement as HTMLElement).querySelectorAll(
+      'div.resultList ul li'
+    );
+
+    const spy = jest.spyOn(component.itemSelected, 'emit');
+    resultListLiElements[0].dispatchEvent(new Event('click'));
+    fixture.detectChanges();
+    expect(spy).toHaveBeenCalledWith({ name: 'Select', distance: 0 });
+  });
+
+  it('when reset observable fires, the typeadhead is reset', fakeAsync(() => {
+    component.sourceArray = planets;
+    const resetSubject = new Subject<void>();
+    component.resetTypeAhead$ = resetSubject.asObservable();
+
+    fixture.detectChanges();
+
+    const inputElement: HTMLInputElement = fixture.nativeElement.querySelector(
+      'input.typeAhead[type=text]'
+    );
+
+    const inputDebugElement = fixture.debugElement.query(
+      By.css('input.typeAhead[type=text]')
+    );
+    inputDebugElement.triggerEventHandler('focus', null);
+    fixture.detectChanges();
+
+    const resultListLiElements = (fixture.nativeElement as HTMLElement).querySelectorAll(
+      'div.resultList ul li'
+    );
+
+    const spy = jest.spyOn(component.itemSelected, 'emit');
+    resultListLiElements[1].dispatchEvent(new Event('click'));
+    fixture.detectChanges();
+    expect(spy).toHaveBeenCalledWith(planets[0]);
+    expect(component.filteredSourceArray.length).toBe(1);
+
+    resetSubject.next();
+    flush();
+    fixture.detectChanges();
+    expect(component.inputTextControl.value).toBe('');
+    expect(component.filteredSourceArray).toBe(planets);
+  }));
 });
