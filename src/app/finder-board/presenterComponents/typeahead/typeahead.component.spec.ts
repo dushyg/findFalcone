@@ -4,6 +4,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { of } from 'rxjs';
 import { IPlanet } from '../../models/planet';
 import { By } from '@angular/platform-browser';
+import { ChangeDetectorRef, Type } from '@angular/core';
 
 describe('TypeAhead Component', () => {
   let fixture: ComponentFixture<TypeaheadComponent>;
@@ -80,15 +81,6 @@ describe('TypeAhead Component', () => {
 
     fixture.detectChanges();
 
-    // const resultListLiDebugElements = fixture.debugElement.queryAll(
-    //   By.css('div.resultList ul li')
-    // );
-
-    // expect(resultListLiDebugElements).toBeTruthy();
-    // expect(resultListLiDebugElements.length).toBe(planets.length + 1);
-    // expect(
-    //   (resultListLiDebugElements[0].nativeElement as HTMLElement).textContent
-    // ).toContain('None');
     const resultListLiElements = (fixture.nativeElement as HTMLElement).querySelectorAll(
       'div.resultList ul li'
     );
@@ -106,5 +98,92 @@ describe('TypeAhead Component', () => {
         );
       }
     });
+  });
+
+  it('filters based on input text', () => {
+    component.sourceArray = planets;
+    component.resetTypeAhead$ = of(null);
+
+    fixture.detectChanges();
+
+    const inputElement: HTMLInputElement = fixture.nativeElement.querySelector(
+      'input.typeAhead[type=text]'
+    );
+    inputElement.dispatchEvent(new Event('focus'));
+    inputElement.value = 'Don';
+    inputElement.dispatchEvent(new Event('input'));
+
+    // could have also triggered this via debugelement triggerEvenHandler like this
+    /* const inputDebugElement = fixture.debugElement.query(
+      By.css('input.typeAhead[type=text]')
+      );
+      inputDebugElement.triggerEventHandler('input', {target : inputDebugElement.nativeElement}); */
+    fixture.detectChanges();
+
+    const resultListLiElements = (fixture.nativeElement as HTMLElement).querySelectorAll(
+      'div.resultList ul li'
+    );
+
+    expect(resultListLiElements).toBeTruthy();
+    expect(resultListLiElements.length).toEqual(2);
+
+    expect(resultListLiElements[0].textContent).toContain('None');
+    expect(resultListLiElements[1].textContent).toContain('Donlon');
+  });
+
+  it('filters even for partial planet name in input text', () => {
+    component.sourceArray = planets;
+    component.resetTypeAhead$ = of(null);
+
+    fixture.detectChanges();
+
+    const inputElement: HTMLInputElement = fixture.nativeElement.querySelector(
+      'input.typeAhead[type=text]'
+    );
+
+    const inputDebugElement = fixture.debugElement.query(
+      By.css('input.typeAhead[type=text]')
+    );
+    inputDebugElement.triggerEventHandler('focus', null);
+    inputDebugElement.nativeElement.value = 'i';
+    inputDebugElement.triggerEventHandler('input', {
+      target: inputDebugElement.nativeElement,
+    });
+    fixture.detectChanges();
+
+    const resultListLiElements = (fixture.nativeElement as HTMLElement).querySelectorAll(
+      'div.resultList ul li'
+    );
+
+    expect(resultListLiElements).toBeTruthy();
+    expect(resultListLiElements.length).toEqual(4);
+  });
+
+  it('emits selected planet when result item is clicked', () => {
+    component.sourceArray = planets;
+    component.resetTypeAhead$ = of(null);
+
+    fixture.detectChanges();
+
+    const inputElement: HTMLInputElement = fixture.nativeElement.querySelector(
+      'input.typeAhead[type=text]'
+    );
+
+    const inputDebugElement = fixture.debugElement.query(
+      By.css('input.typeAhead[type=text]')
+    );
+    inputDebugElement.triggerEventHandler('focus', null);
+    fixture.detectChanges();
+
+    const resultListLiElements = (fixture.nativeElement as HTMLElement).querySelectorAll(
+      'div.resultList ul li'
+    );
+
+    const spy = jest.spyOn(component.itemSelected, 'emit');
+    resultListLiElements[1].dispatchEvent(new Event('click'));
+    fixture.detectChanges();
+    expect(spy).toHaveBeenCalledWith(planets[0]);
+    // this gives the value emitted by the itemSelected event emitter
+    // console.log(spy.mock.calls[0][0]);
   });
 });

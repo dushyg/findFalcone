@@ -10,8 +10,6 @@ import { FalconeTokenService } from '../../services/falcone-token.service';
 import { Router } from '@angular/router';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { of } from 'rxjs';
-import { DestinationWidgetComponent } from '../destination-widget/destination-widget.component';
-import { By } from '@angular/platform-browser';
 
 describe('VehicleListComponent', () => {
   let component: VehicleListComponent;
