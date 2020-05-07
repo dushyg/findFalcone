@@ -15,6 +15,7 @@ exports[`DestinationWidgetComponent should render vehicle list component when pl
 >
   <div
     class="destinationWidget"
+    widgetid="3"
   >
     <span>
       Destination 3

@@ -8,11 +8,15 @@ import { PlanetsService } from 'src/app/finder-board/services/planets.service';
 import { VehiclesService } from 'src/app/finder-board/services/vehicles.service';
 import { FinderFacadeService } from 'src/app/finder-board/services/finder-facade.service';
 import { Router } from '@angular/router';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { DebugElement } from '@angular/core';
 import { FalconeTokenService } from '../../services/falcone-token.service';
 import { By } from '@angular/platform-browser';
 import { DestinationWidgetListComponent } from '../../presenterComponents/destination-widget-list/destination-widget-list.component';
 import { of } from 'rxjs';
+import { DestinationWidgetComponent } from '../destination-widget/destination-widget.component';
+import { TypeaheadComponent } from '../../presenterComponents/typeahead/typeahead.component';
+import { VehicleListComponent } from '../vehicle-list/vehicle-list.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 describe('FinderBoardComponent', () => {
   let component: FinderBoardComponent;
@@ -32,7 +36,13 @@ describe('FinderBoardComponent', () => {
     routerServiceMock = createSpyObj(['navigate']);
 
     TestBed.configureTestingModule({
-      declarations: [FinderBoardComponent, DestinationWidgetListComponent],
+      declarations: [
+        FinderBoardComponent,
+        DestinationWidgetListComponent,
+        DestinationWidgetComponent,
+        VehicleListComponent,
+        TypeaheadComponent,
+      ],
       providers: [
         FinderFacadeService,
         { provide: PlanetsService, useValue: planetServiceMock },
@@ -40,7 +50,8 @@ describe('FinderBoardComponent', () => {
         { provide: FalconeTokenService, useValue: apiTokenServiceMock },
         { provide: Router, useValue: routerServiceMock },
       ],
-      schemas: [NO_ERRORS_SCHEMA],
+      imports: [FormsModule, ReactiveFormsModule],
+      // schemas: [NO_ERRORS_SCHEMA],
     });
 
     planetListToBeReturned = [
@@ -88,7 +99,7 @@ describe('FinderBoardComponent', () => {
     apiTokenServiceMock.getFalconeFinderApiToken.mockReturnValue(
       of(apiTokenToBeReturned)
     );
-
+    DestinationWidgetComponent.prototype.widgetId = 0;
     fixture = TestBed.createComponent(FinderBoardComponent);
     component = fixture.componentInstance;
   });
@@ -128,4 +139,290 @@ describe('FinderBoardComponent', () => {
     );
     expect(findButton).toBeTruthy();
   });
+
+  it('should start with time taken as 0', () => {
+    fixture.detectChanges();
+
+    const divTimeTaken = fixture.nativeElement.querySelector('div.timeTaken');
+    expect(divTimeTaken).toBeTruthy();
+
+    expect(divTimeTaken.textContent).toBe(`Time Taken : 0`);
+  });
+
+  it('should not change time taken when first planet is selected', () => {
+    fixture.detectChanges();
+
+    const typeAheadDebugElements = fixture.debugElement.queryAll(
+      By.directive(TypeaheadComponent)
+    );
+    expect(typeAheadDebugElements).toBeTruthy();
+
+    const widget1TypeAheadDE = getDebugElementByWidgetId(
+      typeAheadDebugElements,
+      1
+    );
+    expect(widget1TypeAheadDE).toBeTruthy();
+    (widget1TypeAheadDE.componentInstance as TypeaheadComponent).planetSelectHandler(
+      'Donlon'
+    );
+
+    fixture.detectChanges();
+
+    const divTimeTaken = fixture.nativeElement.querySelector('div.timeTaken');
+    expect(divTimeTaken).toBeTruthy();
+
+    expect(divTimeTaken.textContent).toBe(`Time Taken : 0`);
+  });
+
+  it('should set correct time taken when first vehicle is selected', () => {
+    fixture.detectChanges();
+
+    const typeAheadDebugElements = fixture.debugElement.queryAll(
+      By.directive(TypeaheadComponent)
+    );
+    expect(typeAheadDebugElements).toBeTruthy();
+
+    const widget1TypeAheadDE = getDebugElementByWidgetId(
+      typeAheadDebugElements,
+      1
+    );
+    expect(widget1TypeAheadDE).toBeTruthy();
+    (widget1TypeAheadDE.componentInstance as TypeaheadComponent).planetSelectHandler(
+      'Donlon'
+    );
+
+    fixture.detectChanges();
+
+    const vehicleListDebugElements = fixture.debugElement.queryAll(
+      By.directive(VehicleListComponent)
+    );
+    expect(vehicleListDebugElements).toBeTruthy();
+
+    const widget1VehicleListDE = getDebugElementByWidgetId(
+      vehicleListDebugElements,
+      1
+    );
+    expect(widget1VehicleListDE).toBeTruthy();
+
+    (widget1VehicleListDE.componentInstance as VehicleListComponent).vehicleSelected(
+      {
+        name: 'Space pod',
+        availNumUnits: 0,
+        maxDistance: 0,
+        speed: 0,
+        totalNumUnits: 0,
+      }
+    );
+    fixture.detectChanges();
+
+    const divTimeTaken = fixture.nativeElement.querySelector('div.timeTaken');
+    expect(divTimeTaken).toBeTruthy();
+
+    expect(divTimeTaken.textContent).toBe(`Time Taken : 50`);
+  });
+
+  it('should enable find button if all widgets are set with required info', () => {
+    fixture.detectChanges();
+
+    const typeAheadDebugElements = fixture.debugElement.queryAll(
+      By.directive(TypeaheadComponent)
+    );
+    expect(typeAheadDebugElements).toBeTruthy();
+
+    //#region setup first widget
+    // find and set planet as Donlon in first widget
+    const widget1TypeAheadDE = getDebugElementByWidgetId(
+      typeAheadDebugElements,
+      1
+    );
+    expect(widget1TypeAheadDE).toBeTruthy();
+    (widget1TypeAheadDE.componentInstance as TypeaheadComponent).planetSelectHandler(
+      'Donlon'
+    );
+    fixture.detectChanges();
+
+    // find and set vehicle Space pod in first widget
+    let vehicleListDebugElements = fixture.debugElement.queryAll(
+      By.directive(VehicleListComponent)
+    );
+    expect(vehicleListDebugElements).toBeTruthy();
+
+    const widget1VehicleListDE = getDebugElementByWidgetId(
+      vehicleListDebugElements,
+      1
+    );
+    expect(widget1VehicleListDE).toBeTruthy();
+
+    (widget1VehicleListDE.componentInstance as VehicleListComponent).vehicleSelected(
+      {
+        name: 'Space pod',
+        availNumUnits: 0,
+        maxDistance: 0,
+        speed: 0,
+        totalNumUnits: 0,
+      }
+    );
+    fixture.detectChanges();
+    //#endregion setup first widget
+
+    //#region setup 2nd widget
+    // find and set planet as Enchai in 2nd widget
+    const widget2TypeAheadDE = getDebugElementByWidgetId(
+      typeAheadDebugElements,
+      2
+    );
+    expect(widget2TypeAheadDE).toBeTruthy();
+    (widget2TypeAheadDE.componentInstance as TypeaheadComponent).planetSelectHandler(
+      'Enchai'
+    );
+    fixture.detectChanges();
+
+    // find and set vehicle Space pod in 2nd widget
+    vehicleListDebugElements = fixture.debugElement.queryAll(
+      By.directive(VehicleListComponent)
+    );
+    expect(vehicleListDebugElements).toBeTruthy();
+
+    const widget2VehicleListDE = getDebugElementByWidgetId(
+      vehicleListDebugElements,
+      2
+    );
+    expect(widget2VehicleListDE).toBeTruthy();
+
+    (widget2VehicleListDE.componentInstance as VehicleListComponent).vehicleSelected(
+      {
+        name: 'Space pod',
+        availNumUnits: 0,
+        maxDistance: 0,
+        speed: 0,
+        totalNumUnits: 0,
+      }
+    );
+    fixture.detectChanges();
+    //#endregion setup 2nd widget
+
+    //#region setup 3rd widget
+    // find and set planet as Jebing in 3rd widget
+    const widget3TypeAheadDE = getDebugElementByWidgetId(
+      typeAheadDebugElements,
+      3
+    );
+    expect(widget3TypeAheadDE).toBeTruthy();
+    (widget3TypeAheadDE.componentInstance as TypeaheadComponent).planetSelectHandler(
+      'Jebing'
+    );
+    fixture.detectChanges();
+
+    // find and set vehicle Space rocket in 3rd widget
+    vehicleListDebugElements = fixture.debugElement.queryAll(
+      By.directive(VehicleListComponent)
+    );
+    expect(vehicleListDebugElements).toBeTruthy();
+
+    const widget3VehicleListDE = getDebugElementByWidgetId(
+      vehicleListDebugElements,
+      3
+    );
+    expect(widget3VehicleListDE).toBeTruthy();
+
+    (widget3VehicleListDE.componentInstance as VehicleListComponent).vehicleSelected(
+      {
+        name: 'Space rocket',
+        availNumUnits: 0,
+        maxDistance: 0,
+        speed: 0,
+        totalNumUnits: 0,
+      }
+    );
+    fixture.detectChanges();
+    //#endregion setup 3rd widget
+
+    //#region setup 4th widget
+    // find and set planet as Sapir in 4th widget
+    const widget4TypeAheadDE = getDebugElementByWidgetId(
+      typeAheadDebugElements,
+      4
+    );
+    expect(widget4TypeAheadDE).toBeTruthy();
+    (widget4TypeAheadDE.componentInstance as TypeaheadComponent).planetSelectHandler(
+      'Sapir'
+    );
+    fixture.detectChanges();
+
+    // find and set vehicle Space shuttle in 4th widget
+    vehicleListDebugElements = fixture.debugElement.queryAll(
+      By.directive(VehicleListComponent)
+    );
+    expect(vehicleListDebugElements).toBeTruthy();
+
+    const widget4VehicleListDE = getDebugElementByWidgetId(
+      vehicleListDebugElements,
+      4
+    );
+    expect(widget4VehicleListDE).toBeTruthy();
+
+    (widget4VehicleListDE.componentInstance as VehicleListComponent).vehicleSelected(
+      {
+        name: 'Space shuttle',
+        availNumUnits: 0,
+        maxDistance: 0,
+        speed: 0,
+        totalNumUnits: 0,
+      }
+    );
+    fixture.detectChanges();
+    //#endregion setup 4th widget
+
+    //#region assert button is enabled
+    const findButton = fixture.nativeElement.querySelector(
+      'div.findButtonContainer input[type=button]'
+    );
+    expect(findButton).toBeTruthy();
+    expect(findButton.disabled).toBeFalsy();
+    //#endregion assert button is enabled
+
+    //#region assert correct time taken
+
+    const divTimeTaken = fixture.nativeElement.querySelector('div.timeTaken');
+    expect(divTimeTaken).toBeTruthy();
+
+    expect(divTimeTaken.textContent).toBe(`Time Taken : 305`);
+    //#endregion assert correct time taken
+
+    //#region commented code
+    // set planet Donlon and vehicle space pod
+    // const widget1TypeAhead = fixture.nativeElement.querySelector(
+    //   'div.destinationWidget[widgetId="1"] input.typeAhead[type=text]'
+    // );
+
+    // widget1TypeAhead.
+    // const widget1VehicleListLIs = fixture.nativeElement.querySelector(
+    //   'div.destinationWidget[widgetId="1"] div.vehicleList input[type=radio]'
+    // );
+    //#endregion
+  });
+
+  it('should call router.navigate(["result"]) when enabled find button is clicked', () => {
+    // arrange
+    fixture.detectChanges();
+
+    const findButton: HTMLButtonElement = fixture.nativeElement.querySelector(
+      'div.findButtonContainer input[type=button]'
+    );
+    expect(findButton).toBeTruthy();
+
+    findButton.disabled = false;
+    const spy = jest.spyOn(routerServiceMock, 'navigate');
+
+    // act
+    findButton.click();
+
+    // assert
+    expect(spy).toHaveBeenCalledWith(['result']);
+  });
+  function getDebugElementByWidgetId(debugElements: DebugElement[], widgetId) {
+    return debugElements.find(
+      (de) => de.componentInstance.widgetId === widgetId
+    );
+  }
 });

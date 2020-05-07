@@ -28,22 +28,130 @@ exports[`FinderBoardComponent should create 1`] = `
           <div
             class="widgetRow"
           >
-            <app-destination-widget />
+            <app-destination-widget>
+              
+              <div
+                class="destinationWidget"
+                widgetid="1"
+              >
+                <span>
+                  Destination 1
+                </span>
+                <app-typeahead>
+                  <div
+                    class="typeahead-container"
+                  >
+                    <div
+                      class="typeadhead-wrapper"
+                    >
+                      <input
+                        class="typeAhead ng-untouched ng-pristine ng-valid"
+                        placeholder="Type to search..."
+                        type="text"
+                      />
+                      
+                    </div>
+                  </div>
+                </app-typeahead>
+                
+              </div>
+            </app-destination-widget>
           </div>
           <div
             class="widgetRow"
           >
-            <app-destination-widget />
+            <app-destination-widget>
+              
+              <div
+                class="destinationWidget"
+                widgetid="2"
+              >
+                <span>
+                  Destination 2
+                </span>
+                <app-typeahead>
+                  <div
+                    class="typeahead-container"
+                  >
+                    <div
+                      class="typeadhead-wrapper"
+                    >
+                      <input
+                        class="typeAhead ng-untouched ng-pristine ng-valid"
+                        placeholder="Type to search..."
+                        type="text"
+                      />
+                      
+                    </div>
+                  </div>
+                </app-typeahead>
+                
+              </div>
+            </app-destination-widget>
           </div>
           <div
             class="widgetRow"
           >
-            <app-destination-widget />
+            <app-destination-widget>
+              
+              <div
+                class="destinationWidget"
+                widgetid="3"
+              >
+                <span>
+                  Destination 3
+                </span>
+                <app-typeahead>
+                  <div
+                    class="typeahead-container"
+                  >
+                    <div
+                      class="typeadhead-wrapper"
+                    >
+                      <input
+                        class="typeAhead ng-untouched ng-pristine ng-valid"
+                        placeholder="Type to search..."
+                        type="text"
+                      />
+                      
+                    </div>
+                  </div>
+                </app-typeahead>
+                
+              </div>
+            </app-destination-widget>
           </div>
           <div
             class="widgetRow"
           >
-            <app-destination-widget />
+            <app-destination-widget>
+              
+              <div
+                class="destinationWidget"
+                widgetid="4"
+              >
+                <span>
+                  Destination 4
+                </span>
+                <app-typeahead>
+                  <div
+                    class="typeahead-container"
+                  >
+                    <div
+                      class="typeadhead-wrapper"
+                    >
+                      <input
+                        class="typeAhead ng-untouched ng-pristine ng-valid"
+                        placeholder="Type to search..."
+                        type="text"
+                      />
+                      
+                    </div>
+                  </div>
+                </app-typeahead>
+                
+              </div>
+            </app-destination-widget>
           </div>
         </div>
       </app-destination-widget-list>

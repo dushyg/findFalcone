@@ -23,7 +23,7 @@ import { takeWhile } from 'rxjs/operators';
 export class TypeaheadComponent implements OnInit, OnDestroy {
   @Input() sourceArray: IPlanet[];
   @Input() resetTypeAhead$: Observable<void>;
-  @Input() private widgetId: number;
+  @Input() public widgetId: number;
   @Output() itemSelected = new EventEmitter<IPlanet>();
 
   public filteredSourceArray: IPlanet[];
