@@ -1,0 +1,68 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AppComponent should create the app 1`] = `
+<app-root
+  finderFacadeService={[Function FinderFacadeService]}
+  title={[Function String]}
+>
+  <div
+    class="falconApp"
+  >
+    <app-falcon-header>
+      <nav
+        class="headerContainer"
+      >
+        <div
+          class="brandName"
+        >
+          <a
+            class="brandAnchor"
+            href="/finderboard"
+          >
+             Finding Falcone! 
+          </a>
+        </div>
+        <div
+          class="resetSection"
+        >
+          <a
+            class="resetLink"
+          >
+             Reset 
+          </a>
+          <a
+            class="geekTrustLink"
+            href="https://www.geektrust.in"
+            target="_blank"
+          >
+             GeekTrust Home 
+          </a>
+        </div>
+      </nav>
+    </app-falcon-header>
+    <div
+      class="appFalconBody"
+    >
+      
+      <div
+        class="errorMsg"
+      >
+        
+      </div>
+      <router-outlet />
+    </div>
+    <app-falcon-footer>
+      <nav
+        class="navbar fixed-bottom navbar-expand-lg navbar-light bg-light"
+      >
+        <div
+          class="container mx-auto"
+          style="width: 350px;"
+        >
+           Coding Problem - www.geektrust.in 
+        </div>
+      </nav>
+    </app-falcon-footer>
+  </div>
+</app-root>
+`;
