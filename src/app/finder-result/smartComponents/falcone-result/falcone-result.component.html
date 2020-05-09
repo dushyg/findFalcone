@@ -1,18 +1,18 @@
 <div class="resultBody">
   <div class="resultWrapper">
-    <div *ngIf="!errorMsg && messageToBeShown">
+    <div class="messageToBeShown" *ngIf="!errorMsg && messageToBeShown">
       <h2>
         {{ messageToBeShown }}
       </h2>
     </div>
 
-    <div *ngIf="errorMsg">
+    <div class="errorMsg" *ngIf="errorMsg">
       <h3>{{ errorMsg }}</h3>
     </div>
 
-    <div *ngIf="timeTaken">Time Taken: {{ timeTaken }}</div>
+    <div class="timeTaken" *ngIf="timeTaken">Time Taken: {{ timeTaken }}</div>
 
-    <div *ngIf="planetNameFalconFoundOn">
+    <div class="planetName" *ngIf="planetNameFalconFoundOn">
       Planet Found: {{ planetNameFalconFoundOn }}
     </div>
 
