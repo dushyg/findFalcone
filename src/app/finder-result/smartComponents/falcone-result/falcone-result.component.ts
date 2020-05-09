@@ -6,6 +6,7 @@ import { IFindFalconeRequest } from 'src/app/finder-result/models/findFalconeReq
 import { IFindFalconeResponse } from 'src/app/finder-result/models/findFalconeResponse';
 import { FalconFinderService } from 'src/app/finder-result/services/falcon-finder.service';
 import { ISearchAttempt } from 'src/app/finder-board/models/searchAttempt';
+import { constants } from 'src/app/shared/constants';
 
 @Component({
   selector: 'app-falcone-result',
@@ -88,22 +89,23 @@ export class FalconeResultComponent implements OnInit, OnDestroy {
             if (response.status.trim().toLowerCase() === 'success') {
               if (response.planetName) {
                 this.planetNameFalconFoundOn = response.planetName;
-                this.messageToBeShown =
-                  'Success! Congratulations on Finding Falcone. King Shan is mighty pleased.';
+                this.messageToBeShown = constants.falconeFoundSucessMsg;
               } else {
-                errorMsg = 'Search api returned empty planet name';
+                errorMsg = constants.falconeEmptyPlanetMsg;
                 this.finderFacadeService.updateError(errorMsg);
               }
             } else if (response.status.trim().toLocaleLowerCase() === 'false') {
-              this.messageToBeShown =
-                'Failure! You were unable to find Falcone. Better luck next time.';
+              this.messageToBeShown = constants.falconeFailureMsg;
             } else {
-              errorMsg = 'Search api did not return a response status value.';
+              errorMsg = constants.falconeApiInvalidResponseStatusMsg;
               this.finderFacadeService.updateError(errorMsg);
             }
+          } else {
+            errorMsg = constants.falconeApiNoResponseStatusMsg;
+            this.finderFacadeService.updateError(errorMsg);
           }
         } else {
-          errorMsg = 'Search api returned invalid response.';
+          errorMsg = constants.falconeApiInvalidResponseMsg;
           this.finderFacadeService.updateError(errorMsg);
         }
       },
