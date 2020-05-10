@@ -246,7 +246,7 @@ describe('TypeAhead Component', () => {
     expect(resultListLiElements.length).toEqual(4);
   });
 
-  it('No planets are shown result list if no match is found', () => {
+  it('No planets are shown in result list if no match is found', () => {
     component.sourceArray = planets;
     component.resetTypeAhead$ = of();
 
@@ -355,6 +355,54 @@ describe('TypeAhead Component', () => {
     resultListLiElements[0].dispatchEvent(new Event('click'));
     fixture.detectChanges();
     expect(spy).toHaveBeenCalledWith({ name: 'Select', distance: 0 });
+  });
+
+  it(`should display all available planets in result list
+  after previous planet is unselected by clicking on item "None"
+  and user clicks again in the typeahead`, () => {
+    component.sourceArray = planets;
+    component.resetTypeAhead$ = of();
+
+    fixture.detectChanges();
+
+    const inputDebugElement = fixture.debugElement.query(
+      By.css('input.typeAhead[type=text]')
+    );
+    inputDebugElement.triggerEventHandler('focus', null);
+    fixture.detectChanges();
+
+    let resultListLiElements = (fixture.nativeElement as HTMLElement).querySelectorAll(
+      'div.resultList ul li'
+    );
+
+    // simulate selection of '2nd item Donlon' in result list
+    resultListLiElements[1].dispatchEvent(new Event('click'));
+    fixture.detectChanges();
+
+    // set focus in textbox to show the list
+    inputDebugElement.triggerEventHandler('focus', null);
+    fixture.detectChanges();
+
+    // get result list
+    resultListLiElements = (fixture.nativeElement as HTMLElement).querySelectorAll(
+      'div.resultList ul li'
+    );
+
+    // simulate selection of 'None' in result list
+    resultListLiElements[0].dispatchEvent(new Event('click'));
+    fixture.detectChanges();
+
+    // set focus on input box to show the result list again
+    inputDebugElement.triggerEventHandler('focus', null);
+    fixture.detectChanges();
+
+    resultListLiElements = (fixture.nativeElement as HTMLElement).querySelectorAll(
+      'div.resultList ul li'
+    );
+
+    expect(component.filteredSourceArray).toBe(component.sourceArray);
+
+    expect(resultListLiElements.length).toBe(component.sourceArray.length + 1);
   });
 
   it('when reset observable fires, the typeadhead is reset', fakeAsync(() => {

@@ -60,6 +60,7 @@ export class TypeaheadComponent implements OnInit, OnDestroy {
     const trimmedValue = value.trim().toLowerCase();
     if (!trimmedValue) {
       this.filteredSourceArray = this.sourceArray;
+      return;
     }
 
     this.filteredSourceArray = this.sourceArray.filter((item) => {
@@ -75,7 +76,7 @@ export class TypeaheadComponent implements OnInit, OnDestroy {
     if (planetName === 'Select') {
       selectedPlanet = { name: 'Select', distance: 0 } as IPlanet;
       this.lastSelection = '';
-      this.inputTextControl.setValue('', { emitEvent: false });
+      this.inputTextControl.setValue('');
     } else {
       this.lastSelection = selectedPlanet.name;
       this.inputTextControl.setValue(this.lastSelection);
@@ -103,7 +104,7 @@ export class TypeaheadComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.inputTextControl.setValue(this.lastSelection, { emitEvent: false });
+    this.inputTextControl.setValue(this.lastSelection);
   };
 
   ngOnDestroy(): void {

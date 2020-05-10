@@ -926,7 +926,7 @@ describe('FinderBoardComponent', () => {
 
     //#region setup 3rd widget
     // find and set planet as Jebing in 3rd widget
-    let widget3TypeAheadDE = getDebugElementByWidgetId(
+    const widget3TypeAheadDE = getDebugElementByWidgetId(
       typeAheadDebugElements,
       3
     );
