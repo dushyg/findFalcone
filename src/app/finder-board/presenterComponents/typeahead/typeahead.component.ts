@@ -93,7 +93,7 @@ export class TypeaheadComponent implements OnInit, OnDestroy {
     // focusout event on the wrapper div is fired first,
     // hence we need to call this after some delay so that lastSelection field
     // has latest value
-    setTimeout(this.hideResults, 250);
+    setTimeout(this.hideResults, 200);
   }
 
   private hideResults = () => {
