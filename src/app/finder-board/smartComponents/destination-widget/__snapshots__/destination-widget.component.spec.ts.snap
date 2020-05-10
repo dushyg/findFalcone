@@ -29,6 +29,7 @@ exports[`DestinationWidgetComponent should render vehicle list component when pl
         >
           <input
             class="typeAhead"
+            id="typeahead_input_widget_3"
             placeholder="Type to search..."
             type="text"
           />
