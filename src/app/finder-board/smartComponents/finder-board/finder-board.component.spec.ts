@@ -616,6 +616,435 @@ describe('FinderBoardComponent', () => {
     //#endregion assert correct time taken
   });
 
+  it('should not reset widgets to the left when 3rd widget planet is changed', fakeAsync(() => {
+    fixture.detectChanges();
+
+    const typeAheadDebugElements = fixture.debugElement.queryAll(
+      By.directive(TypeaheadComponent)
+    );
+    expect(typeAheadDebugElements).toBeTruthy();
+
+    //#region setup first widget
+    // find and set planet as Donlon in first widget
+    const widget1TypeAheadDE = getDebugElementByWidgetId(
+      typeAheadDebugElements,
+      1
+    );
+    expect(widget1TypeAheadDE).toBeTruthy();
+    (widget1TypeAheadDE.componentInstance as TypeaheadComponent).planetSelectHandler(
+      'Donlon'
+    );
+    fixture.detectChanges();
+
+    // find and set vehicle Space pod in first widget
+    let vehicleListDebugElements = fixture.debugElement.queryAll(
+      By.directive(VehicleListComponent)
+    );
+    expect(vehicleListDebugElements).toBeTruthy();
+
+    const widget1VehicleListDE = getDebugElementByWidgetId(
+      vehicleListDebugElements,
+      1
+    );
+    expect(widget1VehicleListDE).toBeTruthy();
+
+    (widget1VehicleListDE.componentInstance as VehicleListComponent).vehicleSelected(
+      {
+        name: 'Space pod',
+        availNumUnits: 0,
+        maxDistance: 0,
+        speed: 0,
+        totalNumUnits: 0,
+      }
+    );
+    fixture.detectChanges();
+
+    // call to flush is requred before setting up next widgets planet so that
+    // reset method in typeahead component clears the widgets to the right before
+    // those widgets are set up.
+    // In earlier test cases we were not calling flush, because we were
+    // not reading contents of the textboxes as part of our assertions
+    flush();
+    //#endregion setup first widget
+
+    //#region setup 2nd widget
+    // find and set planet as Enchai in 2nd widget
+    const widget2TypeAheadDE = getDebugElementByWidgetId(
+      typeAheadDebugElements,
+      2
+    );
+    expect(widget2TypeAheadDE).toBeTruthy();
+    (widget2TypeAheadDE.componentInstance as TypeaheadComponent).planetSelectHandler(
+      'Enchai'
+    );
+    fixture.detectChanges();
+
+    // find and set vehicle Space pod in 2nd widget
+    vehicleListDebugElements = fixture.debugElement.queryAll(
+      By.directive(VehicleListComponent)
+    );
+    expect(vehicleListDebugElements).toBeTruthy();
+
+    const widget2VehicleListDE = getDebugElementByWidgetId(
+      vehicleListDebugElements,
+      2
+    );
+    expect(widget2VehicleListDE).toBeTruthy();
+
+    (widget2VehicleListDE.componentInstance as VehicleListComponent).vehicleSelected(
+      {
+        name: 'Space pod',
+        availNumUnits: 0,
+        maxDistance: 0,
+        speed: 0,
+        totalNumUnits: 0,
+      }
+    );
+    fixture.detectChanges();
+    flush();
+    //#endregion setup 2nd widget
+
+    //#region setup 3rd widget
+    // find and set planet as Jebing in 3rd widget
+    let widget3TypeAheadDE = getDebugElementByWidgetId(
+      typeAheadDebugElements,
+      3
+    );
+    expect(widget3TypeAheadDE).toBeTruthy();
+    (widget3TypeAheadDE.componentInstance as TypeaheadComponent).planetSelectHandler(
+      'Jebing'
+    );
+    fixture.detectChanges();
+
+    // find and set vehicle Space rocket in 3rd widget
+    vehicleListDebugElements = fixture.debugElement.queryAll(
+      By.directive(VehicleListComponent)
+    );
+    expect(vehicleListDebugElements).toBeTruthy();
+
+    const widget3VehicleListDE = getDebugElementByWidgetId(
+      vehicleListDebugElements,
+      3
+    );
+    expect(widget3VehicleListDE).toBeTruthy();
+
+    (widget3VehicleListDE.componentInstance as VehicleListComponent).vehicleSelected(
+      {
+        name: 'Space rocket',
+        availNumUnits: 0,
+        maxDistance: 0,
+        speed: 0,
+        totalNumUnits: 0,
+      }
+    );
+    fixture.detectChanges();
+    flush();
+    //#endregion setup 3rd widget
+
+    //#region setup 4th widget
+    // find and set planet as Sapir in 4th widget
+    const widget4TypeAheadDE = getDebugElementByWidgetId(
+      typeAheadDebugElements,
+      4
+    );
+    expect(widget4TypeAheadDE).toBeTruthy();
+    (widget4TypeAheadDE.componentInstance as TypeaheadComponent).planetSelectHandler(
+      'Sapir'
+    );
+    fixture.detectChanges();
+
+    // find and set vehicle Space shuttle in 4th widget
+    vehicleListDebugElements = fixture.debugElement.queryAll(
+      By.directive(VehicleListComponent)
+    );
+    expect(vehicleListDebugElements).toBeTruthy();
+
+    const widget4VehicleListDE = getDebugElementByWidgetId(
+      vehicleListDebugElements,
+      4
+    );
+    expect(widget4VehicleListDE).toBeTruthy();
+
+    (widget4VehicleListDE.componentInstance as VehicleListComponent).vehicleSelected(
+      {
+        name: 'Space shuttle',
+        availNumUnits: 0,
+        maxDistance: 0,
+        speed: 0,
+        totalNumUnits: 0,
+      }
+    );
+    fixture.detectChanges();
+    flush();
+    //#endregion setup 4th widget
+
+    //#region change 3rd widget's planet
+    widget3TypeAheadDE = getDebugElementByWidgetId(typeAheadDebugElements, 3);
+    expect(widget3TypeAheadDE).toBeTruthy();
+    const widget3TypeaheadComponent = widget3TypeAheadDE.componentInstance as TypeaheadComponent;
+    const widget3TypeaheadInputTextBox = widget3TypeAheadDE.query(
+      By.css('input[type=text]')
+    ).nativeElement;
+
+    widget3TypeaheadInputTextBox.value = '';
+    widget3TypeaheadInputTextBox.dispatchEvent(new Event('input'));
+
+    fixture.detectChanges();
+
+    widget3TypeaheadComponent.planetSelectHandler('Sapir');
+
+    fixture.detectChanges();
+    flush();
+
+    //#endregion change 3rd widget's planet
+
+    //#region assert widgets to the left are not reset
+
+    for (let widgetId = 1; widgetId <= 2; widgetId++) {
+      //#region assert planet is not reset
+      const typeAheadInput: HTMLInputElement = fixture.nativeElement.querySelector(
+        `#typeahead_input_widget_${widgetId}`
+      );
+      expect(typeAheadInput.value).toBeTruthy();
+      //#endregion assert planet is not reset
+
+      //#region assert selected vehicle is not reset, i.e vehicle radio is selected
+      const vehicleRadioBtn: HTMLInputElement = fixture.nativeElement.querySelector(
+        `#vehicle_${widgetId}_0`
+      );
+      expect(vehicleRadioBtn.checked).toBeTruthy();
+
+      //#endregion assert selected vehicle is not reset, i.e vehicle radio is selected
+    }
+
+    //#endregion  assert widgets to the left are not reset
+
+    //#region assert button is disabled
+    const findButton = fixture.nativeElement.querySelector(
+      'div.findButtonContainer input[type=button]'
+    );
+    expect(findButton).toBeTruthy();
+    expect(findButton.disabled).toBeTruthy();
+    //#endregion assert button is disabled
+
+    //#region assert correct time taken
+
+    const divTimeTaken = fixture.nativeElement.querySelector('div.timeTaken');
+    expect(divTimeTaken).toBeTruthy();
+
+    expect(divTimeTaken.textContent).toBe(`Time Taken : 150`);
+    //#endregion assert correct time taken
+  }));
+
+  it('should not reset widgets to the left when 3rd widget planet is changed', fakeAsync(() => {
+    fixture.detectChanges();
+
+    const typeAheadDebugElements = fixture.debugElement.queryAll(
+      By.directive(TypeaheadComponent)
+    );
+    expect(typeAheadDebugElements).toBeTruthy();
+
+    //#region setup first widget
+    // find and set planet as Donlon in first widget
+    const widget1TypeAheadDE = getDebugElementByWidgetId(
+      typeAheadDebugElements,
+      1
+    );
+    expect(widget1TypeAheadDE).toBeTruthy();
+    (widget1TypeAheadDE.componentInstance as TypeaheadComponent).planetSelectHandler(
+      'Donlon'
+    );
+    fixture.detectChanges();
+
+    // find and set vehicle Space pod in first widget
+    let vehicleListDebugElements = fixture.debugElement.queryAll(
+      By.directive(VehicleListComponent)
+    );
+    expect(vehicleListDebugElements).toBeTruthy();
+
+    const widget1VehicleListDE = getDebugElementByWidgetId(
+      vehicleListDebugElements,
+      1
+    );
+    expect(widget1VehicleListDE).toBeTruthy();
+
+    (widget1VehicleListDE.componentInstance as VehicleListComponent).vehicleSelected(
+      {
+        name: 'Space pod',
+        availNumUnits: 0,
+        maxDistance: 0,
+        speed: 0,
+        totalNumUnits: 0,
+      }
+    );
+    fixture.detectChanges();
+
+    // call to flush is requred before setting up next widgets planet so that
+    // reset method in typeahead component clears the widgets to the right before
+    // those widgets are set up.
+    // In earlier test cases we were not calling flush, because we were
+    // not reading contents of the textboxes as part of our assertions
+    flush();
+    //#endregion setup first widget
+
+    //#region setup 2nd widget
+    // find and set planet as Enchai in 2nd widget
+    const widget2TypeAheadDE = getDebugElementByWidgetId(
+      typeAheadDebugElements,
+      2
+    );
+    expect(widget2TypeAheadDE).toBeTruthy();
+    (widget2TypeAheadDE.componentInstance as TypeaheadComponent).planetSelectHandler(
+      'Enchai'
+    );
+    fixture.detectChanges();
+
+    // find and set vehicle Space pod in 2nd widget
+    vehicleListDebugElements = fixture.debugElement.queryAll(
+      By.directive(VehicleListComponent)
+    );
+    expect(vehicleListDebugElements).toBeTruthy();
+
+    const widget2VehicleListDE = getDebugElementByWidgetId(
+      vehicleListDebugElements,
+      2
+    );
+    expect(widget2VehicleListDE).toBeTruthy();
+
+    (widget2VehicleListDE.componentInstance as VehicleListComponent).vehicleSelected(
+      {
+        name: 'Space pod',
+        availNumUnits: 0,
+        maxDistance: 0,
+        speed: 0,
+        totalNumUnits: 0,
+      }
+    );
+    fixture.detectChanges();
+    flush();
+    //#endregion setup 2nd widget
+
+    //#region setup 3rd widget
+    // find and set planet as Jebing in 3rd widget
+    let widget3TypeAheadDE = getDebugElementByWidgetId(
+      typeAheadDebugElements,
+      3
+    );
+    expect(widget3TypeAheadDE).toBeTruthy();
+    (widget3TypeAheadDE.componentInstance as TypeaheadComponent).planetSelectHandler(
+      'Jebing'
+    );
+    fixture.detectChanges();
+
+    // find and set vehicle Space rocket in 3rd widget
+    vehicleListDebugElements = fixture.debugElement.queryAll(
+      By.directive(VehicleListComponent)
+    );
+    expect(vehicleListDebugElements).toBeTruthy();
+
+    const widget3VehicleListDE = getDebugElementByWidgetId(
+      vehicleListDebugElements,
+      3
+    );
+    expect(widget3VehicleListDE).toBeTruthy();
+
+    (widget3VehicleListDE.componentInstance as VehicleListComponent).vehicleSelected(
+      {
+        name: 'Space rocket',
+        availNumUnits: 0,
+        maxDistance: 0,
+        speed: 0,
+        totalNumUnits: 0,
+      }
+    );
+    fixture.detectChanges();
+    flush();
+    //#endregion setup 3rd widget
+
+    //#region setup 4th widget
+    // find and set planet as Sapir in 4th widget
+    const widget4TypeAheadDE = getDebugElementByWidgetId(
+      typeAheadDebugElements,
+      4
+    );
+    expect(widget4TypeAheadDE).toBeTruthy();
+    (widget4TypeAheadDE.componentInstance as TypeaheadComponent).planetSelectHandler(
+      'Sapir'
+    );
+    fixture.detectChanges();
+
+    // find and set vehicle Space shuttle in 4th widget
+    vehicleListDebugElements = fixture.debugElement.queryAll(
+      By.directive(VehicleListComponent)
+    );
+    expect(vehicleListDebugElements).toBeTruthy();
+
+    const widget4VehicleListDE = getDebugElementByWidgetId(
+      vehicleListDebugElements,
+      4
+    );
+    expect(widget4VehicleListDE).toBeTruthy();
+
+    (widget4VehicleListDE.componentInstance as VehicleListComponent).vehicleSelected(
+      {
+        name: 'Space shuttle',
+        availNumUnits: 0,
+        maxDistance: 0,
+        speed: 0,
+        totalNumUnits: 0,
+      }
+    );
+    fixture.detectChanges();
+    flush();
+    //#endregion setup 4th widget
+
+    //#region change 3rd widget's planet
+    const widget3SpaceShuttleRadioButton: HTMLInputElement = fixture.nativeElement.querySelector(
+      '#vehicle_3_2'
+    );
+    widget3SpaceShuttleRadioButton.click();
+    flush();
+    fixture.detectChanges();
+    //#endregion change 3rd widget's planet
+
+    //#region assert widgets to the left are not reset
+
+    for (let widgetId = 1; widgetId <= 2; widgetId++) {
+      //#region assert planet is not reset
+      const typeAheadInput: HTMLInputElement = fixture.nativeElement.querySelector(
+        `#typeahead_input_widget_${widgetId}`
+      );
+      expect(typeAheadInput.value).toBeTruthy();
+      //#endregion assert planet is not reset
+
+      //#region assert selected vehicle is not reset, i.e vehicle radio is selected
+      const vehicleRadioBtn: HTMLInputElement = fixture.nativeElement.querySelector(
+        `#vehicle_${widgetId}_0`
+      );
+      expect(vehicleRadioBtn.checked).toBeTruthy();
+
+      //#endregion assert selected vehicle is not reset, i.e vehicle radio is selected
+    }
+
+    //#endregion  assert widgets to the left are not reset
+
+    //#region assert button is disabled
+    const findButton = fixture.nativeElement.querySelector(
+      'div.findButtonContainer input[type=button]'
+    );
+    expect(findButton).toBeTruthy();
+    expect(findButton.disabled).toBeTruthy();
+    //#endregion assert button is disabled
+
+    //#region assert correct time taken
+
+    const divTimeTaken = fixture.nativeElement.querySelector('div.timeTaken');
+    expect(divTimeTaken).toBeTruthy();
+
+    expect(divTimeTaken.textContent).toBe(`Time Taken : 210`);
+    //#endregion assert correct time taken
+  }));
+
   it('should reset all widgets to the right of first widget when first widget planet is changed', fakeAsync(() => {
     fixture.detectChanges();
 
@@ -776,7 +1205,6 @@ describe('FinderBoardComponent', () => {
       By.css('input[type=text]')
     ).nativeElement;
 
-    // widget1TypeaheadInputTextBox.dispatchEvent(new Event('focus'));
     widget1TypeaheadInputTextBox.value = '';
     widget1TypeaheadInputTextBox.dispatchEvent(new Event('input'));
 
@@ -808,17 +1236,21 @@ describe('FinderBoardComponent', () => {
     //#region  assert widgets to the right are reset
 
     for (let widgetId = 2; widgetId <= 4; widgetId++) {
+      //#region assert planet is reset
       const typeAheadInput: HTMLInputElement = fixture.nativeElement.querySelector(
         `#typeahead_input_widget_${widgetId}`
       );
       expect(typeAheadInput.value).toBeFalsy();
+      //#endregion assert planet is reset
 
+      //#region assert selected vehicle is reset, i.e no vehicle radio is selected
       const vehicleListRadioBtns: HTMLInputElement[] = fixture.nativeElement.querySelectorAll(
         `input[type=radio][id^=vehicle_${widgetId}`
       );
       vehicleListRadioBtns.forEach((radio) => {
         expect(radio.checked).toBeFalsy();
       });
+      //#endregion assert selected vehicle is reset, i.e no vehicle radio is selected
     }
 
     //#endregion  assert widgets to the right are reset
@@ -840,6 +1272,207 @@ describe('FinderBoardComponent', () => {
     //#endregion assert correct time taken
   }));
 
+  it('should reset all widgets to the right of first widget when first widget vehicle is changed', fakeAsync(() => {
+    fixture.detectChanges();
+
+    const typeAheadDebugElements = fixture.debugElement.queryAll(
+      By.directive(TypeaheadComponent)
+    );
+    expect(typeAheadDebugElements).toBeTruthy();
+
+    //#region setup first widget
+    // find and set planet as Donlon in first widget
+    const widget1TypeAheadDE = getDebugElementByWidgetId(
+      typeAheadDebugElements,
+      1
+    );
+    expect(widget1TypeAheadDE).toBeTruthy();
+    (widget1TypeAheadDE.componentInstance as TypeaheadComponent).planetSelectHandler(
+      'Donlon'
+    );
+    fixture.detectChanges();
+
+    // find and set vehicle Space pod in first widget
+    let vehicleListDebugElements = fixture.debugElement.queryAll(
+      By.directive(VehicleListComponent)
+    );
+    expect(vehicleListDebugElements).toBeTruthy();
+
+    const widget1VehicleListDE = getDebugElementByWidgetId(
+      vehicleListDebugElements,
+      1
+    );
+    expect(widget1VehicleListDE).toBeTruthy();
+
+    (widget1VehicleListDE.componentInstance as VehicleListComponent).vehicleSelected(
+      {
+        name: 'Space pod',
+        availNumUnits: 0,
+        maxDistance: 0,
+        speed: 0,
+        totalNumUnits: 0,
+      }
+    );
+    fixture.detectChanges();
+    //#endregion setup first widget
+
+    //#region setup 2nd widget
+    // find and set planet as Enchai in 2nd widget
+    const widget2TypeAheadDE = getDebugElementByWidgetId(
+      typeAheadDebugElements,
+      2
+    );
+    expect(widget2TypeAheadDE).toBeTruthy();
+    (widget2TypeAheadDE.componentInstance as TypeaheadComponent).planetSelectHandler(
+      'Enchai'
+    );
+    fixture.detectChanges();
+
+    // find and set vehicle Space pod in 2nd widget
+    vehicleListDebugElements = fixture.debugElement.queryAll(
+      By.directive(VehicleListComponent)
+    );
+    expect(vehicleListDebugElements).toBeTruthy();
+
+    const widget2VehicleListDE = getDebugElementByWidgetId(
+      vehicleListDebugElements,
+      2
+    );
+    expect(widget2VehicleListDE).toBeTruthy();
+
+    (widget2VehicleListDE.componentInstance as VehicleListComponent).vehicleSelected(
+      {
+        name: 'Space pod',
+        availNumUnits: 0,
+        maxDistance: 0,
+        speed: 0,
+        totalNumUnits: 0,
+      }
+    );
+    fixture.detectChanges();
+    //#endregion setup 2nd widget
+
+    //#region setup 3rd widget
+    // find and set planet as Jebing in 3rd widget
+    const widget3TypeAheadDE = getDebugElementByWidgetId(
+      typeAheadDebugElements,
+      3
+    );
+    expect(widget3TypeAheadDE).toBeTruthy();
+    (widget3TypeAheadDE.componentInstance as TypeaheadComponent).planetSelectHandler(
+      'Jebing'
+    );
+    fixture.detectChanges();
+
+    // find and set vehicle Space rocket in 3rd widget
+    vehicleListDebugElements = fixture.debugElement.queryAll(
+      By.directive(VehicleListComponent)
+    );
+    expect(vehicleListDebugElements).toBeTruthy();
+
+    const widget3VehicleListDE = getDebugElementByWidgetId(
+      vehicleListDebugElements,
+      3
+    );
+    expect(widget3VehicleListDE).toBeTruthy();
+
+    (widget3VehicleListDE.componentInstance as VehicleListComponent).vehicleSelected(
+      {
+        name: 'Space rocket',
+        availNumUnits: 0,
+        maxDistance: 0,
+        speed: 0,
+        totalNumUnits: 0,
+      }
+    );
+    fixture.detectChanges();
+    //#endregion setup 3rd widget
+
+    //#region setup 4th widget
+    // find and set planet as Sapir in 4th widget
+    const widget4TypeAheadDE = getDebugElementByWidgetId(
+      typeAheadDebugElements,
+      4
+    );
+    expect(widget4TypeAheadDE).toBeTruthy();
+    (widget4TypeAheadDE.componentInstance as TypeaheadComponent).planetSelectHandler(
+      'Sapir'
+    );
+    fixture.detectChanges();
+
+    // find and set vehicle Space shuttle in 4th widget
+    vehicleListDebugElements = fixture.debugElement.queryAll(
+      By.directive(VehicleListComponent)
+    );
+    expect(vehicleListDebugElements).toBeTruthy();
+
+    const widget4VehicleListDE = getDebugElementByWidgetId(
+      vehicleListDebugElements,
+      4
+    );
+    expect(widget4VehicleListDE).toBeTruthy();
+
+    (widget4VehicleListDE.componentInstance as VehicleListComponent).vehicleSelected(
+      {
+        name: 'Space shuttle',
+        availNumUnits: 0,
+        maxDistance: 0,
+        speed: 0,
+        totalNumUnits: 0,
+      }
+    );
+    fixture.detectChanges();
+    //#endregion setup 4th widget
+
+    //#region change first widget's vehicle
+    const widget1SpaceRocketVehicle: HTMLInputElement = fixture.nativeElement.querySelector(
+      '#vehicle_1_1'
+    );
+    widget1SpaceRocketVehicle.click();
+    flush();
+    fixture.detectChanges();
+
+    //#endregion change first widget's vehicle
+
+    //#region  assert widgets to the right are reset
+
+    for (let widgetId = 2; widgetId <= 4; widgetId++) {
+      //#region assert planet is reset
+      const typeAheadInput: HTMLInputElement = fixture.nativeElement.querySelector(
+        `#typeahead_input_widget_${widgetId}`
+      );
+      expect(typeAheadInput.value).toBeFalsy();
+      //#endregion assert planet is reset
+
+      //#region assert selected vehicle is reset, i.e no vehicle radio is selected
+      const vehicleListRadioBtns: HTMLInputElement[] = fixture.nativeElement.querySelectorAll(
+        `input[type=radio][id^=vehicle_${widgetId}`
+      );
+      vehicleListRadioBtns.forEach((radio) => {
+        expect(radio.checked).toBeFalsy();
+      });
+      //#endregion assert selected vehicle is reset, i.e no vehicle radio is selected
+    }
+
+    //#endregion  assert widgets to the right are reset
+
+    //#region assert button is disabled
+    const findButton = fixture.nativeElement.querySelector(
+      'div.findButtonContainer input[type=button]'
+    );
+    expect(findButton).toBeTruthy();
+    expect(findButton.disabled).toBeTruthy();
+    //#endregion assert button is disabled
+
+    //#region assert correct time taken
+
+    const divTimeTaken = fixture.nativeElement.querySelector('div.timeTaken');
+    expect(divTimeTaken).toBeTruthy();
+
+    expect(divTimeTaken.textContent).toBe(`Time Taken : 25`);
+    //#endregion assert correct time taken
+  }));
+
   it('should call router.navigate(["result"]) when enabled find button is clicked', () => {
     // arrange
     fixture.detectChanges();
@@ -858,6 +1491,7 @@ describe('FinderBoardComponent', () => {
     // assert
     expect(spy).toHaveBeenCalledWith(['result']);
   });
+
   function getDebugElementByWidgetId(debugElements: DebugElement[], widgetId) {
     return debugElements.find(
       (de) => de.componentInstance.widgetId === widgetId
