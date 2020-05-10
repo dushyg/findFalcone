@@ -6,6 +6,7 @@
       placeholder="Type to search..."
       [formControl]="inputTextControl"
       (focus)="showResultsList()"
+      id="typeahead_input_widget_{{ widgetId }}"
     />
     <div class="resultList" *ngIf="doShowResults">
       <ul>
