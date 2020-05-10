@@ -1,9 +1,4 @@
-import {
-  ComponentFixture,
-  TestBed,
-  fakeAsync,
-  flush,
-} from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { FinderBoardComponent } from './finder-board.component';
 import { IPlanet } from 'src/app/finder-board/models/planet';
