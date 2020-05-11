@@ -140,13 +140,6 @@ describe('FalconeFinderService', () => {
   });
 
   describe('Falcone Finder api exception cases', () => {
-    // const mockedFindFalconeResponse: IFindFalconeResponse = {
-    //   error:
-    //     'Communication exception',
-    //   planetName: undefined,
-    //   status: undefined,
-    // };
-
     const mockedFindFalconeResponse = 'Communication exception';
 
     const httpClientMock = {
