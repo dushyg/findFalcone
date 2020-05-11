@@ -9,13 +9,13 @@ import { IFindFalconeResponse } from '../models/findFalconeResponse';
 @Injectable({
   providedIn: 'root',
 })
-export class FalconFinderService {
+export class FalconeFinderService {
   constructor(private http: HttpClient) {}
 
   private readonly falconFinderApiUrl =
     'https://findfalcone.herokuapp.com/find';
 
-  public findFalcon(
+  public findFalcone(
     request: IFindFalconeRequest
   ): Observable<IFindFalconeResponse> {
     const httpOptions = {

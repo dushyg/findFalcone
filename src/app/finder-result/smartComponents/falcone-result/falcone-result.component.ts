@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { takeWhile } from 'rxjs/operators';
 import { IFindFalconeRequest } from 'src/app/finder-result/models/findFalconeRequest';
 import { IFindFalconeResponse } from 'src/app/finder-result/models/findFalconeResponse';
-import { FalconFinderService } from 'src/app/finder-result/services/falcon-finder.service';
+import { FalconeFinderService } from 'src/app/finder-result/services/falcone-finder.service';
 import { ISearchAttempt } from 'src/app/finder-board/models/searchAttempt';
 import { constants } from 'src/app/shared/constants';
 
@@ -15,7 +15,7 @@ import { constants } from 'src/app/shared/constants';
 })
 export class FalconeResultComponent implements OnInit, OnDestroy {
   constructor(
-    private finderService: FalconFinderService,
+    private finderService: FalconeFinderService,
     private finderFacadeService: FinderFacadeService
   ) {}
 
@@ -76,7 +76,7 @@ export class FalconeResultComponent implements OnInit, OnDestroy {
   private callFindFalconApi(request: IFindFalconeRequest) {
     request.token = this.finderFacadeService.getFinderApiToken();
     this.finderFacadeService.setLoadingFlag(true);
-    this.finderService.findFalcon(request).subscribe(
+    this.finderService.findFalcone(request).subscribe(
       (response: IFindFalconeResponse) => {
         this.finderFacadeService.setLoadingFlag(false);
 

@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FalconeResultComponent } from './falcone-result.component';
 import { FinderFacadeService } from 'src/app/finder-board/services/finder-facade.service';
-import { FalconFinderService } from '../../services/falcon-finder.service';
+import { FalconeFinderService } from '../../services/falcone-finder.service';
 import { of, Subject, Observable, BehaviorSubject, throwError } from 'rxjs';
 import { ISearchAttempt } from 'src/app/finder-board/models/searchAttempt';
 import { HttpClient } from '@angular/common/http';
@@ -74,7 +74,7 @@ describe('Falcone Result Component', () => {
         providers: [
           { provide: FinderFacadeService, useValue: finderFacadeServiceMock },
           { provide: HttpClient, useValue: httpClientMock },
-          FalconFinderService,
+          FalconeFinderService,
         ],
       });
 
@@ -128,7 +128,7 @@ describe('Falcone Result Component', () => {
         providers: [
           { provide: FinderFacadeService, useValue: finderFacadeServiceMock },
           { provide: HttpClient, useValue: httpClientMock },
-          FalconFinderService,
+          FalconeFinderService,
         ],
       });
 
@@ -187,7 +187,7 @@ describe('Falcone Result Component', () => {
         providers: [
           { provide: FinderFacadeService, useValue: finderFacadeServiceMock },
           { provide: HttpClient, useValue: httpClientMock },
-          FalconFinderService,
+          FalconeFinderService,
         ],
       });
 
@@ -219,7 +219,7 @@ describe('Falcone Result Component', () => {
         providers: [
           { provide: FinderFacadeService, useValue: finderFacadeServiceMock },
           { provide: HttpClient, useValue: httpClientMock },
-          FalconFinderService,
+          FalconeFinderService,
         ],
       });
 
@@ -251,7 +251,7 @@ describe('Falcone Result Component', () => {
         providers: [
           { provide: FinderFacadeService, useValue: finderFacadeServiceMock },
           { provide: HttpClient, useValue: httpClientMock },
-          FalconFinderService,
+          FalconeFinderService,
         ],
       });
 
@@ -283,7 +283,7 @@ describe('Falcone Result Component', () => {
         providers: [
           { provide: FinderFacadeService, useValue: finderFacadeServiceMock },
           { provide: HttpClient, useValue: httpClientMock },
-          FalconFinderService,
+          FalconeFinderService,
         ],
       });
 
@@ -315,7 +315,7 @@ describe('Falcone Result Component', () => {
         providers: [
           { provide: FinderFacadeService, useValue: finderFacadeServiceMock },
           { provide: HttpClient, useValue: httpClientMock },
-          FalconFinderService,
+          FalconeFinderService,
         ],
       });
 
@@ -347,7 +347,7 @@ describe('Falcone Result Component', () => {
         providers: [
           { provide: FinderFacadeService, useValue: finderFacadeServiceMock },
           { provide: HttpClient, useValue: httpClientMock },
-          FalconFinderService,
+          FalconeFinderService,
         ],
       });
 

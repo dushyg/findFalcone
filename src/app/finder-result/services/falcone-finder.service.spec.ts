@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { FalconFinderService } from './falcon-finder.service';
+import { FalconeFinderService } from './falcone-finder.service';
 import { TestScheduler } from 'rxjs/testing';
 import { HttpClient } from '@angular/common/http';
 import { IFindFalconeResponse } from '../models/findFalconeResponse';
@@ -8,10 +8,10 @@ import { IFindFalconeRequest } from '../models/findFalconeRequest';
 import { of, throwError } from 'rxjs';
 import { RunHelpers } from 'rxjs/internal/testing/TestScheduler';
 
-describe('FalconFinderService', () => {
+describe('FalconeFinderService', () => {
   let testScheduler: TestScheduler;
 
-  describe('FalconFinder success cases', () => {
+  describe('FalconeFinder success cases', () => {
     const mockedHttpResponse = {
       error: '',
       planet_name: 'Donlon',
@@ -32,7 +32,7 @@ describe('FalconFinderService', () => {
       TestBed.configureTestingModule({
         providers: [
           { provide: HttpClient, useValue: httpClientMock },
-          FalconFinderService,
+          FalconeFinderService,
         ],
       });
 
@@ -42,13 +42,13 @@ describe('FalconFinderService', () => {
     });
 
     it('should be created', () => {
-      const service: FalconFinderService = TestBed.get(FalconFinderService);
+      const service: FalconeFinderService = TestBed.get(FalconeFinderService);
       expect(service).toBeTruthy();
     });
 
     it('should return mocked response when findFalcone is called', () => {
-      const service: FalconFinderService = TestBed.get(FalconFinderService);
-      const apiResponse = service.findFalcon({} as IFindFalconeRequest);
+      const service: FalconeFinderService = TestBed.get(FalconeFinderService);
+      const apiResponse = service.findFalcone({} as IFindFalconeRequest);
       testScheduler.run(({ expectObservable }) => {
         expectObservable(apiResponse).toBe('(a|)', {
           a: mockedFindFalconeResponse,
@@ -57,7 +57,7 @@ describe('FalconFinderService', () => {
     });
   });
 
-  describe('Falcon Finder failure to find cases', () => {
+  describe('Falcone Finder failure to find cases', () => {
     const mockedHttpResponse = {
       status: 'false',
     };
@@ -76,7 +76,7 @@ describe('FalconFinderService', () => {
       TestBed.configureTestingModule({
         providers: [
           { provide: HttpClient, useValue: httpClientMock },
-          FalconFinderService,
+          FalconeFinderService,
         ],
       });
 
@@ -86,8 +86,8 @@ describe('FalconFinderService', () => {
     });
 
     it('should return response with status of false when falcone is not found', () => {
-      const service: FalconFinderService = TestBed.get(FalconFinderService);
-      const apiResponse = service.findFalcon({} as IFindFalconeRequest);
+      const service: FalconeFinderService = TestBed.get(FalconeFinderService);
+      const apiResponse = service.findFalcone({} as IFindFalconeRequest);
 
       testScheduler.run(({ expectObservable }) => {
         expectObservable(apiResponse).toBe('(a|)', {
@@ -97,7 +97,7 @@ describe('FalconFinderService', () => {
     });
   });
 
-  describe('Falcon Finder api error cases', () => {
+  describe('Falcone Finder api error cases', () => {
     const mockedHttpResponse = {
       error:
         'Token not initialized. Please get a new token with the /token API',
@@ -118,7 +118,7 @@ describe('FalconFinderService', () => {
       TestBed.configureTestingModule({
         providers: [
           { provide: HttpClient, useValue: httpClientMock },
-          FalconFinderService,
+          FalconeFinderService,
         ],
       });
 
@@ -128,8 +128,8 @@ describe('FalconFinderService', () => {
     });
 
     it('should return response with error message when findFalcone api fails', () => {
-      const service: FalconFinderService = TestBed.get(FalconFinderService);
-      const apiResponse = service.findFalcon({} as IFindFalconeRequest);
+      const service: FalconeFinderService = TestBed.get(FalconeFinderService);
+      const apiResponse = service.findFalcone({} as IFindFalconeRequest);
 
       testScheduler.run(({ expectObservable }) => {
         expectObservable(apiResponse).toBe('(a|)', {
@@ -139,7 +139,7 @@ describe('FalconFinderService', () => {
     });
   });
 
-  describe('Falcon Finder api exception cases', () => {
+  describe('Falcone Finder api exception cases', () => {
     // const mockedFindFalconeResponse: IFindFalconeResponse = {
     //   error:
     //     'Communication exception',
@@ -158,7 +158,7 @@ describe('FalconFinderService', () => {
       TestBed.configureTestingModule({
         providers: [
           { provide: HttpClient, useValue: httpClientMock },
-          FalconFinderService,
+          FalconeFinderService,
         ],
       });
 
@@ -168,8 +168,8 @@ describe('FalconFinderService', () => {
     });
 
     it('should return observable with error message when findFalcone api fails', () => {
-      const service: FalconFinderService = TestBed.get(FalconFinderService);
-      const apiResponse = service.findFalcon({} as IFindFalconeRequest);
+      const service: FalconeFinderService = TestBed.get(FalconeFinderService);
+      const apiResponse = service.findFalcone({} as IFindFalconeRequest);
 
       testScheduler.run(({ expectObservable }: RunHelpers) => {
         expectObservable(apiResponse).toBe(
