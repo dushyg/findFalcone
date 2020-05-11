@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { IPlanet } from '../models/planet';
 import { handleError } from '../handleError';
 import { catchError, map } from 'rxjs/operators';
+import { constants } from 'src/app/shared/constants';
 
 @Injectable({
   providedIn: 'root',
@@ -11,7 +12,7 @@ import { catchError, map } from 'rxjs/operators';
 export class PlanetsService {
   constructor(private http: HttpClient) {}
 
-  readonly planetsApiUrl = 'https://findfalcone.herokuapp.com/planets';
+  readonly planetsApiUrl = `${constants.apiUrlBase}/planets`;
 
   public getAllPlanets(): Observable<IPlanet[]> {
     return this.http.get<IPlanet[]>(this.planetsApiUrl).pipe(

@@ -5,6 +5,7 @@ import { handleError } from '../../finder-board/handleError';
 import { Observable } from 'rxjs';
 import { IFindFalconeRequest } from '../models/findFalconeRequest';
 import { IFindFalconeResponse } from '../models/findFalconeResponse';
+import { constants } from 'src/app/shared/constants';
 
 @Injectable({
   providedIn: 'root',
@@ -12,8 +13,7 @@ import { IFindFalconeResponse } from '../models/findFalconeResponse';
 export class FalconeFinderService {
   constructor(private http: HttpClient) {}
 
-  private readonly falconFinderApiUrl =
-    'https://findfalcone.herokuapp.com/find';
+  private readonly falconFinderApiUrl = `${constants.apiUrlBase}/find`;
 
   public findFalcone(
     request: IFindFalconeRequest

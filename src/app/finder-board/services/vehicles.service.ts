@@ -4,14 +4,15 @@ import { Observable } from 'rxjs';
 import { IVehicle, RawVehicle } from '../models/vehicle';
 import { map, catchError, tap } from 'rxjs/operators';
 import { handleError } from '../handleError';
+import { constants } from 'src/app/shared/constants';
 
 @Injectable({
   providedIn: 'root',
 })
 export class VehiclesService {
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
-  readonly vehicleApiUrl = 'https://findfalcone.herokuapp.com/vehicles';
+  readonly vehicleApiUrl = `${constants.apiUrlBase}/vehicles`;
 
   public getAllVehicles(): Observable<IVehicle[]> {
     return this.http.get<RawVehicle[]>(this.vehicleApiUrl).pipe(
