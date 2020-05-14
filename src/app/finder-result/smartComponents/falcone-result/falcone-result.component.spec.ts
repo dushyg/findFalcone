@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FalconeResultComponent } from './falcone-result.component';
 import { FinderFacadeService } from 'src/app/finder-board/services/finder-facade.service';
 import { FalconeFinderService } from '../../services/falcone-finder.service';
-import { of, Subject, Observable, BehaviorSubject, throwError } from 'rxjs';
+import { of, BehaviorSubject, throwError } from 'rxjs';
 import { ISearchAttempt } from 'src/app/finder-board/models/searchAttempt';
 import { HttpClient } from '@angular/common/http';
 import { constants } from 'src/app/shared/constants';

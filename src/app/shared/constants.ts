@@ -1,5 +1,7 @@
+const apiDomain = 'findfalcone.herokuapp.com';
 export const constants = {
-  apiUrlBase: 'https://findfalcone.herokuapp.com',
+  apiDomain: 'findfalcone.herokuapp.com',
+  apiUrlBase: `https://${apiDomain}`,
   resetLink: 'resetLink',
   falconeFoundSucessMsg:
     'Success! Congratulations on Finding Falcone. King Shan is mighty pleased.',

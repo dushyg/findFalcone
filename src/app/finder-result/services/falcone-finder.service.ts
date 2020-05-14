@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, map } from 'rxjs/operators';
-import { handleError } from '../../finder-board/handleError';
+import { handleError } from '../../handleError';
 import { Observable } from 'rxjs';
 import { IFindFalconeRequest } from '../models/findFalconeRequest';
 import { IFindFalconeResponse } from '../models/findFalconeResponse';

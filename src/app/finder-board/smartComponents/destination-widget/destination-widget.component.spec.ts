@@ -4,7 +4,7 @@ import { TypeaheadComponent } from '../../presenterComponents/typeahead/typeahea
 import { VehicleListComponent } from '../vehicle-list/vehicle-list.component';
 import { IPlanet } from '../../models/planet';
 import { IVehicle } from '../../models/vehicle';
-import { createSpyObj } from '../../utitlity';
+import { createSpyObj } from '../../../testingUtitlity';
 import { FinderFacadeService } from '../../services/finder-facade.service';
 import { PlanetsService } from '../../services/planets.service';
 import { VehiclesService } from '../../services/vehicles.service';

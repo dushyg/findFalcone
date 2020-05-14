@@ -14,6 +14,10 @@ import { TypeaheadComponent } from './finder-board/presenterComponents/typeahead
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { SharedModule } from './shared/shared.module';
+import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
+import { AppData } from './finder-board/services/mockData/app.data';
+import { environment } from 'src/environments/environment';
+import { constants } from './shared/constants';
 
 @NgModule({
   declarations: [
@@ -32,6 +36,15 @@ import { SharedModule } from './shared/shared.module';
     ReactiveFormsModule,
     SharedModule,
     HttpClientModule,
+    environment.production
+      ? []
+      : HttpClientInMemoryWebApiModule.forRoot(AppData, {
+          delay: 100,
+          host: constants.apiDomain,
+          apiBase: '/',
+          rootPath: '/',
+          passThruUnknownUrl: true,
+        }),
   ],
   bootstrap: [AppComponent],
 })

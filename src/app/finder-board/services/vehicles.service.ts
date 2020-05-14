@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { IVehicle, RawVehicle } from '../models/vehicle';
 import { map, catchError, tap } from 'rxjs/operators';
-import { handleError } from '../handleError';
+import { handleError } from '../../handleError';
 import { constants } from 'src/app/shared/constants';
 
 @Injectable({

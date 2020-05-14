@@ -6,7 +6,7 @@ import PlanetChange from '../models/planetChange';
 import { ISearchAttempt } from '../models/searchAttempt';
 import { IVehicle } from '../models/vehicle';
 import VehicleChange from '../models/vehicleChange';
-import { createSpyObj } from '../utitlity';
+import { createSpyObj } from '../../testingUtitlity';
 import { FinderFacadeService } from './finder-facade.service';
 
 // Isolated unit tests
