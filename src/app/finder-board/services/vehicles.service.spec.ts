@@ -7,11 +7,12 @@ import { of, throwError } from 'rxjs';
 import { RunHelpers } from 'rxjs/internal/testing/TestScheduler';
 import { IVehicle, RawVehicle } from '../models/vehicle';
 import { VehiclesService } from './vehicles.service';
+import { VehiclesMockData } from './mockData/vehicles.data';
 
 describe('VehiclesService', () => {
   let testScheduler: TestScheduler;
 
-  describe('Planets Service success cases', () => {
+  describe('Vehicles Service success cases', () => {
     const serviceResponse: IVehicle[] = [
       {
         name: 'Space pod',
@@ -42,36 +43,7 @@ describe('VehiclesService', () => {
         totalNumUnits: 2,
       },
     ];
-    const mockedHttpResponse: RawVehicle[] = [
-      {
-        name: 'Space pod',
-
-        max_distance: 200,
-        speed: 2,
-        total_no: 2,
-      },
-      {
-        name: 'Space rocket',
-
-        max_distance: 300,
-        speed: 4,
-        total_no: 1,
-      },
-      {
-        name: 'Space shuttle',
-
-        max_distance: 400,
-        speed: 5,
-        total_no: 1,
-      },
-      {
-        name: 'Space ship',
-
-        max_distance: 600,
-        speed: 10,
-        total_no: 2,
-      },
-    ];
+    const mockedHttpResponse: RawVehicle[] = VehiclesMockData.vehicles;
     const httpClientMock = {
       get: jest.fn(() => {
         return of(mockedHttpResponse);
@@ -106,7 +78,7 @@ describe('VehiclesService', () => {
     });
   });
 
-  describe('Planets api exception cases', () => {
+  describe('Vehicles api exception cases', () => {
     const mockedGetVehiclesResponse = {
       status: 500,
       message: 'Communication exception',

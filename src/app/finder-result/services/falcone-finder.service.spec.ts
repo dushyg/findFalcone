@@ -7,16 +7,13 @@ import { IFindFalconeResponse } from '../models/findFalconeResponse';
 import { IFindFalconeRequest } from '../models/findFalconeRequest';
 import { of, throwError } from 'rxjs';
 import { RunHelpers } from 'rxjs/internal/testing/TestScheduler';
+import { FindFalconeMockData } from 'src/app/finder-board/services/mockData/findFalcone.data';
 
 describe('FalconeFinderService', () => {
   let testScheduler: TestScheduler;
 
   describe('FalconeFinder success cases', () => {
-    const mockedHttpResponse = {
-      error: '',
-      planet_name: 'Donlon',
-      status: 'success',
-    };
+    const mockedHttpResponse = FindFalconeMockData.successResponse;
     const mockedFindFalconeResponse: IFindFalconeResponse = {
       error: '',
       planetName: 'Donlon',
@@ -58,9 +55,7 @@ describe('FalconeFinderService', () => {
   });
 
   describe('Falcone Finder failure to find cases', () => {
-    const mockedHttpResponse = {
-      status: 'false',
-    };
+    const mockedHttpResponse = FindFalconeMockData.failureResponse;
     const mockedFindFalconeResponse: IFindFalconeResponse = {
       error: undefined,
       planetName: undefined,
@@ -98,10 +93,7 @@ describe('FalconeFinderService', () => {
   });
 
   describe('Falcone Finder api error cases', () => {
-    const mockedHttpResponse = {
-      error:
-        'Token not initialized. Please get a new token with the /token API',
-    };
+    const mockedHttpResponse = FindFalconeMockData.errorResponse;
     const mockedFindFalconeResponse: IFindFalconeResponse = {
       error:
         'Token not initialized. Please get a new token with the /token API',
@@ -140,7 +132,7 @@ describe('FalconeFinderService', () => {
   });
 
   describe('Falcone Finder api exception cases', () => {
-    const mockedFindFalconeResponse = 'Communication exception';
+    const mockedFindFalconeResponse = FindFalconeMockData.exceptionResponse;
 
     const httpClientMock = {
       post: jest.fn(() => {

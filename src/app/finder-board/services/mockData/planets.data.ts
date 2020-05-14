@@ -1,6 +1,6 @@
-import { IPlanet, RawPlanet } from '../../models/planet';
+import { RawPlanet } from '../../models/planet';
 
-export class PlanetsData {
+export class PlanetsMockData {
   public static planets: RawPlanet[] = [
     { name: 'Donlon', distance: 100, id: 1 },
     { name: 'Enchai', distance: 200, id: 2 },

@@ -1,17 +1,17 @@
 import { InMemoryDbService, RequestInfo } from 'angular-in-memory-web-api';
 import { createResponse } from '../../../inMemoryWebApiUtils';
 
-import { PlanetsData } from './planets.data';
-import { VehiclesData } from './vehicles.data';
-import { TokenData } from './token.data';
-import { FindFalcone } from './findFalcone.data';
+import { PlanetsMockData } from './planets.data';
+import { VehiclesMockData } from './vehicles.data';
+import { TokenMockData } from './token.data';
+import { FindFalconeMockData } from './findFalcone.data';
 
 export class AppData implements InMemoryDbService {
   createDb(reqInfo?: RequestInfo): {} {
-    const planets = PlanetsData.planets;
-    const vehicles = VehiclesData.vehicles;
-    const token = TokenData.token;
-    const find = FindFalcone.successResponse;
+    const planets = PlanetsMockData.planets;
+    const vehicles = VehiclesMockData.vehicles;
+    const token = TokenMockData.token;
+    const find = FindFalconeMockData.successResponse;
     return { planets, vehicles, token, find };
   }
 
@@ -19,9 +19,9 @@ export class AppData implements InMemoryDbService {
   post(reqInfo: RequestInfo) {
     const collectionName = reqInfo.collectionName;
     if (collectionName === 'token') {
-      return createResponse(reqInfo, TokenData.token);
+      return createResponse(reqInfo, TokenMockData.token);
     } else if (collectionName === 'find') {
-      return createResponse(reqInfo, FindFalcone.successResponse);
+      return createResponse(reqInfo, FindFalconeMockData.successResponse);
     }
     return undefined; // let the default POST handle all others
   }

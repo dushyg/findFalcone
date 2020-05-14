@@ -1,4 +1,4 @@
-export class FindFalcone {
+export class FindFalconeMockData {
   public static successResponse = {
     error: '',
     planet_name: 'Donlon',

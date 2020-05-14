@@ -7,17 +7,13 @@ import { of, throwError } from 'rxjs';
 import { RunHelpers } from 'rxjs/internal/testing/TestScheduler';
 import { PlanetsService } from './planets.service';
 import { IPlanet } from '../models/planet';
+import { PlanetsMockData } from './mockData/planets.data';
 
 describe('PlanetsService', () => {
   let testScheduler: TestScheduler;
 
   describe('Planets Service success cases', () => {
-    const mockedHttpResponse: IPlanet[] = [
-      { name: 'Donlon', distance: 100 },
-      { name: 'Enchai', distance: 200 },
-      { name: 'Jebing', distance: 300 },
-      { name: 'Sapir', distance: 400 },
-    ];
+    const mockedHttpResponse: IPlanet[] = PlanetsMockData.planets;
 
     const httpClientMock = {
       get: jest.fn(() => {

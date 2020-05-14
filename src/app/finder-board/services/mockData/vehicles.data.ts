@@ -1,6 +1,6 @@
 import { RawVehicle } from '../../models/vehicle';
 
-export class VehiclesData {
+export class VehiclesMockData {
   public static vehicles: RawVehicle[] = [
     {
       name: 'Space pod',

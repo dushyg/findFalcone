@@ -3,9 +3,10 @@ import { HttpClient } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
 import { TestScheduler } from 'rxjs/testing';
+import { TokenMockData } from './mockData/token.data';
 describe('falconeTokenService', () => {
   let testScheduler: TestScheduler;
-  const tokenToBeReturned = { token: 'dummyApiToken' };
+  const tokenToBeReturned = TokenMockData.token;
   beforeEach(() => {
     const httpClientMock = {
       post: jest.fn(() => {
