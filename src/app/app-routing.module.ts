@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule, PreloadAllModules } from '@angular/router';
-import { FinderBoardComponent } from './finder-board/smartComponents/finder-board/finder-board.component';
-import { FalconeResetComponent } from './shared/presenterComponents/falcone-reset/falcone-reset.component';
+import { Routes, RouterModule } from '@angular/router';
+import { FinderBoardComponent } from './finder-board/smartComponents';
+import { FalconeResetComponent } from './shared/presenterComponents';
 
 const routes: Routes = [
   {

@@ -7,9 +7,8 @@ import {
 import { TypeaheadComponent } from './typeahead.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { of, Subject } from 'rxjs';
-import { IPlanet } from '../../models/planet';
+import { IPlanet } from '../../models';
 import { By } from '@angular/platform-browser';
-import { ChangeDetectorRef, Type } from '@angular/core';
 
 describe('TypeAhead Component', () => {
   let fixture: ComponentFixture<TypeaheadComponent>;

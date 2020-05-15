@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { IPlanet } from '../models/planet';
+import { IPlanet } from '../models';
 import { handleError } from '../../handleError';
 import { catchError, map } from 'rxjs/operators';
 import { constants } from 'src/app/shared/constants';

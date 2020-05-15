@@ -6,8 +6,6 @@ import {
 } from '@angular/core/testing';
 
 import { FinderBoardComponent } from './finder-board.component';
-import { IPlanet } from 'src/app/finder-board/models/planet';
-import { IVehicle } from 'src/app/finder-board/models/vehicle';
 import { createSpyObj } from 'src/app/testingUtitlity';
 import { PlanetsService } from 'src/app/finder-board/services/planets.service';
 import { VehiclesService } from 'src/app/finder-board/services/vehicles.service';
@@ -22,6 +20,7 @@ import { DestinationWidgetComponent } from '../destination-widget/destination-wi
 import { TypeaheadComponent } from '../../presenterComponents/typeahead/typeahead.component';
 import { VehicleListComponent } from '../vehicle-list/vehicle-list.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { IPlanet, IVehicle } from '../../models';
 
 describe('FinderBoardComponent', () => {
   let component: FinderBoardComponent;

@@ -3,9 +3,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, map } from 'rxjs/operators';
 import { handleError } from '../../handleError';
 import { Observable } from 'rxjs';
-import { IFindFalconeRequest } from '../models/findFalconeRequest';
-import { IFindFalconeResponse } from '../models/findFalconeResponse';
 import { constants } from 'src/app/shared/constants';
+import { IFindFalconeRequest, IFindFalconeResponse } from '../models';
 
 @Injectable({
   providedIn: 'root',

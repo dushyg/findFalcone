@@ -1,10 +1,11 @@
 import { InMemoryDbService, RequestInfo } from 'angular-in-memory-web-api';
 import { createResponse } from '../../../inMemoryWebApiUtils';
-
-import { PlanetsMockData } from './planets.data';
-import { VehiclesMockData } from './vehicles.data';
-import { TokenMockData } from './token.data';
-import { FindFalconeMockData } from './findFalcone.data';
+import {
+  PlanetsMockData,
+  VehiclesMockData,
+  TokenMockData,
+  FindFalconeMockData,
+} from '.';
 
 export class AppData implements InMemoryDbService {
   createDb(reqInfo?: RequestInfo): {} {

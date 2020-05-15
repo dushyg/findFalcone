@@ -1,7 +1,9 @@
 import { NgModule } from '@angular/core';
-import { FalconFooterComponent } from './presenterComponents/falcon-footer/falcon-footer.component';
-import { FalconeResetComponent } from './presenterComponents/falcone-reset/falcone-reset.component';
-import { FalconHeaderComponent } from './presenterComponents/falcon-header/falcon-header.component';
+import {
+  FalconFooterComponent,
+  FalconeResetComponent,
+  FalconHeaderComponent,
+} from './presenterComponents';
 
 @NgModule({
   declarations: [

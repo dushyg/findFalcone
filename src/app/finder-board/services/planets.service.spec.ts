@@ -5,9 +5,9 @@ import { HttpClient } from '@angular/common/http';
 
 import { of, throwError } from 'rxjs';
 import { RunHelpers } from 'rxjs/internal/testing/TestScheduler';
-import { PlanetsService } from './planets.service';
-import { IPlanet } from '../models/planet';
-import { PlanetsMockData } from './mockData/planets.data';
+import { IPlanet } from '../models';
+import { PlanetsMockData } from './mockData';
+import { PlanetsService } from '.';
 
 describe('PlanetsService', () => {
   let testScheduler: TestScheduler;

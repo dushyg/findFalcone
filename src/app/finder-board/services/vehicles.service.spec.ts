@@ -5,9 +5,9 @@ import { HttpClient } from '@angular/common/http';
 
 import { of, throwError } from 'rxjs';
 import { RunHelpers } from 'rxjs/internal/testing/TestScheduler';
-import { IVehicle, RawVehicle } from '../models/vehicle';
-import { VehiclesService } from './vehicles.service';
-import { VehiclesMockData } from './mockData/vehicles.data';
+import { IVehicle, RawVehicle } from '../models';
+import { VehiclesMockData } from './mockData';
+import { VehiclesService } from '.';
 
 describe('VehiclesService', () => {
   let testScheduler: TestScheduler;

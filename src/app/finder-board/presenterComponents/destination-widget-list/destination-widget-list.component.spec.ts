@@ -1,9 +1,7 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DestinationWidgetListComponent } from './destination-widget-list.component';
 import { DestinationWidgetComponent } from '../../smartComponents/destination-widget/destination-widget.component';
-import { IPlanet } from '../../models/planet';
-import { IVehicle } from '../../models/vehicle';
 import { createSpyObj } from '../../../testingUtitlity';
 import { TypeaheadComponent } from '../typeahead/typeahead.component';
 import { VehicleListComponent } from '../../smartComponents/vehicle-list/vehicle-list.component';

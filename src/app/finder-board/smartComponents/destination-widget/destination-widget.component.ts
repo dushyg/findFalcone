@@ -6,11 +6,10 @@ import {
   ChangeDetectorRef,
 } from '@angular/core';
 
-import { IPlanet } from 'src/app/finder-board/models/planet';
-import PlanetChange from 'src/app/finder-board/models/planetChange';
 import { Observable, Subject, combineLatest } from 'rxjs';
 import { FinderFacadeService } from 'src/app/finder-board/services/finder-facade.service';
 import { takeWhile, withLatestFrom } from 'rxjs/operators';
+import { IPlanet, PlanetChange } from '../../models';
 
 @Component({
   selector: 'app-destination-widget',

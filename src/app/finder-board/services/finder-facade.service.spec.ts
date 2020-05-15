@@ -1,11 +1,13 @@
 import { fakeAsync, tick } from '@angular/core/testing';
 import { asyncScheduler, of } from 'rxjs';
 import { IFalconAppState } from '../models/falconApp.state';
-import { IPlanet } from '../models/planet';
-import PlanetChange from '../models/planetChange';
-import { ISearchAttempt } from '../models/searchAttempt';
-import { IVehicle } from '../models/vehicle';
-import VehicleChange from '../models/vehicleChange';
+import {
+  IVehicle,
+  IPlanet,
+  PlanetChange,
+  VehicleChange,
+  ISearchAttempt,
+} from '../models';
 import { createSpyObj } from '../../testingUtitlity';
 import { FinderFacadeService } from './finder-facade.service';
 

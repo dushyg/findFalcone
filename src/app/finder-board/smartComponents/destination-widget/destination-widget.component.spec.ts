@@ -2,8 +2,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DestinationWidgetComponent } from './destination-widget.component';
 import { TypeaheadComponent } from '../../presenterComponents/typeahead/typeahead.component';
 import { VehicleListComponent } from '../vehicle-list/vehicle-list.component';
-import { IPlanet } from '../../models/planet';
-import { IVehicle } from '../../models/vehicle';
 import { createSpyObj } from '../../../testingUtitlity';
 import { FinderFacadeService } from '../../services/finder-facade.service';
 import { PlanetsService } from '../../services/planets.service';
@@ -13,6 +11,7 @@ import { Router } from '@angular/router';
 import { NO_ERRORS_SCHEMA, Type, ChangeDetectorRef } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { of } from 'rxjs';
+import { IPlanet, IVehicle } from '../../models';
 
 describe('DestinationWidgetComponent', () => {
   let component: DestinationWidgetComponent;

@@ -8,7 +8,7 @@ import {
   ChangeDetectorRef,
   ChangeDetectionStrategy,
 } from '@angular/core';
-import { IPlanet } from 'src/app/finder-board/models/planet';
+import { IPlanet } from 'src/app/finder-board/models';
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { takeWhile } from 'rxjs/operators';

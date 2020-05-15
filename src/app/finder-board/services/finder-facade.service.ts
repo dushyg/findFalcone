@@ -1,17 +1,20 @@
 import { Injectable } from '@angular/core';
-import { PlanetsService } from './planets.service';
-import { VehiclesService } from './vehicles.service';
-import { IPlanet } from '../models/planet';
 import { BehaviorSubject, forkJoin, combineLatest, Subject } from 'rxjs';
-import { IVehicle } from '../models/vehicle';
-import { ISearchAttempt } from '../models/searchAttempt';
-import { IFalconAppState } from '../models/falconApp.state';
-import { map, distinctUntilChanged, filter } from 'rxjs/operators';
+import { map, distinctUntilChanged } from 'rxjs/operators';
 import { Router } from '@angular/router';
-import PlanetChange from '../models/planetChange';
-import VehicleChange from '../models/vehicleChange';
 import * as selectors from '../selectors';
 import { ChangeUtils } from '../changeUtils';
+
+import {
+  IFalconAppState,
+  PlanetChange,
+  VehicleChange,
+  IVehicle,
+  IPlanet,
+  ISearchAttempt,
+} from '../models';
+import { PlanetsService } from './planets.service';
+import { VehiclesService } from './vehicles.service';
 import { FalconeTokenService } from './falcone-token.service';
 
 @Injectable({
