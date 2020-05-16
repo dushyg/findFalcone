@@ -60,11 +60,10 @@ export class ChangeUtils {
 
     searchMap.forEach((value: ISearchAttempt, key: string) => {
       let updatedSearchAttempt: ISearchAttempt;
-      // if the current widget is to the left of changed widget or the changed widget then
-      // just make a clone for immutability and continue
+      // if the current widget is to the left of changed widget or the changed widget then simply continue
       const currentlyLoopedWidgetId = Number(key);
       if (currentlyLoopedWidgetId < changedWidgetId) {
-        updatedSearchAttempt = { ...value } as ISearchAttempt;
+        updatedSearchAttempt = value; // { ...value } as ISearchAttempt;
       } else if (currentlyLoopedWidgetId === changedWidgetId) {
         updatedSearchAttempt = changedWidgetSearchAttemptGetter();
       } else {
