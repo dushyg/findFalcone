@@ -176,23 +176,6 @@ export class FinderFacadeService {
     this.planetChangedSubject.next(planetChange);
   }
 
-  getUnsearchedPlanets(
-    searchMap: Map<string, ISearchAttempt>,
-    planetList: IPlanet[]
-  ): IPlanet[] {
-    const usedPlanetSet = new Set<string>();
-
-    searchMap.forEach((searchAttempt: ISearchAttempt) => {
-      if (searchAttempt && searchAttempt.searchedPlanet) {
-        usedPlanetSet.add(searchAttempt.searchedPlanet);
-      }
-    });
-
-    return planetList.filter(
-      (planet: IPlanet) => !usedPlanetSet.has(planet.name)
-    );
-  }
-
   public vehicleChanged(vehicleChange: VehicleChange) {
     const changedWidgetId = vehicleChange.widgetId.toString();
 
