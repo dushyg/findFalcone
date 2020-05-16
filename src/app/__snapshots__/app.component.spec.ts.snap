@@ -44,11 +44,6 @@ exports[`AppComponent should create the app 1`] = `
       class="appFalconBody"
     >
       
-      <div
-        class="errorMsg"
-      >
-        
-      </div>
       <router-outlet />
     </div>
     <app-falcon-footer>
