@@ -66,13 +66,11 @@ export class VehicleListComponent implements OnInit, OnDestroy {
         takeWhile(() => this.isComponentActive)
       )
       .subscribe(([planetChange, updatedVehicles]) => {
-        // need to refresh the vehicle list even when the planet is chnaged for current widget
+        // need to refresh the vehicle list even when the planet is changed for current widget
         if (planetChange && planetChange.widgetId <= this.widgetId) {
           this.vehicleList = updatedVehicles;
-          // if (planetChange.widgetId !== this.widgetId) {
           this.clearLastSelection();
           this.changeDetector.detectChanges();
-          // }
         }
       });
   }
