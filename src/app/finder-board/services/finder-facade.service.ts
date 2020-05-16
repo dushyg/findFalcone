@@ -121,18 +121,18 @@ export class FinderFacadeService {
       this.planetService.getAllPlanets(),
       this.tokenService.getFalconeFinderApiToken()
     ).subscribe(
-      (response) => {
-        this.finderApiToken = response[2].token;
-        const vehicleList: IVehicle[] = response[0];
-        const planetList: IPlanet[] = response[1];
-
-        // todo handle error scenarios
+      ([vehicles, planets, tokenObj]: [
+        IVehicle[],
+        IPlanet[],
+        { token: string }
+      ]) => {
+        this.finderApiToken = tokenObj.token;
         this.updateState({
           ...this.state,
-          planetList,
-          vehicleList,
-          unsearchedPlanets: [...planetList],
-          vehicleInventory: [...vehicleList],
+          planetList: planets,
+          vehicleList: vehicles,
+          unsearchedPlanets: [...planets],
+          vehicleInventory: [...vehicles],
           searchMap: this.getInitializedSearchMap(),
           errorMsg: '',
           isLoading: false,
