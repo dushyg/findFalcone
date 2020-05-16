@@ -3,11 +3,8 @@
     (headerLinkClicked)="headerLinkClicked($event)"
   ></app-falcon-header>
   <div class="appFalconBody">
-    <div
-      class="errorMsg"
-      *ngIf="finderFacadeService.dashboardVm$ | async as vm"
-    >
-      <span *ngIf="vm.error">{{ vm.error }}</span>
+    <div class="errorMsg" *ngIf="finderFacadeService.error$ | async as error">
+      <span>{{ error }}</span>
     </div>
     <router-outlet></router-outlet>
   </div>

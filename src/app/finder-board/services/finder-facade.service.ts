@@ -46,19 +46,19 @@ export class FinderFacadeService {
 
   private store$ = this.store.asObservable();
 
-  private error$ = this.store$.pipe(map(selectors.getErrorMsg));
+  public error$ = this.store$.pipe(map(selectors.getErrorMsg));
 
   private searchAttemptMap$ = this.store$.pipe(
     map(selectors.getSearchAttemptMap),
     distinctUntilChanged()
   );
 
-  private totalTimeTaken$ = this.store$.pipe(
+  public totalTimeTaken$ = this.store$.pipe(
     map(selectors.getTotalTimeTaken),
     distinctUntilChanged()
   );
 
-  private readyToSearch$ = this.store$.pipe(
+  public readyToSearch$ = this.store$.pipe(
     map(selectors.getIsReadyToSearch),
     distinctUntilChanged()
   );
