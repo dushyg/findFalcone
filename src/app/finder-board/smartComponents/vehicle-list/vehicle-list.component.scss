@@ -3,19 +3,29 @@
   text-align: left;
 }
 
-input[type="radio"]:disabled {
+div.vehicleList input,
+div.vehicleList label {
+  cursor: pointer;
+}
+
+input[type='radio']:disabled {
   cursor: not-allowed;
 }
 
-input[type="radio"]:disabled + label {
-  cursor: not-allowed;
+input[type='radio']:disabled + label {
+  cursor: default;
   text-decoration: line-through;
   color: lightcoral;
 }
 
-input[type="radio"]:checked + label {
+input[type='radio']:checked + label {
   font-weight: bold;
   font-style: italic;
   text-decoration: none;
   color: black;
+}
+
+div.vehicleList div input[type='radio']:checked,
+div.vehicleList div input[type='radio']:disabled {
+  cursor: default;
 }
