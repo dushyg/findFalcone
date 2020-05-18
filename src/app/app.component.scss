@@ -1,20 +1,22 @@
 .falconApp {
   width: 100%;
+  overflow-x: auto;
+  display: grid;
+  grid-template-columns: fr;
+  grid-template-rows: 10vh 80vh 10vh;
+  grid-template-areas:
+    'header'
+    'body'
+    'footer';
   app-falcon-header {
-    height: 60px;
-    position: fixed;
-    top: 0;
-    width: 100%;
+    grid-area: header;
     background-color: white;
   }
 
-  app-finder-board {
-    height: 100%;
-  }
   .appFalconBody {
-    margin-top: 100px;
+    grid-area: body;
     height: 100%;
-
+    overflow-y: auto;
     .errorMsg {
       margin: 10px auto;
       text-align: center;
@@ -23,6 +25,6 @@
   }
 
   app-falcon-footer {
-    height: 40px;
+    grid-area: footer;
   }
 }
