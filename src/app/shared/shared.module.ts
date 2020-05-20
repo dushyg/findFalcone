@@ -3,6 +3,7 @@ import {
   FalconFooterComponent,
   FalconeResetComponent,
   FalconHeaderComponent,
+  SpinnerComponent,
 } from './presenterComponents';
 
 @NgModule({
@@ -10,11 +11,13 @@ import {
     FalconFooterComponent,
     FalconeResetComponent,
     FalconHeaderComponent,
+    SpinnerComponent,
   ],
   exports: [
     FalconFooterComponent,
     FalconeResetComponent,
     FalconHeaderComponent,
+    SpinnerComponent,
   ],
 })
 export class SharedModule {}
