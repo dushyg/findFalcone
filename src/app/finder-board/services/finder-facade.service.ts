@@ -197,6 +197,7 @@ export class FinderFacadeService {
   }
 
   resetApp() {
+    this.setLoadingFlag(true);
     this.router.navigate(['reset']);
   }
 
