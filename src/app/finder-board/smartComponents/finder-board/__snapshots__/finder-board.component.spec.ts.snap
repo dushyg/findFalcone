@@ -168,11 +168,6 @@ exports[`FinderBoardComponent should create 1`] = `
           value="Find Falcone!"
         />
       </div>
-      <div
-        class="d-flex justify-content-center my-spinner"
-      >
-        
-      </div>
     </div>
   </div>
 </app-finder-board>

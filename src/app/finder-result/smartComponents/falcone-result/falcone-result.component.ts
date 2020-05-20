@@ -75,7 +75,6 @@ export class FalconeResultComponent implements OnInit, OnDestroy {
 
   private callFindFalconApi(request: IFindFalconeRequest) {
     request.token = this.finderFacadeService.getFinderApiToken();
-    this.finderFacadeService.setLoadingFlag(true);
     this.finderService.findFalcone(request).subscribe(
       (response: IFindFalconeResponse) => {
         this.finderFacadeService.setLoadingFlag(false);

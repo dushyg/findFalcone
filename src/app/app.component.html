@@ -3,6 +3,8 @@
     (headerLinkClicked)="headerLinkClicked($event)"
   ></app-falcon-header>
   <div class="appFalconBody">
+    <app-spinner *ngIf="finderFacadeService.isLoading$ | async as loading">
+    </app-spinner>
     <div class="errorMsg" *ngIf="finderFacadeService.error$ | async as error">
       <span>{{ error }}</span>
     </div>

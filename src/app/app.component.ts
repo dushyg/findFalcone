@@ -16,7 +16,9 @@ import { constants } from './shared/constants';
 export class AppComponent implements OnInit, AfterViewChecked {
   title = 'findingFalcone';
   constructor(public finderFacadeService: FinderFacadeService) {}
-  ngOnInit() {}
+  ngOnInit() {
+    this.finderFacadeService.setLoadingFlag(true);
+  }
 
   public headerLinkClicked(linkName: string): void {
     if (linkName === constants.resetLink) {

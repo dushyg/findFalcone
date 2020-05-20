@@ -115,7 +115,6 @@ export class FinderFacadeService {
   }
 
   public initializeAppData() {
-    this.setLoadingFlag(true);
     forkJoin(
       this.vehicleService.getAllVehicles(),
       this.planetService.getAllPlanets(),

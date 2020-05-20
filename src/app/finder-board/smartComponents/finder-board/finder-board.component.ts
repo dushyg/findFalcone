@@ -6,7 +6,6 @@ import {
 } from '@angular/core';
 import { FinderFacadeService } from 'src/app/finder-board/services/finder-facade.service';
 import { Router } from '@angular/router';
-import { takeWhile } from 'rxjs/operators';
 
 @Component({
   selector: 'app-finder-board',
@@ -27,8 +26,12 @@ export class FinderBoardComponent implements OnInit, OnDestroy {
   }
 
   public findFalcone() {
+    this.finderFacadeService.setLoadingFlag(true);
     this.router.navigate(['result']);
   }
-
+  // tslint:disable-next-line: use-lifecycle-interface
+  // ngAfterViewChecked(): void {
+  //   console.log('ngAfterViewChecked finder board component');
+  // }
   ngOnDestroy(): void {}
 }

@@ -44,17 +44,27 @@ exports[`AppComponent should create the app 1`] = `
       class="appFalconBody"
     >
       
+      <app-spinner />
+      
       <router-outlet />
     </div>
     <app-falcon-footer>
       <nav
-        class="navbar fixed-bottom navbar-expand-lg navbar-light bg-light"
+        class="footer"
       >
         <div
-          class="container mx-auto"
-          style="width: 350px;"
+          class="footer-container"
         >
-           Coding Problem - www.geektrust.in 
+          <div
+            class="disclaimer"
+          >
+             Changing planet/vehicle on earlier destinations will cause subsequent planets/vehicles to be reset! 
+          </div>
+          <div
+            class="geekTrustProblem"
+          >
+             Coding Problem - www.geektrust.in 
+          </div>
         </div>
       </nav>
     </app-falcon-footer>
