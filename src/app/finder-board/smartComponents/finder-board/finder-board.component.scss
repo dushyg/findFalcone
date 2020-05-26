@@ -1,7 +1,34 @@
 div.boardContainer {
   /*default css for small devices like IPhone 5*/
   text-align: center;
-  margin-top: 10px;
+  height: 100%;
+  display: grid;
+  grid-template-areas:
+    'timeTaken'
+    'instructionLine'
+    'widgetList'
+    'findButton';
+  grid-template-columns: 100%;
+  grid-template-rows: 40px 40px 1fr 50px;
+
+  // margin-top: 10px;
+
+  div.instructionLine {
+    grid-area: instructionLine;
+  }
+
+  div.timeTaken {
+    grid-area: timeTaken;
+  }
+
+  app-destination-widget-list {
+    grid-area: widgetList;
+    overflow-y: auto;
+  }
+
+  div.findButtonContainer {
+    grid-area: findButton;
+  }
 
   div.instructionLine,
   div.timeTaken,
@@ -15,36 +42,33 @@ div.boardContainer {
     min-height: 320px;
   }
 
-  @media (min-width: 375px) {
-    /*css for small devices like IPhone 6/7*/
+  // @media (min-width: 375px) {
+  //   /*css for small devices like IPhone 6/7*/
 
-    div.boardContainer {
-      app-destination-widget-list {
-        min-height: 400px;
-      }
-    }
-  }
+  //   div.boardContainer {
+  //     app-destination-widget-list {
+  //       min-height: 400px;
+  //     }
+  //   }
+  // }
 
-  @media (min-width: 768px) {
-    /*css for medium devices like IPad*/
+  // @media (min-width: 768px) {
+  //   /*css for medium devices like IPad*/
 
-    div.boardContainer {
-      app-destination-widget-list {
-        min-height: 600px;
-      }
-    }
-  }
+  //   div.boardContainer {
+  //     app-destination-widget-list {
+  //       min-height: 600px;
+  //     }
+  //   }
+  // }
 
-  @media (min-width: 1240px) {
-    /*css for large devices like IPad Pro and larger*/
+  // @media (min-width: 1240px) {
+  //   /*css for large devices like IPad Pro and larger*/
 
-    div.boardContainer {
-      app-destination-widget-list {
-        min-height: 800px;
-      }
-    }
-  }
-}
-div.my-spinner {
-  text-align: center;
+  //   div.boardContainer {
+  //     app-destination-widget-list {
+  //       min-height: 800px;
+  //     }
+  //   }
+  // }
 }

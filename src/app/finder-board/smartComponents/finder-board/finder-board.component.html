@@ -2,24 +2,24 @@
   class="boardContainer"
   *ngIf="finderFacadeService.dashboardVm$ | async as vm"
 >
-  <div>
-    <div class="timeTaken">Time Taken : {{ vm.totalTimeTaken }}</div>
+  <div class="timeTaken">Time Taken : {{ vm.totalTimeTaken }}</div>
 
-    <div class="instructionLine">
-      Select planets you want to search in :
-    </div>
+  <div class="instructionLine">
+    Note: Changing planet/vehicle on earlier destinations will cause
+    planets/vehicles in subsequent destinations to be reset! <br />
+    Select planets you want to search in :
+  </div>
 
-    <app-destination-widget-list
-      [maxWidgetCount]="maxWidgetCount"
-    ></app-destination-widget-list>
+  <app-destination-widget-list
+    [maxWidgetCount]="maxWidgetCount"
+  ></app-destination-widget-list>
 
-    <div class="findButtonContainer">
-      <input
-        [disabled]="!vm.isReadyForSearch"
-        type="button"
-        value="Find Falcone!"
-        (click)="findFalcone()"
-      />
-    </div>
+  <div class="findButtonContainer">
+    <input
+      [disabled]="!vm.isReadyForSearch"
+      type="button"
+      value="Find Falcone!"
+      (click)="findFalcone()"
+    />
   </div>
 </div>
