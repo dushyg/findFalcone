@@ -20,8 +20,7 @@ div.boardContainer {
     margin-top: 10px;
   }
 
-  div.instructionLine,
-  div.timeTaken {
+  div.instructionLine {
     font-size: 0.5rem;
   }
 
@@ -46,24 +45,23 @@ div.boardContainer {
 
   @media (min-width: 375px) {
     /*css for small devices like IPhone 6/7*/
-    div.instructionLine,
-    div.timeTaken {
+    grid-template-rows: 45px 45px 1fr 50px;
+    div.instructionLine {
       font-size: 0.65rem;
     }
   }
 
   @media (min-width: 768px) {
     /*css for medium devices like IPad*/
-    div.instructionLine,
-    div.timeTaken {
+    grid-template-rows: 50px 50px 1fr 50px;
+    div.instructionLine {
       font-size: 0.9rem;
     }
   }
 
   @media (min-width: 1240px) {
     /*css for large devices like IPad Pro and larger*/
-    div.instructionLine,
-    div.timeTaken {
+    div.instructionLine {
       font-size: 1rem;
     }
   }
