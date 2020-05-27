@@ -9,165 +9,165 @@ exports[`FinderBoardComponent should create 1`] = `
   <div
     class="boardContainer"
   >
-    <div>
+    <div
+      class="timeTaken"
+    >
+      Time Taken : 0
+    </div>
+    <div
+      class="instructionLine"
+    >
+       Note: Changing planet/vehicle on earlier destinations will cause planets/vehicles in subsequent destinations to be reset! 
+      <br />
+       Select planets you want to search in : 
+    </div>
+    <app-destination-widget-list>
       <div
-        class="timeTaken"
+        class="widgetListContainer"
       >
-        Time Taken : 0
-      </div>
-      <div
-        class="instructionLine"
-      >
-         Select planets you want to search in : 
-      </div>
-      <app-destination-widget-list>
+        
         <div
-          class="widgetListContainer"
+          class="widgetRow"
         >
-          
-          <div
-            class="widgetRow"
-          >
-            <app-destination-widget>
-              
-              <div
-                class="destinationWidget"
-                widgetid="1"
-              >
-                <span>
-                  Destination 1
-                </span>
-                <app-typeahead>
+          <app-destination-widget>
+            
+            <div
+              class="destinationWidget"
+              widgetid="1"
+            >
+              <span>
+                Destination 1
+              </span>
+              <app-typeahead>
+                <div
+                  class="typeahead-container"
+                >
                   <div
-                    class="typeahead-container"
+                    class="typeadhead-wrapper"
                   >
-                    <div
-                      class="typeadhead-wrapper"
-                    >
-                      <input
-                        class="typeAhead ng-untouched ng-pristine ng-valid"
-                        id="typeahead_input_widget_1"
-                        placeholder="Type to search..."
-                        type="text"
-                      />
-                      
-                    </div>
+                    <input
+                      class="typeAhead ng-untouched ng-pristine ng-valid"
+                      id="typeahead_input_widget_1"
+                      placeholder="Type to search..."
+                      type="text"
+                    />
+                    
                   </div>
-                </app-typeahead>
-                
-              </div>
-            </app-destination-widget>
-          </div>
-          <div
-            class="widgetRow"
-          >
-            <app-destination-widget>
+                </div>
+              </app-typeahead>
               
-              <div
-                class="destinationWidget"
-                widgetid="2"
-              >
-                <span>
-                  Destination 2
-                </span>
-                <app-typeahead>
-                  <div
-                    class="typeahead-container"
-                  >
-                    <div
-                      class="typeadhead-wrapper"
-                    >
-                      <input
-                        class="typeAhead ng-untouched ng-pristine ng-valid"
-                        id="typeahead_input_widget_2"
-                        placeholder="Type to search..."
-                        type="text"
-                      />
-                      
-                    </div>
-                  </div>
-                </app-typeahead>
-                
-              </div>
-            </app-destination-widget>
-          </div>
-          <div
-            class="widgetRow"
-          >
-            <app-destination-widget>
-              
-              <div
-                class="destinationWidget"
-                widgetid="3"
-              >
-                <span>
-                  Destination 3
-                </span>
-                <app-typeahead>
-                  <div
-                    class="typeahead-container"
-                  >
-                    <div
-                      class="typeadhead-wrapper"
-                    >
-                      <input
-                        class="typeAhead ng-untouched ng-pristine ng-valid"
-                        id="typeahead_input_widget_3"
-                        placeholder="Type to search..."
-                        type="text"
-                      />
-                      
-                    </div>
-                  </div>
-                </app-typeahead>
-                
-              </div>
-            </app-destination-widget>
-          </div>
-          <div
-            class="widgetRow"
-          >
-            <app-destination-widget>
-              
-              <div
-                class="destinationWidget"
-                widgetid="4"
-              >
-                <span>
-                  Destination 4
-                </span>
-                <app-typeahead>
-                  <div
-                    class="typeahead-container"
-                  >
-                    <div
-                      class="typeadhead-wrapper"
-                    >
-                      <input
-                        class="typeAhead ng-untouched ng-pristine ng-valid"
-                        id="typeahead_input_widget_4"
-                        placeholder="Type to search..."
-                        type="text"
-                      />
-                      
-                    </div>
-                  </div>
-                </app-typeahead>
-                
-              </div>
-            </app-destination-widget>
-          </div>
+            </div>
+          </app-destination-widget>
         </div>
-      </app-destination-widget-list>
-      <div
-        class="findButtonContainer"
-      >
-        <input
-          disabled=""
-          type="button"
-          value="Find Falcone!"
-        />
+        <div
+          class="widgetRow"
+        >
+          <app-destination-widget>
+            
+            <div
+              class="destinationWidget"
+              widgetid="2"
+            >
+              <span>
+                Destination 2
+              </span>
+              <app-typeahead>
+                <div
+                  class="typeahead-container"
+                >
+                  <div
+                    class="typeadhead-wrapper"
+                  >
+                    <input
+                      class="typeAhead ng-untouched ng-pristine ng-valid"
+                      id="typeahead_input_widget_2"
+                      placeholder="Type to search..."
+                      type="text"
+                    />
+                    
+                  </div>
+                </div>
+              </app-typeahead>
+              
+            </div>
+          </app-destination-widget>
+        </div>
+        <div
+          class="widgetRow"
+        >
+          <app-destination-widget>
+            
+            <div
+              class="destinationWidget"
+              widgetid="3"
+            >
+              <span>
+                Destination 3
+              </span>
+              <app-typeahead>
+                <div
+                  class="typeahead-container"
+                >
+                  <div
+                    class="typeadhead-wrapper"
+                  >
+                    <input
+                      class="typeAhead ng-untouched ng-pristine ng-valid"
+                      id="typeahead_input_widget_3"
+                      placeholder="Type to search..."
+                      type="text"
+                    />
+                    
+                  </div>
+                </div>
+              </app-typeahead>
+              
+            </div>
+          </app-destination-widget>
+        </div>
+        <div
+          class="widgetRow"
+        >
+          <app-destination-widget>
+            
+            <div
+              class="destinationWidget"
+              widgetid="4"
+            >
+              <span>
+                Destination 4
+              </span>
+              <app-typeahead>
+                <div
+                  class="typeahead-container"
+                >
+                  <div
+                    class="typeadhead-wrapper"
+                  >
+                    <input
+                      class="typeAhead ng-untouched ng-pristine ng-valid"
+                      id="typeahead_input_widget_4"
+                      placeholder="Type to search..."
+                      type="text"
+                    />
+                    
+                  </div>
+                </div>
+              </app-typeahead>
+              
+            </div>
+          </app-destination-widget>
+        </div>
       </div>
+    </app-destination-widget-list>
+    <div
+      class="findButtonContainer"
+    >
+      <input
+        disabled=""
+        type="button"
+        value="Find Falcone!"
+      />
     </div>
   </div>
 </app-finder-board>

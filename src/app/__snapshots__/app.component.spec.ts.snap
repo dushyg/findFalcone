@@ -56,11 +56,6 @@ exports[`AppComponent should create the app 1`] = `
           class="footer-container"
         >
           <div
-            class="disclaimer"
-          >
-             Changing planet/vehicle on earlier destinations will cause subsequent planets/vehicles to be reset! 
-          </div>
-          <div
             class="geekTrustProblem"
           >
              Coding Problem - www.geektrust.in 

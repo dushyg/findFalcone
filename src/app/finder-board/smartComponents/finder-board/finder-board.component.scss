@@ -11,14 +11,18 @@ div.boardContainer {
   grid-template-columns: 100%;
   grid-template-rows: 40px 40px 1fr 50px;
 
-  // margin-top: 10px;
-
   div.instructionLine {
     grid-area: instructionLine;
   }
 
   div.timeTaken {
     grid-area: timeTaken;
+    margin-top: 10px;
+  }
+
+  div.instructionLine,
+  div.timeTaken {
+    font-size: 0.5rem;
   }
 
   app-destination-widget-list {
@@ -31,10 +35,8 @@ div.boardContainer {
   }
 
   div.instructionLine,
-  div.timeTaken,
   app-destination-widget-list,
   div.findButtonContainer {
-    margin-top: 10px;
     margin-bottom: 10px;
   }
 
@@ -42,33 +44,27 @@ div.boardContainer {
     min-height: 320px;
   }
 
-  // @media (min-width: 375px) {
-  //   /*css for small devices like IPhone 6/7*/
+  @media (min-width: 375px) {
+    /*css for small devices like IPhone 6/7*/
+    div.instructionLine,
+    div.timeTaken {
+      font-size: 0.65rem;
+    }
+  }
 
-  //   div.boardContainer {
-  //     app-destination-widget-list {
-  //       min-height: 400px;
-  //     }
-  //   }
-  // }
+  @media (min-width: 768px) {
+    /*css for medium devices like IPad*/
+    div.instructionLine,
+    div.timeTaken {
+      font-size: 0.9rem;
+    }
+  }
 
-  // @media (min-width: 768px) {
-  //   /*css for medium devices like IPad*/
-
-  //   div.boardContainer {
-  //     app-destination-widget-list {
-  //       min-height: 600px;
-  //     }
-  //   }
-  // }
-
-  // @media (min-width: 1240px) {
-  //   /*css for large devices like IPad Pro and larger*/
-
-  //   div.boardContainer {
-  //     app-destination-widget-list {
-  //       min-height: 800px;
-  //     }
-  //   }
-  // }
+  @media (min-width: 1240px) {
+    /*css for large devices like IPad Pro and larger*/
+    div.instructionLine,
+    div.timeTaken {
+      font-size: 1rem;
+    }
+  }
 }
