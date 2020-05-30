@@ -41,7 +41,9 @@ export class FinderFacadeService {
   private finderApiToken: string;
   private readonly MAX_SEARCH_ATTEMPTS_ALLOWED = 4;
 
-  // initial app state
+  /**
+   *  initial app state
+   */
   private state: IFalconAppState = {
     errorMsg: '',
     isLoading: false,
@@ -56,6 +58,9 @@ export class FinderFacadeService {
 
   private store = new BehaviorSubject<IFalconAppState>(this.state);
 
+  /**
+   * Observable stream for application state
+   */
   private store$ = this.store.asObservable();
 
   /**
@@ -156,6 +161,7 @@ export class FinderFacadeService {
     )
   );
   /**
+   * A method that gives count of planets that must be searched to find Falcone
    * @returns Count of planets that must be searched to find Falcone
    */
   public getCountOfWidgetsDisplayed(): number {
@@ -199,6 +205,8 @@ export class FinderFacadeService {
   }
 
   /**
+   * Creates a brand new search map, which is a map of widgetId to SearchAttempt.
+   * SearchAttempt contains name of the planet searched and name of the vehicle used for searching.
    * @returns A map of widgetId to SearchAttempt
    */
   private getInitializedSearchMap(): Map<string, ISearchAttempt> {
