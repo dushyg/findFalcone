@@ -5,7 +5,7 @@
     "ng": "ng",
     "start": "ng serve --prod",
     "start:dev": "ng serve --watch",
-    "build": "npm run lint && npm test && ng build --prod && npm run surge-create-200html",
+    "build": "npm run lint && npm test && ng build --prod && npm run surge-create-200html && npm run build:doc",
     "test": "jest --coverage",
     "test:watch": "jest --coverage --watch",
     "lint": "ng lint",
