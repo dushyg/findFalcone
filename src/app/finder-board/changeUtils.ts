@@ -3,13 +3,25 @@ import { IPlanet } from './models/planet';
 import { IVehicle } from './models/vehicle';
 import { IFalconAppState } from './models/falconApp.state';
 
+/**
+ * Utility that calculates changes to state required after every planet / vehicle change
+ */
 export class ChangeUtils {
+  /**
+   * This method is called to calculate the new application state after a vehicle or planet was set or changed in a widget.
+   * @param changedWidgetId Id of the widget where planet or vehicle was changed
+   * @param changedValue New name of the planet or vehicle after the change
+   * @param changedWidgetSearchAttemptGetter A function that returns new SearchAttempt object that will be set
+   * @param previousState Previous application state
+   * @returns Next application state after planet or vehicle was changed
+   */
   public static getNextStateAfterChange(
     changedWidgetId: number,
     changedValue: string,
     changedWidgetSearchAttemptGetter: () => ISearchAttempt,
     previousState: IFalconAppState
   ): IFalconAppState {
+    // get updated search map
     const updatedSearchMap = ChangeUtils.getUpdatedSearchMap(
       previousState.searchMap,
       changedWidgetId,
@@ -36,6 +48,7 @@ export class ChangeUtils {
       previousState.vehicleList
     );
 
+    // sets true if all widgets have vehicle and planet values set by the user
     const isReadyToSearch: boolean = ChangeUtils.isItFineToStartSearching(
       updatedSearchMap
     );
@@ -50,6 +63,15 @@ export class ChangeUtils {
     } as IFalconAppState;
   }
 
+  /**
+   * This method returns updated search map that has a mapping of widget id to ISearchAttempt.
+   * ISearchAttempt object holds the name of planet being searched and vehicle used for the search.
+   * @returns Updated search map that has a mapping of widget id to ISearchAttempt
+   * @param searchMap A Map of widget id to SearchAttempt object
+   * @param changedWidgetId Id of the widget where planet or vehicle was changed
+   * @param changedValue New name of the planet or vehicle after the change
+   * @param changedWidgetSearchAttemptGetter A function that returns new SearchAttempt object that will be set
+   */
   private static getUpdatedSearchMap(
     searchMap: Map<string, ISearchAttempt>,
     changedWidgetId: number,
@@ -80,6 +102,12 @@ export class ChangeUtils {
     return updatedSearchMap;
   }
 
+  /**
+   * This method returns a list of planets that have not been searched yet.
+   * @returns List of planets that have not been searched yet
+   * @param searchMap A mapping of widget id to ISearchAttempt
+   * @param planetList List of all planets
+   */
   private static getUnsearchedPlanets(
     searchMap: Map<string, ISearchAttempt>,
     planetList: IPlanet[]
@@ -97,6 +125,12 @@ export class ChangeUtils {
     );
   }
 
+  /**
+   * This method returns a list of vehicles with updated available units
+   * @returns List of vehicles with updated available units
+   * @param searchMap A mapping of widget id to ISearchAttempt
+   * @param vehicleList List of all vehicles
+   */
   private static getUpdatedVehicleInventory(
     searchMap: Map<string, ISearchAttempt>,
     vehicleList: IVehicle[]
@@ -116,6 +150,10 @@ export class ChangeUtils {
     return updatedVehicleList;
   }
 
+  /**
+   * @returns A mapping of vehicle name and count of vehicles already used for search
+   * @param searchMap A mapping of widget id to ISearchAttempt
+   */
   private static getUsedVehicleMap(
     searchMap: Map<string, ISearchAttempt>
   ): Map<string, number> {
@@ -138,6 +176,12 @@ export class ChangeUtils {
     return usedVehicleMap;
   }
 
+  /**
+   *
+   * @param searchMap A mapping of widget id to ISearchAttempt
+   * @param allPlanets List of all planets
+   * @param allVehicles List of all vehicles
+   */
   private static getTotalTimeTakenForSearch(
     searchMap: Map<string, ISearchAttempt>,
     allPlanets: IPlanet[],
@@ -180,6 +224,11 @@ export class ChangeUtils {
     return totalTimeTakenForSearch;
   }
 
+  /**
+   * This method returns true if all widgets have vehicle and planet values set by the user else false
+   * @returns true if all widgets have vehicle and planet values set by the user
+   * @param searchMap A Map of widget id to SearchAttempt object
+   */
   private static isItFineToStartSearching(
     searchMap: Map<string, ISearchAttempt>
   ): boolean {
