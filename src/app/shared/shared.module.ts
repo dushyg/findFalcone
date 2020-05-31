@@ -3,8 +3,8 @@ import {
   FalconFooterComponent,
   FalconeResetComponent,
   FalconHeaderComponent,
-  SpinnerComponent,
-} from './presenterComponents';
+  SpinnerComponent} from './presenterComponents';
+import { CommonModule } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -19,5 +19,6 @@ import {
     FalconHeaderComponent,
     SpinnerComponent,
   ],
+  imports: [CommonModule]
 })
 export class SharedModule {}

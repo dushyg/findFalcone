@@ -1,5 +1,6 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { constants } from '../../constants';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-falcon-header',
@@ -7,9 +8,12 @@ import { constants } from '../../constants';
   styleUrls: ['./falcon-header.component.scss'],
 })
 export class FalconHeaderComponent implements OnInit {
+  public env: { production: boolean; };
   constructor() {}
   @Output() private headerLinkClicked = new EventEmitter<string>();
-  ngOnInit() {}
+  ngOnInit() {
+    this.env = environment;
+  }
 
   reset() {
     this.headerLinkClicked.emit(constants.resetLink);

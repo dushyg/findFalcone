@@ -37,6 +37,7 @@ exports[`AppComponent should create the app 1`] = `
           >
              GeekTrust Home 
           </a>
+          
         </div>
       </nav>
     </app-falcon-header>
