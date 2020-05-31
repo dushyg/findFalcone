@@ -2,19 +2,21 @@
   "name": "finding-falcon",
   "version": "0.0.0",
   "scripts": {
-    "ng": "ng",
-    "start": "ng serve --prod",
+    "ng": "ng",    
+    "build": "npm run lint && ng build --prod && npm test && npm run surge-create-200html && npm run build:doc",
+    "build:doc": "./node_modules/.bin/compodoc -p tsconfig.app.json --theme Readthedocs --disableSourceCode --disableCoverage -d dist/findingFalcon/documentation/compodoc",
+    "serve:doc": "npm run build:doc -- -s",
+    "http-server": "npx http-server dist/findingFalcon/ -a localhost -p 4200 -o -P http://localhost",
+    "start": "npm run build && npm run http-server",
+    "start:prod": "ng serve --prod",
     "start:dev": "ng serve --watch",
-    "build": "npm run lint && npm test && ng build --prod && npm run surge-create-200html && npm run build:doc",
     "test": "jest --coverage",
     "test:watch": "jest --coverage --watch",
     "lint": "ng lint",
     "e2e": "ng e2e",
     "preanalyze": "ng build --prod --stats-json",
     "analyze": "webpack-bundle-analyzer dist/findingFalcon/stats-es2015.json",
-    "surge-create-200html": "node -e \"require('fs').copyFile('dist/findingFalcon/index.html', 'dist/findingFalcon/200.html', function(err) { if (err) {console.log(err); throw err;} console.log('File successfully renamed!'); })\"",
-    "build:doc": "./node_modules/.bin/compodoc -p tsconfig.app.json --theme Readthedocs --disableSourceCode -d dist/findingFalcon/documentation/compodoc",
-    "serve:doc": "npm run build:doc -- -s"
+    "surge-create-200html": "node -e \"require('fs').copyFile('dist/findingFalcon/index.html', 'dist/findingFalcon/200.html', function(err) { if (err) {console.log(err); throw err;} console.log('File successfully renamed!'); })\""    
   },
   "private": true,
   "dependencies": {
