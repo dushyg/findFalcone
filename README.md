@@ -32,11 +32,10 @@ As soon as user finishes setting up all planets to be searched and vehicles used
    This command will:
    a. Check the code for any tslint errors
    b. Build the app using angular cli and The build artifacts will be stored in the `dist/` directory.
-   c. Run unit / integration tests using Jest
-   d. Create a 200.html which is a copy of dist/index.html to allow Surge application server to handle urls not associated with any deployed resources and redirect to application home page.
-   e. Create documentation for the application using compodoc library which can be accessed by clicking on the 'docs' link in application header.
-   f. Serve the contents of the 'dist' directory using http-server web server at port 4200.
-   g. A new tab will be opened in your default browser and application will be loaded in it.
+   c. Run unit / integration tests using Jest  
+   d. Create documentation for the application using compodoc library which can be accessed by clicking on the 'docs' link in application header.
+   e. Serve the contents of the 'dist' directory using http-server web server at port 4200.
+   f. A new tab will be opened in your default browser and application will be loaded in it.
 
 ## Directly running unit test cases from command line
 
@@ -58,6 +57,9 @@ build errors, unit test case success. The code is then deployed to Surge web ser
 
 This project is configured to be deployed to Surge web servers as part of CI/CD pipeline.
 The application can be accessed at this url : http://findingfalcone-dushyg.surge.sh
+
+'npm run build' script also runs the script 'npm run surge-create-200html'
+It creates a 200.html which is a copy of dist/index.html to allow Surge application server to handle urls not associated with any deployed resources and redirect such requests to application home page.
 
 ## Responsive mobile first application design
 

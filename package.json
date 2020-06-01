@@ -4,10 +4,11 @@
   "scripts": {
     "ng": "ng",
     "build": "npm run lint && ng build --prod && npm test && npm run surge-create-200html && npm run build:doc",
+    "build:local": "npm run lint && ng build --prod && npm test && npm run build:doc",
     "build:doc": "./node_modules/.bin/compodoc -p tsconfig.app.json --theme Readthedocs --disableSourceCode --disableCoverage -d dist/findingFalcon/documentation/compodoc",
     "serve:doc": "npm run build:doc -- -s",
     "http-server": "npx http-server dist/findingFalcon/ -a localhost -p 4200 -o --proxy http://localhost:4200?",
-    "start": "npm run build && npm run http-server",
+    "start": "npm run build:local && npm run http-server",
     "start:prod": "ng serve --prod",
     "start:dev": "ng serve --watch",
     "test": "jest --coverage",
