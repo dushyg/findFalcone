@@ -59,6 +59,10 @@ build errors, unit test case success. The code is then deployed to Surge web ser
 This project is configured to be deployed to Surge web servers as part of CI/CD pipeline.
 The application can be accessed at this url : http://findingfalcone-dushyg.surge.sh
 
+## Responsive mobile first application design
+
+This project uses CSS Grid, Flexbox and css media queries to enable the app to be used on a wide range of devices.
+
 ## Mocking Http API calls
 
 This project uses angular-in-memory-web-api to mock http api calls in development mode.
@@ -73,7 +77,7 @@ Default webpack config can be overridden in custom-webpack.config.js file.
 ## Documentation
 
 Various methods and classes from the code and its usage has been documented using compodoc tool. Documentation can be accessed using the docs link in application header in production mode.
-Documentation can also be served locally using the command 'npm run serve:doc'
+Documentation can also be served locally using the command 'npm run serve:doc' and opening up http://127.0.0.1:8080
 
 ## Angular onPush Change Detection
 
@@ -106,3 +110,55 @@ Run `ng build` to build the project. The build artifacts will be stored in the `
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
 
 # Developer notes
+
+## Facade Service with a subject
+
+This application follows 'Facade Service with a subject' design pattern to provide encapsulation to all the http services and state implementation.
+Application state is stored in a BehaviorSubject which is then exposed as an observable stream of IFalconAppState objects.
+Creating this facade helps to change implementation to a store based state storage implementation like ngrx / redux later on if app complexity increases.
+
+## Setting up Jest testing framework
+
+Refer to steps in https://www.npmjs.com/package/jest-preset-angular
+
+npm install -D jest jest-preset-angular @types/jest
+
+Basically add following key value pair in package.json:
+
+"jest": {
+"preset": "jest-preset-angular",
+"setupFilesAfterEnv": [
+"./setupJest.ts"
+]
+}
+
+Add setupJest.ts file at root of the project with following contents:
+import 'jest-preset-angular';
+
+Delete or rename src/test.ts (which has karma specific settings) so that it doesnt conflict with Jest.
+Jest uses jsdom to run the tests in place of a browser instance unlike Karma.
+
+## Setting up angular-in-memory-web-api
+
+follow steps in https://www.npmjs.com/package/angular-in-memory-web-api
+npm i -D angular-in-memory-web-api
+
+a. Create a class that implements InMemoryDbService.
+It has a method createDb(reqInfo?: RequestInfo): {}
+
+To conditionally handle post or get requests provide below method:
+post(reqInfo: RequestInfo)
+See src\app\finder-board\services\mockData\app.data.ts for implementation details.
+
+b. Add below module in app module imports:
+
+environment.production
+? []
+: HttpClientInMemoryWebApiModule.forRoot(AppData, {
+delay: 100,
+host: constants.apiDomain,
+apiBase: '/',
+rootPath: '/',
+passThruUnknownUrl: true,
+}),
+]
