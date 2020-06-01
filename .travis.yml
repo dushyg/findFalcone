@@ -1,23 +1,23 @@
 language: node_js
 
 node_js:
-   - node # will use latest node
+  - node # will use latest node
 
 branches:
-   only:
-      - serviceWithSubjectResponsive # will only build for this branch commits
+  only:
+    - serviceWithSubjectResponsive # will only build for this branch commits
 
 before_script: # commands to run before the build step
-   - npm install --silent
-   - npm install -g surge
+  - npm install --silent
+  - npm install -g surge
 
 script: # the build step
-   - npm run build
+  - npm run build
 
 after_success:
-   - surge --project ./dist/findingFalcon --domain findingfalcone-dushyg.surge.sh
+  - surge --project ./dist/findingFalcon --domain https://findingfalcone-dushyg.surge.sh
 
 notifications:
-  email: # only receive email when the build status changes (someone broke the build!) 
+  email: # only receive email when the build status changes (someone broke the build!)
     on_failure: change
-    on_success: change   
+    on_success: change
