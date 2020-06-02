@@ -33,6 +33,7 @@ exports[`AppComponent should create the app 1`] = `
           <a
             class="geekTrustLink"
             href="https://www.geektrust.in"
+            rel="noopener"
             target="_blank"
           >
              GeekTrust Home 
