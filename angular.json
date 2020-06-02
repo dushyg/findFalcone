@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "findingFalcon": {
+    "findingFalcone": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -13,7 +13,7 @@
         "build": {
           "builder": "@angular-builders/custom-webpack:browser",
           "options": {
-            "outputPath": "dist/findingFalcon",
+            "outputPath": "dist/findingFalcone",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -57,18 +57,18 @@
         "serve": {
           "builder": "@angular-builders/custom-webpack:dev-server",
           "options": {
-            "browserTarget": "findingFalcon:build"
+            "browserTarget": "findingFalcone:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "findingFalcon:build:production"
+              "browserTarget": "findingFalcone:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "findingFalcon:build"
+            "browserTarget": "findingFalcone:build"
           }
         },
         "lint": {
@@ -86,16 +86,16 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "findingFalcon:serve"
+            "devServerTarget": "findingFalcone:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "findingFalcon:serve:production"
+              "devServerTarget": "findingFalcone:serve:production"
             }
           }
         }
       }
     }
   },
-  "defaultProject": "findingFalcon"
+  "defaultProject": "findingFalcone"
 }
