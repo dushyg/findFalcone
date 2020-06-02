@@ -2,7 +2,8 @@
   <app-falcon-header
     (headerLinkClicked)="headerLinkClicked($event)"
   ></app-falcon-header>
-  <div class="appFalconBody">
+  <a class="skip-link" href="#appFalconBody">Skip to main</a>
+  <div class="appFalconBody" id="appFalconBody">
     <app-spinner *ngIf="finderFacadeService.isLoading$ | async as loading">
     </app-spinner>
     <div class="errorMsg" *ngIf="finderFacadeService.error$ | async as error">

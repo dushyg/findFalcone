@@ -41,8 +41,15 @@ exports[`AppComponent should create the app 1`] = `
         </div>
       </nav>
     </app-falcon-header>
+    <a
+      class="skip-link"
+      href="#appFalconBody"
+    >
+      Skip to main
+    </a>
     <div
       class="appFalconBody"
+      id="appFalconBody"
     >
       
       <app-spinner />
