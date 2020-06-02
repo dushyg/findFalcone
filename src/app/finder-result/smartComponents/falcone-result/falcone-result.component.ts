@@ -39,10 +39,10 @@ export class FalconeResultComponent implements OnInit, OnDestroy {
         this.searchAttemptMap = vm.searchAttemptMap;
       });
 
-    this.findFalcon();
+    this.findFalcone();
   }
 
-  public findFalcon(): void {
+  public findFalcone(): void {
     let findFalconRequest: IFindFalconeRequest;
     const searchAttemptMap = this.searchAttemptMap;
     const maxSearchAttemptsAllowed = this.finderFacadeService.getCountOfWidgetsDisplayed();
