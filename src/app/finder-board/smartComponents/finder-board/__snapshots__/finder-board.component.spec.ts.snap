@@ -35,9 +35,6 @@ exports[`FinderBoardComponent should create 1`] = `
               class="destinationWidget"
               widgetid="1"
             >
-              <span>
-                Destination 1
-              </span>
               <app-typeahead>
                 <div
                   class="typeahead-container"
@@ -45,6 +42,11 @@ exports[`FinderBoardComponent should create 1`] = `
                   <div
                     class="typeadhead-wrapper"
                   >
+                    <label
+                      for="typeahead_input_widget_1"
+                    >
+                      Destination 1
+                    </label>
                     <input
                       class="typeAhead ng-untouched ng-pristine ng-valid"
                       id="typeahead_input_widget_1"
@@ -68,9 +70,6 @@ exports[`FinderBoardComponent should create 1`] = `
               class="destinationWidget"
               widgetid="2"
             >
-              <span>
-                Destination 2
-              </span>
               <app-typeahead>
                 <div
                   class="typeahead-container"
@@ -78,6 +77,11 @@ exports[`FinderBoardComponent should create 1`] = `
                   <div
                     class="typeadhead-wrapper"
                   >
+                    <label
+                      for="typeahead_input_widget_2"
+                    >
+                      Destination 2
+                    </label>
                     <input
                       class="typeAhead ng-untouched ng-pristine ng-valid"
                       id="typeahead_input_widget_2"
@@ -101,9 +105,6 @@ exports[`FinderBoardComponent should create 1`] = `
               class="destinationWidget"
               widgetid="3"
             >
-              <span>
-                Destination 3
-              </span>
               <app-typeahead>
                 <div
                   class="typeahead-container"
@@ -111,6 +112,11 @@ exports[`FinderBoardComponent should create 1`] = `
                   <div
                     class="typeadhead-wrapper"
                   >
+                    <label
+                      for="typeahead_input_widget_3"
+                    >
+                      Destination 3
+                    </label>
                     <input
                       class="typeAhead ng-untouched ng-pristine ng-valid"
                       id="typeahead_input_widget_3"
@@ -134,9 +140,6 @@ exports[`FinderBoardComponent should create 1`] = `
               class="destinationWidget"
               widgetid="4"
             >
-              <span>
-                Destination 4
-              </span>
               <app-typeahead>
                 <div
                   class="typeahead-container"
@@ -144,6 +147,11 @@ exports[`FinderBoardComponent should create 1`] = `
                   <div
                     class="typeadhead-wrapper"
                   >
+                    <label
+                      for="typeahead_input_widget_4"
+                    >
+                      Destination 4
+                    </label>
                     <input
                       class="typeAhead ng-untouched ng-pristine ng-valid"
                       id="typeahead_input_widget_4"

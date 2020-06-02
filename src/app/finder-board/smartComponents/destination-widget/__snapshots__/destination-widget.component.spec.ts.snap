@@ -17,9 +17,6 @@ exports[`DestinationWidgetComponent should render vehicle list component when pl
     class="destinationWidget"
     widgetid="3"
   >
-    <span>
-      Destination 3
-    </span>
     <app-typeahead>
       <div
         class="typeahead-container"
@@ -27,6 +24,11 @@ exports[`DestinationWidgetComponent should render vehicle list component when pl
         <div
           class="typeadhead-wrapper"
         >
+          <label
+            for="typeahead_input_widget_3"
+          >
+            Destination 3
+          </label>
           <input
             class="typeAhead"
             id="typeahead_input_widget_3"

@@ -20,6 +20,11 @@ exports[`TypeAhead Component shows result list if input text box recieves focus 
     <div
       class="typeadhead-wrapper"
     >
+      <label
+        for="typeahead_input_widget_"
+      >
+        Destination 
+      </label>
       <input
         class="typeAhead ng-untouched ng-pristine ng-valid"
         id="typeahead_input_widget_"

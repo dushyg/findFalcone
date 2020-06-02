@@ -3,7 +3,6 @@
   [attr.widgetId]="widgetId"
   *ngIf="planetListInitialized"
 >
-  <span>Destination {{ widgetId }}</span>
   <app-typeahead
     [sourceArray]="planetList"
     [resetTypeAhead$]="resetTypeAhead$"
