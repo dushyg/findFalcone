@@ -15,7 +15,7 @@ script: # the build step
   - npm run build
 
 after_success:
-  - surge --project ./dist/findingFalcon --domain https://findingfalcone-dushyg.surge.sh
+  - surge --project ./dist/findingFalcone --domain https://findingfalcone-dushyg.surge.sh
 
 notifications:
   email: # only receive email when the build status changes (someone broke the build!)
