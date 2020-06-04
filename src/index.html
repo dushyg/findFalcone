@@ -15,9 +15,35 @@
     <link rel="manifest" href="/manifest.webmanifest" />
     <link rel="apple-touch-icon" sizes="180x180" href="icon-152x152.png" />
     <meta name="theme-color" content="#1976d2" />
+    <style type="text/css">
+      div#preAngular {
+        text-align: center;
+        height: 50vh;
+        width: 80vh;
+        margin: 25vh auto;
+      }
+    </style>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        document.getElementById('preAngular').remove();
+      });
+    </script>
   </head>
   <body>
-    <noscript><h2>Please enable javascript</h2></noscript>
+    <noscript
+      ><h2>
+        Please enable javascript for this application to be usable.
+      </h2></noscript
+    >
+    <div id="preAngular">
+      After the recent Falicornian war, King Shan has exiled Queen Al Falcone
+      for 15 years. However, if he finds her before the 15 years are up, she has
+      to go into exile for another 15 years! King Shan has received intelligence
+      that Al Falcone is hiding in one of six neighbouring planets. To solve
+      this problem this application helps you to choose the planets to search,
+      and the vehicles to use in Finding Falcone. Please click on 'docs' link in
+      the header for more information.
+    </div>
     <app-root></app-root>
   </body>
 </html>

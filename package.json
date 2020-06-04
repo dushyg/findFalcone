@@ -7,7 +7,7 @@
     "build:local": "npm run lint && ng build --prod && npm test && npm run build:doc",
     "build:doc": "./node_modules/.bin/compodoc -p tsconfig.app.json --theme Readthedocs --disableSourceCode --disableCoverage -d dist/findingFalcone/documentation/compodoc",
     "serve:doc": "npm run build:doc -- -s",
-    "http-server": "npx http-server dist/findingFalcone/ --proxy http://localhost:4200? -a localhost -p 4200 -c-1 -o",
+    "http-server": "npx http-server dist/findingFalcone/ --proxy http://localhost:4200? -a localhost -p 4200 -c-1 -o -g",
     "start": "npm run build:local && npm run http-server",
     "start:prod": "ng serve --prod",
     "start:dev": "ng serve --watch",
