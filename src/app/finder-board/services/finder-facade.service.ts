@@ -190,7 +190,9 @@ export class FinderFacadeService {
           vehicleList: vehicles,
           unsearchedPlanets: [...planets],
           vehicleInventory: [...vehicles],
-          searchMap: this.getInitializedSearchMap(),
+          searchMap: this.getInitializedSearchMap(
+            this.MAX_SEARCH_ATTEMPTS_ALLOWED
+          ),
           errorMsg: '',
           isLoading: false,
           isReadyToSearch: false,
@@ -209,13 +211,15 @@ export class FinderFacadeService {
    * SearchAttempt contains name of the planet searched and name of the vehicle used for searching.
    * @returns A map of widgetId to SearchAttempt
    */
-  private getInitializedSearchMap(): Map<string, ISearchAttempt> {
-    const searchMap = new Map<string, ISearchAttempt>();
-
-    for (let index = 1; index < this.MAX_SEARCH_ATTEMPTS_ALLOWED + 1; index++) {
-      searchMap.set(index.toString(), {} as ISearchAttempt);
-    }
-    return searchMap;
+  private getInitializedSearchMap(
+    widgetCount: number
+  ): Map<string, ISearchAttempt> {
+    return new Map<string, ISearchAttempt>(
+      Array.from(new Array(widgetCount), (_, index) => [
+        (index + 1).toString(),
+        {} as ISearchAttempt,
+      ])
+    );
   }
 
   /**
