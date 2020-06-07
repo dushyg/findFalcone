@@ -10,56 +10,39 @@ export class ChangeUtils {
   /**
    * This method is called to calculate the new application state after a vehicle or planet was set or changed in a widget.
    * @param changedWidgetId Id of the widget where planet or vehicle was changed
-   * @param changedValue New name of the planet or vehicle after the change
-   * @param changedWidgetSearchAttemptGetter A function that returns new SearchAttempt object that will be set
+   * @param changedWidgetSearchAttempt  a SearchAttempt object that will be set for current widget
    * @param previousState Previous application state
    * @returns Next application state after planet or vehicle was changed
    */
   public static getNextStateAfterChange(
     changedWidgetId: number,
-    changedValue: string,
-    changedWidgetSearchAttemptGetter: () => ISearchAttempt,
+    changedWidgetSearchAttempt: ISearchAttempt,
     previousState: IFalconAppState
   ): IFalconAppState {
     // get updated search map
-    const updatedSearchMap = ChangeUtils.getUpdatedSearchMap(
+    const updatedSearchMap = this.getUpdatedSearchMap(
       previousState.searchMap,
       changedWidgetId,
-      changedValue,
-      changedWidgetSearchAttemptGetter
-    );
-
-    // find unsearched planets after this planet change
-    const unsearchedPlanets: IPlanet[] = ChangeUtils.getUnsearchedPlanets(
-      updatedSearchMap,
-      previousState.planetList
-    );
-
-    // update the vehicle inventory, taking into account used and freed vehicles
-    const updatedVehicleInventory: IVehicle[] = ChangeUtils.getUpdatedVehicleInventory(
-      updatedSearchMap,
-      previousState.vehicleList
-    );
-
-    // calculate the total time taken to search planets with vehicles selected
-    const totalTimeTakenForSearch: number = ChangeUtils.getTotalTimeTakenForSearch(
-      updatedSearchMap,
-      previousState.planetList,
-      previousState.vehicleList
-    );
-
-    // sets true if all widgets have vehicle and planet values set by the user
-    const isReadyToSearch: boolean = ChangeUtils.isItFineToStartSearching(
-      updatedSearchMap
+      changedWidgetSearchAttempt
     );
 
     return {
       ...previousState,
       searchMap: updatedSearchMap,
-      unsearchedPlanets,
-      vehicleInventory: updatedVehicleInventory,
-      isReadyToSearch,
-      totalTimeTaken: totalTimeTakenForSearch,
+      unsearchedPlanets: this.getUnsearchedPlanets(
+        updatedSearchMap,
+        previousState.planetList
+      ),
+      vehicleInventory: this.getUpdatedVehicleInventory(
+        updatedSearchMap,
+        previousState.vehicleList
+      ),
+      isReadyToSearch: this.isItFineToStartSearching(updatedSearchMap),
+      totalTimeTaken: this.getTotalTimeTakenForSearch(
+        updatedSearchMap,
+        previousState.planetList,
+        previousState.vehicleList
+      ),
     } as IFalconAppState;
   }
 
@@ -69,25 +52,36 @@ export class ChangeUtils {
    * @returns Updated search map that has a mapping of widget id to ISearchAttempt
    * @param searchMap A Map of widget id to SearchAttempt object
    * @param changedWidgetId Id of the widget where planet or vehicle was changed
-   * @param changedValue New name of the planet or vehicle after the change
-   * @param changedWidgetSearchAttemptGetter A function that returns new SearchAttempt object that will be set
+   * @param changedWidgetSearchAttempt  a SearchAttempt object that will be set for current widget
    */
   private static getUpdatedSearchMap(
     searchMap: Map<string, ISearchAttempt>,
     changedWidgetId: number,
-    changedValue: string,
-    changedWidgetSearchAttemptGetter: () => ISearchAttempt
+    changedWidgetSearchAttempt: ISearchAttempt
   ): Map<string, ISearchAttempt> {
-    const updatedSearchMap = new Map<string, ISearchAttempt>();
+    return new Map<string, ISearchAttempt>(
+      Array.from(
+        searchMap,
+        ChangeUtils.mapToUpdatedWidgetIdSearchAttemptPair(
+          changedWidgetId,
+          changedWidgetSearchAttempt
+        )
+      )
+    );
+  }
 
-    searchMap.forEach((value: ISearchAttempt, key: string) => {
+  private static mapToUpdatedWidgetIdSearchAttemptPair(
+    changedWidgetId: number,
+    changedWidgetSearchAttempt: ISearchAttempt
+  ) {
+    return function mapperFunction([key, value]): [string, ISearchAttempt] {
       let updatedSearchAttempt: ISearchAttempt;
       // if the current widget is to the left of changed widget or the changed widget then simply continue
       const currentlyLoopedWidgetId = Number(key);
       if (currentlyLoopedWidgetId < changedWidgetId) {
         updatedSearchAttempt = value; // { ...value } as ISearchAttempt;
       } else if (currentlyLoopedWidgetId === changedWidgetId) {
-        updatedSearchAttempt = changedWidgetSearchAttemptGetter();
+        updatedSearchAttempt = changedWidgetSearchAttempt;
       } else {
         // else if the current widget is to the right of the changed widget then
         // we will need to reset both the existing planet and vehicle selections if any
@@ -96,10 +90,8 @@ export class ChangeUtils {
           searchedPlanet: null,
         } as ISearchAttempt;
       }
-
-      updatedSearchMap.set(key, updatedSearchAttempt);
-    });
-    return updatedSearchMap;
+      return [key, updatedSearchAttempt];
+    };
   }
 
   /**
@@ -112,17 +104,24 @@ export class ChangeUtils {
     searchMap: Map<string, ISearchAttempt>,
     planetList: IPlanet[]
   ): IPlanet[] {
-    const usedPlanetSet = new Set<string>();
-
-    searchMap.forEach((searchAttempt: ISearchAttempt) => {
-      if (searchAttempt && searchAttempt.searchedPlanet) {
-        usedPlanetSet.add(searchAttempt.searchedPlanet);
-      }
-    });
+    const usedPlanetSet = [...searchMap].reduce(
+      this.AddPlanetToSetIfUsed,
+      new Set<string>()
+    );
 
     return planetList.filter(
       (planet: IPlanet) => !usedPlanetSet.has(planet.name)
     );
+  }
+
+  private static AddPlanetToSetIfUsed(
+    planetSet: Set<string>,
+    [_, searchAttempt]: [string, ISearchAttempt]
+  ) {
+    if (searchAttempt && searchAttempt.searchedPlanet) {
+      planetSet.add(searchAttempt.searchedPlanet);
+    }
+    return planetSet;
   }
 
   /**
@@ -157,10 +156,7 @@ export class ChangeUtils {
   private static getUsedVehicleMap(
     searchMap: Map<string, ISearchAttempt>
   ): Map<string, number> {
-    const usedVehicleMap = new Map<string, number>();
-    for (let index = 1; index < searchMap.size + 1; index++) {
-      const key = index.toString();
-      const searchAttempt: ISearchAttempt = searchMap.get(key);
+    return [...searchMap].reduce((usedVehicleMap, [_, searchAttempt]) => {
       if (searchAttempt) {
         const vehicle: string = searchAttempt.vehicleUsed;
         if (vehicle) {
@@ -172,8 +168,8 @@ export class ChangeUtils {
           }
         }
       }
-    }
-    return usedVehicleMap;
+      return usedVehicleMap;
+    }, new Map<string, number>());
   }
 
   /**
@@ -187,41 +183,32 @@ export class ChangeUtils {
     allPlanets: IPlanet[],
     allVehicles: IVehicle[]
   ): number {
-    let totalTimeTakenForSearch = 0;
+    const nameToPlanetMap = new Map<string, IPlanet>(
+      allPlanets.map((currentPlanet) => [currentPlanet.name, currentPlanet])
+    );
 
-    const nameToPlanetMap: Map<string, IPlanet> = new Map<string, IPlanet>();
-    const nameToVehicleMap: Map<string, IVehicle> = new Map<string, IVehicle>();
+    const nameToVehicleMap = new Map<string, IVehicle>(
+      allVehicles.map((currentVehicle) => [currentVehicle.name, currentVehicle])
+    );
 
-    allPlanets.forEach((planet) => {
-      nameToPlanetMap.set(planet.name, planet);
-    });
-
-    allVehicles.forEach((vehicle) => {
-      nameToVehicleMap.set(vehicle.name, vehicle);
-    });
-
-    searchMap.forEach((value: ISearchAttempt) => {
-      if (!value) {
-        return;
+    return [...searchMap].reduce((totalTime, [_, searchAttempt]) => {
+      const searchedPlanetName = searchAttempt.searchedPlanet;
+      const usedVehicleName = searchAttempt.vehicleUsed;
+      if (!searchedPlanetName || !usedVehicleName) {
+        return totalTime;
       }
 
-      if (!value.searchedPlanet || !value.vehicleUsed) {
-        return;
-      }
-
-      const planet: IPlanet = nameToPlanetMap.get(value.searchedPlanet);
-      const vehicle: IVehicle = nameToVehicleMap.get(value.vehicleUsed);
+      const planet: IPlanet = nameToPlanetMap.get(searchedPlanetName);
+      const vehicle: IVehicle = nameToVehicleMap.get(usedVehicleName);
       const planetDistance = planet.distance;
       const vehicleSpeed = vehicle.speed;
       if (!planetDistance || !vehicleSpeed) {
-        return;
+        return totalTime;
       }
 
-      totalTimeTakenForSearch =
-        totalTimeTakenForSearch + planetDistance / vehicleSpeed;
-    });
-
-    return totalTimeTakenForSearch;
+      totalTime = totalTime + planetDistance / vehicleSpeed;
+      return totalTime;
+    }, 0);
   }
 
   /**
@@ -232,20 +219,13 @@ export class ChangeUtils {
   private static isItFineToStartSearching(
     searchMap: Map<string, ISearchAttempt>
   ): boolean {
-    let isReadyForSearch = true;
-
-    searchMap.forEach((value: ISearchAttempt) => {
-      if (!value) {
-        isReadyForSearch = false;
-        return;
-      }
-
-      if (!value.searchedPlanet || !value.vehicleUsed) {
-        isReadyForSearch = false;
-        return;
-      }
-    });
-
-    return isReadyForSearch;
+    return [...searchMap].every(
+      ([_, searchAttempt]): boolean =>
+        !!(
+          searchAttempt &&
+          searchAttempt.searchedPlanet &&
+          searchAttempt.vehicleUsed
+        )
+    );
   }
 }

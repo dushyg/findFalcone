@@ -230,16 +230,13 @@ export class FinderFacadeService {
   public planetChanged(planetChange: PlanetChange): void {
     const nextState: IFalconAppState = ChangeUtils.getNextStateAfterChange(
       planetChange.widgetId,
-      planetChange.newPlanetName,
-      () => {
-        return {
-          searchedPlanet:
-            planetChange.newPlanetName !== 'Select'
-              ? planetChange.newPlanetName
-              : null,
-          vehicleUsed: null,
-        } as ISearchAttempt;
-      },
+      {
+        searchedPlanet:
+          planetChange.newPlanetName !== 'Select'
+            ? planetChange.newPlanetName
+            : null,
+        vehicleUsed: null,
+      } as ISearchAttempt,
       this.state
     );
 
@@ -257,15 +254,12 @@ export class FinderFacadeService {
 
     const nextState: IFalconAppState = ChangeUtils.getNextStateAfterChange(
       vehicleChange.widgetId,
-      vehicleChange.newVehicleName,
-      () => {
-        return {
-          searchedPlanet: selectors
-            .getSearchAttemptMap(this.state)
-            .get(changedWidgetId).searchedPlanet,
-          vehicleUsed: vehicleChange.newVehicleName,
-        } as ISearchAttempt;
-      },
+      {
+        searchedPlanet: selectors
+          .getSearchAttemptMap(this.state)
+          .get(changedWidgetId).searchedPlanet,
+        vehicleUsed: vehicleChange.newVehicleName,
+      } as ISearchAttempt,
       this.state
     );
 
