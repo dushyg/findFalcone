@@ -32,7 +32,7 @@ import { AppData } from './finder-board/services/mockData/app.data';
     TypeaheadComponent,
   ],
   imports: [
-    BrowserModule,
+    BrowserModule.withServerTransition({ appId: 'serverApp' }),
     AppRoutingModule,
     BrowserAnimationsModule,
     FormsModule,
