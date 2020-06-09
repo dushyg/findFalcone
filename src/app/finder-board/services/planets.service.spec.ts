@@ -7,7 +7,7 @@ import { of, throwError } from 'rxjs';
 import { RunHelpers } from 'rxjs/internal/testing/TestScheduler';
 import { IPlanet } from '../models';
 import { PlanetsMockData } from './mockData';
-import { PlanetsService } from '.';
+import { PlanetsService } from './index';
 
 describe('PlanetsService', () => {
   let testScheduler: TestScheduler;

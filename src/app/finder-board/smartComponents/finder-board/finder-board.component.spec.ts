@@ -6,7 +6,7 @@ import {
 } from '@angular/core/testing';
 
 import { FinderBoardComponent } from './finder-board.component';
-import { createSpyObj } from 'src/app/testingUtitlity';
+import { createSpyObj } from 'src/app/testingUtility';
 import { PlanetsService } from 'src/app/finder-board/services/planets.service';
 import { VehiclesService } from 'src/app/finder-board/services/vehicles.service';
 import { FinderFacadeService } from 'src/app/finder-board/services/finder-facade.service';

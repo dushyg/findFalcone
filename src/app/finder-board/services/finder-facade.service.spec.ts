@@ -8,7 +8,7 @@ import {
   VehicleChange,
   ISearchAttempt,
 } from '../models';
-import { createSpyObj } from '../../testingUtitlity';
+import { createSpyObj } from '../../testingUtility';
 import { FinderFacadeService } from './finder-facade.service';
 
 // Isolated unit tests

@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DestinationWidgetComponent } from './destination-widget.component';
 import { TypeaheadComponent } from '../../presenterComponents/typeahead/typeahead.component';
 import { VehicleListComponent } from '../vehicle-list/vehicle-list.component';
-import { createSpyObj } from '../../../testingUtitlity';
+import { createSpyObj } from '../../../testingUtility';
 import { FinderFacadeService } from '../../services/finder-facade.service';
 import { PlanetsService } from '../../services/planets.service';
 import { VehiclesService } from '../../services/vehicles.service';

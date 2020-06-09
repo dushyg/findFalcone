@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { VehicleListComponent } from './vehicle-list.component';
 import { IVehicle } from '../../models/vehicle';
-import { createSpyObj } from '../../../testingUtitlity';
+import { createSpyObj } from '../../../testingUtility';
 import { FinderFacadeService } from '../../services/finder-facade.service';
 import { PlanetsService } from '../../services/planets.service';
 import { VehiclesService } from '../../services/vehicles.service';
