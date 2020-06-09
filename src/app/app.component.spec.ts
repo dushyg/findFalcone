@@ -12,7 +12,7 @@ import { PlanetsService } from './finder-board/services/planets.service';
 import { VehiclesService } from './finder-board/services/vehicles.service';
 import { FalconeTokenService } from './finder-board/services/falcone-token.service';
 import { SharedModule } from './shared/shared.module';
-import { createSpyObj } from './testingUtitlity';
+import { createSpyObj } from './testingUtility';
 
 describe('AppComponent', () => {
   let component: AppComponent;
