@@ -2,6 +2,7 @@
 
 exports[`FinderBoardComponent should create 1`] = `
 <app-finder-board
+  __ngContext__={[Function LRootView]}
   finderFacadeService={[Function FinderFacadeService]}
   maxWidgetCount={[Function Number]}
   router={[Function Object]}
@@ -25,12 +26,10 @@ exports[`FinderBoardComponent should create 1`] = `
       <div
         class="widgetListContainer"
       >
-        
         <div
           class="widgetRow"
         >
           <app-destination-widget>
-            
             <div
               class="destinationWidget"
               widgetid="1"
@@ -59,13 +58,13 @@ exports[`FinderBoardComponent should create 1`] = `
               </app-typeahead>
               
             </div>
+            
           </app-destination-widget>
         </div>
         <div
           class="widgetRow"
         >
           <app-destination-widget>
-            
             <div
               class="destinationWidget"
               widgetid="2"
@@ -94,13 +93,13 @@ exports[`FinderBoardComponent should create 1`] = `
               </app-typeahead>
               
             </div>
+            
           </app-destination-widget>
         </div>
         <div
           class="widgetRow"
         >
           <app-destination-widget>
-            
             <div
               class="destinationWidget"
               widgetid="3"
@@ -129,13 +128,13 @@ exports[`FinderBoardComponent should create 1`] = `
               </app-typeahead>
               
             </div>
+            
           </app-destination-widget>
         </div>
         <div
           class="widgetRow"
         >
           <app-destination-widget>
-            
             <div
               class="destinationWidget"
               widgetid="4"
@@ -164,8 +163,10 @@ exports[`FinderBoardComponent should create 1`] = `
               </app-typeahead>
               
             </div>
+            
           </app-destination-widget>
         </div>
+        
       </div>
     </app-destination-widget-list>
     <div

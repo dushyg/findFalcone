@@ -2,7 +2,8 @@
 
 exports[`VehicleListComponent should render radio buttons equal to number of vehicles 1`] = `
 <app-vehicle-list
-  changeDetector={[Function ViewRef_]}
+  __ngContext__={[Function LRootView]}
+  changeDetector={[Function ViewRef]}
   finderFacadeService={[Function FinderFacadeService]}
   isComponentActive={[Function Boolean]}
   lastSelectedVehicle={[Function Object]}
@@ -11,7 +12,6 @@ exports[`VehicleListComponent should render radio buttons equal to number of veh
   <div
     class="vehicleList"
   >
-    
     <div>
       <input
         id="vehicle__0"
@@ -72,6 +72,7 @@ exports[`VehicleListComponent should render radio buttons equal to number of veh
       </label>
       <br />
     </div>
+    
   </div>
 </app-vehicle-list>
 `;

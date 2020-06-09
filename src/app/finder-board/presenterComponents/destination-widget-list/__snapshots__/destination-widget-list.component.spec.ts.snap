@@ -2,12 +2,12 @@
 
 exports[`DestinationWidgetListComponent should create 1`] = `
 <app-destination-widget-list
+  __ngContext__={[Function LRootView]}
   widgetCountIterator={[Function Array]}
 >
   <div
     class="widgetListContainer"
   >
-    
     <div
       class="widgetRow"
     >
@@ -15,6 +15,7 @@ exports[`DestinationWidgetListComponent should create 1`] = `
         
       </app-destination-widget>
     </div>
+    
   </div>
 </app-destination-widget-list>
 `;

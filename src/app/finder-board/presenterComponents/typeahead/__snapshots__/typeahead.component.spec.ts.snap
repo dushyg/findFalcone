@@ -2,7 +2,8 @@
 
 exports[`TypeAhead Component shows result list if input text box recieves focus 1`] = `
 <app-typeahead
-  changeDetector={[Function ViewRef_]}
+  __ngContext__={[Function LRootView]}
+  changeDetector={[Function ViewRef]}
   doShowResults={[Function Boolean]}
   filteredSourceArray={[Function Array]}
   hideResults={[Function Function]}
@@ -31,7 +32,6 @@ exports[`TypeAhead Component shows result list if input text box recieves focus 
         placeholder="Type to search..."
         type="text"
       />
-      
       <div
         class="resultList"
       >
@@ -41,7 +41,6 @@ exports[`TypeAhead Component shows result list if input text box recieves focus 
           >
              None 
           </li>
-          
           <li
             class="resultItem"
           >
@@ -62,8 +61,10 @@ exports[`TypeAhead Component shows result list if input text box recieves focus 
           >
              Sapir 
           </li>
+          
         </ul>
       </div>
+      
     </div>
   </div>
 </app-typeahead>

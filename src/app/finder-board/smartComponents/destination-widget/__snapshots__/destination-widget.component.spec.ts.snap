@@ -2,7 +2,8 @@
 
 exports[`DestinationWidgetComponent should render vehicle list component when planet is selected 1`] = `
 <app-destination-widget
-  changeDetector={[Function ViewRef_]}
+  __ngContext__={[Function LRootView]}
+  changeDetector={[Function ViewRef]}
   destinationDistance={[Function Number]}
   finderFacadeService={[Function FinderFacadeService]}
   isComponentActive={[Function Boolean]}
@@ -39,12 +40,10 @@ exports[`DestinationWidgetComponent should render vehicle list component when pl
         </div>
       </div>
     </app-typeahead>
-    
     <app-vehicle-list>
       <div
         class="vehicleList"
       >
-        
         <div>
           <input
             id="vehicle_3_0"
@@ -105,8 +104,10 @@ exports[`DestinationWidgetComponent should render vehicle list component when pl
           </label>
           <br />
         </div>
+        
       </div>
     </app-vehicle-list>
+    
   </div>
 </app-destination-widget>
 `;

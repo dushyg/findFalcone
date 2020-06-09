@@ -2,6 +2,7 @@
 
 exports[`AppComponent should create the app 1`] = `
 <app-root
+  __ngContext__={[Function LRootView]}
   finderFacadeService={[Function FinderFacadeService]}
   title={[Function String]}
 >
@@ -52,10 +53,11 @@ exports[`AppComponent should create the app 1`] = `
       class="appFalconBody"
       id="appFalconBody"
     >
-      
       <app-spinner />
       
+      
       <router-outlet />
+      
     </div>
     <app-falcon-footer>
       <nav
