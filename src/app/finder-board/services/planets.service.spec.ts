@@ -34,12 +34,12 @@ describe('PlanetsService', () => {
     });
 
     it('should be created', () => {
-      const service: PlanetsService = TestBed.get(PlanetsService);
+      const service: PlanetsService = TestBed.inject(PlanetsService);
       expect(service).toBeTruthy();
     });
 
     it('should return mocked response when getAllPlanets is called', () => {
-      const service: PlanetsService = TestBed.get(PlanetsService);
+      const service: PlanetsService = TestBed.inject(PlanetsService);
       const apiResponse = service.getAllPlanets();
       testScheduler.run(({ expectObservable }) => {
         expectObservable(apiResponse).toBe('(a|)', {
@@ -74,7 +74,7 @@ describe('PlanetsService', () => {
     });
 
     it('should return observable with error message when getAllPlanets api fails', () => {
-      const service: PlanetsService = TestBed.get(PlanetsService);
+      const service: PlanetsService = TestBed.inject(PlanetsService);
       const apiResponse = service.getAllPlanets();
 
       testScheduler.run(({ expectObservable }: RunHelpers) => {

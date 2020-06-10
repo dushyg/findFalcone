@@ -39,12 +39,16 @@ describe('FalconeFinderService', () => {
     });
 
     it('should be created', () => {
-      const service: FalconeFinderService = TestBed.get(FalconeFinderService);
+      const service: FalconeFinderService = TestBed.inject(
+        FalconeFinderService
+      );
       expect(service).toBeTruthy();
     });
 
     it('should return mocked response when findFalcone is called', () => {
-      const service: FalconeFinderService = TestBed.get(FalconeFinderService);
+      const service: FalconeFinderService = TestBed.inject(
+        FalconeFinderService
+      );
       const apiResponse = service.findFalcone({} as IFindFalconeRequest);
       testScheduler.run(({ expectObservable }) => {
         expectObservable(apiResponse).toBe('(a|)', {
@@ -81,7 +85,9 @@ describe('FalconeFinderService', () => {
     });
 
     it('should return response with status of false when falcone is not found', () => {
-      const service: FalconeFinderService = TestBed.get(FalconeFinderService);
+      const service: FalconeFinderService = TestBed.inject(
+        FalconeFinderService
+      );
       const apiResponse = service.findFalcone({} as IFindFalconeRequest);
 
       testScheduler.run(({ expectObservable }) => {
@@ -120,7 +126,9 @@ describe('FalconeFinderService', () => {
     });
 
     it('should return response with error message when findFalcone api fails', () => {
-      const service: FalconeFinderService = TestBed.get(FalconeFinderService);
+      const service: FalconeFinderService = TestBed.inject(
+        FalconeFinderService
+      );
       const apiResponse = service.findFalcone({} as IFindFalconeRequest);
 
       testScheduler.run(({ expectObservable }) => {
@@ -153,7 +161,9 @@ describe('FalconeFinderService', () => {
     });
 
     it('should return observable with error message when findFalcone api fails', () => {
-      const service: FalconeFinderService = TestBed.get(FalconeFinderService);
+      const service: FalconeFinderService = TestBed.inject(
+        FalconeFinderService
+      );
       const apiResponse = service.findFalcone({} as IFindFalconeRequest);
 
       testScheduler.run(({ expectObservable }: RunHelpers) => {

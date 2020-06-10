@@ -63,12 +63,12 @@ describe('VehiclesService', () => {
     });
 
     it('should be created', () => {
-      const service: VehiclesService = TestBed.get(VehiclesService);
+      const service: VehiclesService = TestBed.inject(VehiclesService);
       expect(service).toBeTruthy();
     });
 
     it('should return mocked response when getAllVehicles is called', () => {
-      const service: VehiclesService = TestBed.get(VehiclesService);
+      const service: VehiclesService = TestBed.inject(VehiclesService);
       const apiResponse = service.getAllVehicles();
       testScheduler.run(({ expectObservable }) => {
         expectObservable(apiResponse).toBe('(a|)', {
@@ -103,7 +103,7 @@ describe('VehiclesService', () => {
     });
 
     it('should return observable with error message when getAllVehicles api fails', () => {
-      const service: VehiclesService = TestBed.get(VehiclesService);
+      const service: VehiclesService = TestBed.inject(VehiclesService);
       const apiResponse = service.getAllVehicles();
 
       testScheduler.run(({ expectObservable }: RunHelpers) => {

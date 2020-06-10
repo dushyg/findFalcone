@@ -29,14 +29,14 @@ describe('falconeTokenService', () => {
   });
 
   it('should get created', () => {
-    const falconeTokenService: FalconeTokenService = TestBed.get(
+    const falconeTokenService: FalconeTokenService = TestBed.inject(
       FalconeTokenService
     );
     expect(falconeTokenService).toBeTruthy();
   });
 
   it('should return a non empty token when getFalconeFinderApiToken is called', () => {
-    const falconeTokenService: FalconeTokenService = TestBed.get(
+    const falconeTokenService: FalconeTokenService = TestBed.inject(
       FalconeTokenService
     );
     const response$ = falconeTokenService.getFalconeFinderApiToken();
