@@ -17,13 +17,8 @@ div.welcomePage {
     }
   }
   div#divStartBtn {
-    width: 80px;
-    height: 40px;
-    margin-bottom: 15px;
-    margin-left: 45vw;
-    input.btnStart {
-      margin: 5px 15px;
-    }
+    width: 50px;
+    margin: 10px auto;
   }
 
   @media (min-width: 768px) {
