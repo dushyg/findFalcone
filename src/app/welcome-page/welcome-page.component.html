@@ -1,0 +1,36 @@
+<div class="welcomePage">
+  <h2>Instructions</h2>
+  <div class="instructions">
+    After the recent Falicornian war, King Shan has exiled Queen Al Falcone for
+    15 years. However, if he finds her before the 15 years are up, she has to go
+    into exile for another 15 years! King Shan has received intelligence that Al
+    Falcone is hiding in one of six neighbouring planets. To solve this problem
+    this application helps you to choose the planets to search, and the vehicles
+    to use in Finding Falcone. <br /><br />
+    You need to search across 4 planets from a list and use one of the available
+    vehicles. Every vehicle can cover a maximum distance. So it cant be used for
+    a planet that is at a distance greater than the max it can travel. Once a
+    planet is selected it is removed from list of available planets. Once a
+    vehicle is selected its available count is reduced by one in Vehicle
+    Inventory.
+    <br /><br />
+    To honor above constraints, if a planet or vehicle is set / changed, all
+    planets and vehicles to the right are reset. Planet searched & vehicle used
+    for search are grouped into a destination widget. There is a typeahead
+    control per widget that allows user to easily search planets from a list. As
+    soon as user finishes setting up all planets to be searched and vehicles
+    used for the search, the 'Find' button is enabled to initiate the search.
+    <br /><br />
+    <div class="goodLuckText">Good luck Finding Falcone!</div>
+  </div>
+  <!-- <div id="divImage">
+    <img
+      class="instructionImg"
+      src="../../assets/Planets_Vehicles.JPG"
+      alt="Image showing all planets and vehicles that can be used"
+    />
+  </div> -->
+  <div id="divStartBtn">
+    <input type="button" class="btnStart" (click)="start()" value="Start" />
+  </div>
+</div>

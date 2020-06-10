@@ -21,10 +21,12 @@ import {
   TypeaheadComponent,
 } from './finder-board/presenterComponents';
 import { AppData } from './finder-board/services/mockData/app.data';
+import { WelcomePageComponent } from './welcome-page/welcome-page.component';
 
 @NgModule({
   declarations: [
     AppComponent,
+    WelcomePageComponent,
     FinderBoardComponent,
     DestinationWidgetListComponent,
     DestinationWidgetComponent,
