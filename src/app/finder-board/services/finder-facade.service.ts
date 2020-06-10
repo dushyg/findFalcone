@@ -173,11 +173,11 @@ export class FinderFacadeService {
    * It fetches the planets, vehicles and the token required to invoke find Falcone api.
    */
   public initializeAppData(): void {
-    forkJoin(
+    forkJoin([
       this.vehicleService.getAllVehicles(),
       this.planetService.getAllPlanets(),
-      this.tokenService.getFalconeFinderApiToken()
-    ).subscribe(
+      this.tokenService.getFalconeFinderApiToken(),
+    ]).subscribe(
       ([vehicles, planets, tokenObj]: [
         IVehicle[],
         IPlanet[],

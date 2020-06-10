@@ -1,5 +1,5 @@
 import { fakeAsync, tick } from '@angular/core/testing';
-import { asyncScheduler, of } from 'rxjs';
+import { asyncScheduler, of, scheduled } from 'rxjs';
 import { IFalconAppState } from '../models/falconApp.state';
 import {
   IVehicle,
@@ -134,13 +134,13 @@ describe('FinderFacadeService', () => {
       );
 
       planetServiceMock.getAllPlanets.mockReturnValue(
-        of(planetListToBeReturned, asyncScheduler)
+        scheduled(of(planetListToBeReturned), asyncScheduler)
       );
       vehiclesServiceMock.getAllVehicles.mockReturnValue(
-        of(vehicleListToBeReturned, asyncScheduler)
+        scheduled(of(vehicleListToBeReturned), asyncScheduler)
       );
       tokenServiceMock.getFalconeFinderApiToken.mockReturnValue(
-        of(apiTokenToBeReturned, asyncScheduler)
+        scheduled(of(apiTokenToBeReturned), asyncScheduler)
       );
 
       service.initializeAppData();
@@ -222,13 +222,13 @@ describe('FinderFacadeService', () => {
       };
 
       planetServiceMock.getAllPlanets.mockReturnValue(
-        of(planetListToBeReturned, asyncScheduler)
+        scheduled(of(planetListToBeReturned), asyncScheduler)
       );
       vehiclesServiceMock.getAllVehicles.mockReturnValue(
-        of(vehicleListToBeReturned, asyncScheduler)
+        scheduled(of(vehicleListToBeReturned), asyncScheduler)
       );
       tokenServiceMock.getFalconeFinderApiToken.mockReturnValue(
-        of(apiTokenToBeReturned, asyncScheduler)
+        scheduled(of(apiTokenToBeReturned), asyncScheduler)
       );
     });
 
