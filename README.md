@@ -10,7 +10,7 @@ You need to search across 4 planets from a list and use one of the available veh
 
 Every vehicle can cover a maximum distance. So it cant be used for a planet that is at a distance greater than the max it can travel.
 
-Once a planet is selected it cant be searched with another vehicle.
+Once a planet is selected it is removed from list of available planets.
 
 Once a vehicle is selected its available count is reduced by one in Vehicle Inventory.
 
