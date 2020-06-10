@@ -6,16 +6,16 @@ After the recent Falicornian war, King Shan has exiled Queen Al Falcone for 15 y
 
 King Shan has received intelligence that Al Falcone is hiding in one of six neighbouring planets. To solve this problem this application helps you to choose the planets to search, and the vehicles to use in Finding Falcone.
 
-You need to search across 4 planets from a list and use one of the available vehicles.
+You need to search across 4 planets from a list and use one of the available
+vehicles to search a planet.
 
-Every vehicle can cover a maximum distance. So it cant be used for a planet that is at a distance greater than the max it can travel.
+Every vehicle has its a limit for distance it can cover. So it cant be used for a planet that is at a distance greater than the max it can travel.
 
 Once a planet is selected it is removed from list of available planets.
 
-Once a vehicle is selected its available count is reduced by one in Vehicle Inventory.
+Once a vehicle is selected its available count is reduced by 1 in Vehicle Inventory.
 
-To honor above constraints, if a planet or vehicle is set / changed, all planets and vehicles
-to the right are reset.
+To honor above constraints, if a planet or vehicle is set / changed, all planets and vehicles to the right are reset.
 
 Planet searched & vehicle used for search are grouped into a destination widget.
 There is a typeahead control per widget that allows user to easily search planets from a list.
