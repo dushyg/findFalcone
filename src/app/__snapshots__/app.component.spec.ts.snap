@@ -53,7 +53,6 @@ exports[`AppComponent should create the app 1`] = `
       class="appFalconBody"
       id="appFalconBody"
     >
-      <app-spinner />
       
       
       <router-outlet />
