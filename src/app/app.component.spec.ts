@@ -13,6 +13,7 @@ import { VehiclesService } from './finder-board/services/vehicles.service';
 import { FalconeTokenService } from './finder-board/services/falcone-token.service';
 import { SharedModule } from './shared/shared.module';
 import { createSpyObj } from './testingUtility';
+import { WelcomePageComponent } from './welcome-page/welcome-page.component';
 
 describe('AppComponent', () => {
   let component: AppComponent;
@@ -34,6 +35,7 @@ describe('AppComponent', () => {
         AppComponent,
         FalconHeaderComponent,
         FalconFooterComponent,
+        WelcomePageComponent,
       ],
       providers: [
         FinderFacadeService,
@@ -42,7 +44,6 @@ describe('AppComponent', () => {
         { provide: FalconeTokenService, useValue: apiTokenServiceMock },
         { provide: Router, useValue: routerServiceMock },
       ],
-      imports: [RouterTestingModule],
       schemas: [NO_ERRORS_SCHEMA],
     });
 
@@ -81,9 +82,7 @@ describe('AppComponent', () => {
   it('should contain router outlet', () => {
     fixture.detectChanges();
     const appComponentDebugElement = fixture.debugElement;
-    expect(
-      appComponentDebugElement.query(By.directive(RouterOutlet))
-    ).toBeTruthy();
+    expect(fixture.nativeElement.querySelector('router-outlet')).toBeTruthy();
   });
 
   it('should call finderFacadeService.resetApp when rest link is clicked in the header', () => {
