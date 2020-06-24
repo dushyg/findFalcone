@@ -5,7 +5,8 @@ node_js:
 
 branches:
   only:
-    - serviceWithSubjectResponsive # will only build for this branch commits
+    - serviceWithSubjectResponsive # will only build for these branches
+    - universal
 
 before_script: # commands to run before the build step
   - npm install --silent
@@ -15,7 +16,7 @@ script: # the build step
   - npm run build
 
 after_success:
-  - surge --project ./dist/findingFalcone --domain https://findingfalcone-dushyg.surge.sh
+  - surge --project ./dist/findingFalcone/browser --domain https://findingfalcone-dushyg.surge.sh
 
 notifications:
   email: # only receive email when the build status changes (someone broke the build!)
