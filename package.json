@@ -6,7 +6,7 @@
     "start": "npm run prerender && npm run lint && npm test && npm run copy-files && npm run http-server",
     "start:prod": "ng serve --prod",
     "start:dev": "ng serve --watch",
-    "build": "npm run prerender && npm run lint && npm test && npm run copy-tasks",
+    "build": "npm run prerender && npm run lint && npm test && npm run copy-files",
     "http-server": "npx http-server dist/findingFalcone/browser --proxy http://localhost:4200? -a localhost -p 4200 -c-1 -o -g",
     "serve:doc": "npm run build:doc -- -s",
     "build:doc": "./node_modules/.bin/compodoc -p tsconfig.app.json --theme Readthedocs --disableSourceCode --disableCoverage -d dist/findingFalcone/documentation/compodoc",
