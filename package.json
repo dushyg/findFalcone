@@ -17,9 +17,9 @@
     "preanalyze": "ng build --prod --stats-json",
     "analyze": "webpack-bundle-analyzer dist/findingFalcone/stats-es2015.json",
     "copy-files": "npm run surge-create-200html && npm run surge-copy-robots && npm run copy-ngsw-files",
-    "surge-copy-robots": "npm run copy-file -s ./robots.txt -d ./dist/findingFalcone/browser/robots.txt",
-    "surge-create-200html": "npm run copy-file -s ./dist/findingFalcone/browser/index.html -d ./dist/findingFalcone/browser/200.html",
-    "copy-ngsw-files": "npm run copy-file -s ./dist/findingFalcone/ngsw-worker.js -d ./dist/findingFalcone/browser/ngsw-worker.js && npm run copy-file -s ./dist/findingFalcone/ngsw.json -d ./dist/findingFalcone/browser/ngsw.json",
+    "surge-copy-robots": "npm run copy-file -s robots.txt -d dist/findingFalcone/browser/robots.txt",
+    "surge-create-200html": "npm run copy-file -s dist/findingFalcone/browser/index.html -d dist/findingFalcone/browser/200.html",
+    "copy-ngsw-files": "npm run copy-file -s dist/findingFalcone/ngsw-worker.js -d dist/findingFalcone/browser/ngsw-worker.js && npm run copy-file -s dist/findingFalcone/ngsw.json -d dist/findingFalcone/browser/ngsw.json",
     "copy-file": "node ./copy.js",
     "postinstall": "ngcc",
     "dev:ssr": "ng run findingFalcone:serve-ssr",
@@ -27,7 +27,7 @@
     "build:ssr": "ng build --prod && ng run findingFalcone:server:production",
     "prerender": "ng run findingFalcone:prerender",
     "list-files": "node -e \"require('fs').readdir('.', (err, files) => {    files.forEach(file => {     console.log(file);    });    });\"",
-    "list-files-dist": "node -e \"require('fs').readdir('./dist/findingFalcone', (err, files) => {    files.forEach(file => {     console.log(file);    });    });\""
+    "list-files-dist": "node -e \"require('fs').readdir('./dist/findingFalcone/browser', (err, files) => {    files.forEach(file => {     console.log(file);    });    });\""
   },
   "private": true,
   "dependencies": {
