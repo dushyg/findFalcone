@@ -6,7 +6,7 @@
     "start": "npm run prerender && npm run lint && npm test && npm run copy-files && npm run http-server",
     "start:prod": "ng serve --prod",
     "start:dev": "ng serve --watch",
-    "build": "npm run prerender && npm run lint && npm test && npm run copy-files",
+    "build": "npm run prerender && npm run lint && npm test && npm run list-files && npm run list-files-dist && npm run copy-files",
     "http-server": "npx http-server dist/findingFalcone/browser --proxy http://localhost:4200? -a localhost -p 4200 -c-1 -o -g",
     "serve:doc": "npm run build:doc -- -s",
     "build:doc": "./node_modules/.bin/compodoc -p tsconfig.app.json --theme Readthedocs --disableSourceCode --disableCoverage -d dist/findingFalcone/documentation/compodoc",
@@ -16,7 +16,7 @@
     "e2e": "ng e2e",
     "preanalyze": "ng build --prod --stats-json",
     "analyze": "webpack-bundle-analyzer dist/findingFalcone/stats-es2015.json",
-    "copy-files": "npm run copy-ngsw-files && npm run surge-create-200html && npm run surge-copy-robots",
+    "copy-files": "npm run surge-create-200html && npm run surge-copy-robots && npm run copy-ngsw-files",
     "surge-copy-robots": "npm run copy-file -s ./robots.txt -d ./dist/findingFalcone/browser/robots.txt",
     "surge-create-200html": "npm run copy-file -s ./dist/findingFalcone/browser/index.html -d ./dist/findingFalcone/browser/200.html",
     "copy-ngsw-files": "npm run copy-file -s ./dist/findingFalcone/ngsw-worker.js -d ./dist/findingFalcone/browser/ngsw-worker.js && npm run copy-file -s ./dist/findingFalcone/ngsw.json -d ./dist/findingFalcone/browser/ngsw.json",
@@ -25,7 +25,9 @@
     "dev:ssr": "ng run findingFalcone:serve-ssr",
     "serve:ssr": "node dist/findingFalcone/server/main.js",
     "build:ssr": "ng build --prod && ng run findingFalcone:server:production",
-    "prerender": "ng run findingFalcone:prerender"
+    "prerender": "ng run findingFalcone:prerender",
+    "list-files": "node -e \"require('fs').readdir('.', (err, files) => {    files.forEach(file => {     console.log(file);    });    });\"",
+    "list-files-dist": "node -e \"require('fs').readdir('./dist/findingFalcone', (err, files) => {    files.forEach(file => {     console.log(file);    });    });\""
   },
   "private": true,
   "dependencies": {
