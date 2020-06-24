@@ -34,7 +34,7 @@ import { WelcomePageComponent } from './welcome-page/welcome-page.component';
     TypeaheadComponent,
   ],
   imports: [
-    BrowserModule.withServerTransition({ appId: 'serverApp' }),
+    BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     FormsModule,
