@@ -20,7 +20,11 @@
     "analyze": "webpack-bundle-analyzer dist/findingFalcone/stats-es2015.json",
     "surge-create-200html": "node -e \"require('fs').copyFile('dist/findingFalcone/index.html', 'dist/findingFalcone/200.html', function(err) { if (err) {console.log(err); throw err;} console.log('File successfully renamed!'); })\"",
     "surge-copy-robots": "node -e \"require('fs').copyFile('./robots.txt', 'dist/findingFalcone/robots.txt', function(err) { if (err) {console.log(err); throw err;} console.log('Robots.txt successfully copied!'); })\"",
-    "postinstall": "ngcc"
+    "postinstall": "ngcc",
+    "dev:ssr": "ng run findingFalcone:serve-ssr",
+    "serve:ssr": "node dist/findingFalcone/server/main.js",
+    "build:ssr": "ng build --prod && ng run findingFalcone:server:production",
+    "prerender": "ng run findingFalcone:prerender"
   },
   "private": true,
   "dependencies": {
@@ -34,7 +38,9 @@
     "@angular/platform-server": "~9.1.11",
     "@angular/router": "~9.1.11",
     "@angular/service-worker": "~9.1.11",
+    "@nguniversal/express-engine": "^9.1.1",
     "bootstrap": "^4.5.0",
+    "express": "^4.15.2",
     "rxjs": "~6.5.5",
     "tslib": "^1.13.0",
     "zone.js": "~0.10.2"
@@ -47,6 +53,8 @@
     "@angular/language-service": "~9.1.11",
     "@babel/compat-data": "7.8.0",
     "@compodoc/compodoc": "^1.1.11",
+    "@nguniversal/builders": "^9.1.1",
+    "@types/express": "^4.17.0",
     "@types/jasmine": "^3.3.16",
     "@types/jasminewd2": "^2.0.8",
     "@types/jest": "^24.9.1",
