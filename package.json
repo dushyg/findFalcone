@@ -4,8 +4,8 @@
   "scripts": {
     "ng": "ng",
     "start": "npm run build:ssr && npm run serve:ssr",
-    "start:prerender-ngsw": "npm run generate-ngswfiles && npm run prerender && npm run recreate-ngsw-hash && npm run lint && npm test && npm run copy-files && npm run http-server",
-    "build": "npm run generate-ngswfiles && npm run prerender && npm run recreate-ngsw-hash && npm run lint && npm test && npm run list-files && npm run list-files-dist && npm run copy-files",
+    "start:prerender-ngsw": "npm run lint && npm test && npm run generate-ngswfiles && npm run prerender && npm run recreate-ngsw-hash && npm run copy-files && npm run http-server",
+    "build": "npm run lint && npm test && npm run generate-ngswfiles && npm run prerender && npm run recreate-ngsw-hash && npm run list-files && npm run list-files-dist && npm run copy-files",
     "http-server": "npx http-server dist/findingFalcone/browser --proxy http://localhost:4200? -a localhost -p 4200 -c-1 -o -g",
     "serve:doc": "npm run build:doc -- -s",
     "build:doc": "./node_modules/.bin/compodoc -p tsconfig.app.json --theme Readthedocs --disableSourceCode --disableCoverage -d dist/findingFalcone/documentation/compodoc",
