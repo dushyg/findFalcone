@@ -7,12 +7,12 @@ import {
 
 import { FinderBoardComponent } from './finder-board.component';
 import { createSpyObj } from 'src/app/testingUtility';
-import { PlanetsService } from 'src/app/finder-board/services/planets.service';
-import { VehiclesService } from 'src/app/finder-board/services/vehicles.service';
-import { FinderFacadeService } from 'src/app/finder-board/services/finder-facade.service';
+import { PlanetsService } from 'src/app/services/planets.service';
+import { VehiclesService } from 'src/app/services/vehicles.service';
+import { FinderFacadeService } from 'src/app/services/finder-facade.service';
 import { Router } from '@angular/router';
 import { DebugElement } from '@angular/core';
-import { FalconeTokenService } from '../../services/falcone-token.service';
+import { FalconeTokenService } from '../../../services/falcone-token.service';
 import { By } from '@angular/platform-browser';
 import { DestinationWidgetListComponent } from '../../presenterComponents/destination-widget-list/destination-widget-list.component';
 import { of } from 'rxjs';
@@ -20,7 +20,7 @@ import { DestinationWidgetComponent } from '../destination-widget/destination-wi
 import { TypeaheadComponent } from '../../presenterComponents/typeahead/typeahead.component';
 import { VehicleListComponent } from '../vehicle-list/vehicle-list.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { IPlanet, IVehicle } from '../../models';
+import { IPlanet, IVehicle } from '../../../models';
 
 describe('FinderBoardComponent', () => {
   let component: FinderBoardComponent;

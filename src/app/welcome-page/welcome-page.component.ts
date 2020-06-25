@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
-import { FinderFacadeService } from '../finder-board/services';
+import { FinderFacadeService } from '../services';
 
 @Component({
   selector: 'app-welcome-page',

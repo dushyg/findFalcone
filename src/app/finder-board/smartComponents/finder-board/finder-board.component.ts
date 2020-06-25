@@ -4,7 +4,7 @@ import {
   OnDestroy,
   ChangeDetectionStrategy,
 } from '@angular/core';
-import { FinderFacadeService } from 'src/app/finder-board/services/finder-facade.service';
+import { FinderFacadeService } from 'src/app/services/finder-facade.service';
 import { Router } from '@angular/router';
 
 @Component({

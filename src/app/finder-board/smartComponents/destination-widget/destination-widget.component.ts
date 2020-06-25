@@ -7,9 +7,9 @@ import {
 } from '@angular/core';
 
 import { Observable, Subject, combineLatest } from 'rxjs';
-import { FinderFacadeService } from 'src/app/finder-board/services/finder-facade.service';
+import { FinderFacadeService } from 'src/app/services/finder-facade.service';
 import { takeWhile, withLatestFrom } from 'rxjs/operators';
-import { IPlanet, PlanetChange } from '../../models';
+import { IPlanet, PlanetChange } from '../../../models';
 
 @Component({
   selector: 'app-destination-widget',

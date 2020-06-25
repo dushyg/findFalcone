@@ -7,7 +7,7 @@ import { IFindFalconeResponse } from '../models/findFalconeResponse';
 import { IFindFalconeRequest } from '../models/findFalconeRequest';
 import { of, throwError } from 'rxjs';
 import { RunHelpers } from 'rxjs/internal/testing/TestScheduler';
-import { FindFalconeMockData } from 'src/app/finder-board/services/mockData/findFalcone.data';
+import { FindFalconeMockData } from 'src/app/services/mockData/findFalcone.data';
 
 describe('FalconeFinderService', () => {
   let testScheduler: TestScheduler;

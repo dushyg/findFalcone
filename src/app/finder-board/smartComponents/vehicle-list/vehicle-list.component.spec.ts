@@ -1,12 +1,12 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { VehicleListComponent } from './vehicle-list.component';
-import { IVehicle } from '../../models/vehicle';
+import { IVehicle } from '../../../models/vehicle';
 import { createSpyObj } from '../../../testingUtility';
-import { FinderFacadeService } from '../../services/finder-facade.service';
-import { PlanetsService } from '../../services/planets.service';
-import { VehiclesService } from '../../services/vehicles.service';
-import { FalconeTokenService } from '../../services/falcone-token.service';
+import { FinderFacadeService } from '../../../services/finder-facade.service';
+import { PlanetsService } from '../../../services/planets.service';
+import { VehiclesService } from '../../../services/vehicles.service';
+import { FalconeTokenService } from '../../../services/falcone-token.service';
 import { Router } from '@angular/router';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { of } from 'rxjs';

@@ -1,5 +1,5 @@
 import { InMemoryDbService, RequestInfo } from 'angular-in-memory-web-api';
-import { createResponse } from '../../../inMemoryWebApiUtils';
+import { createResponse } from '../../inMemoryWebApiUtils';
 import {
   PlanetsMockData,
   VehiclesMockData,

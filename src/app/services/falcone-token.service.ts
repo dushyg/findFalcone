@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { handleError } from '../../handleError';
+import { handleError } from '../handleError';
 import { constants } from 'src/app/shared/constants';
 
 @Injectable({

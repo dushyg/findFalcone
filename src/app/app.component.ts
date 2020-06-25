@@ -4,7 +4,7 @@ import {
   AfterViewChecked,
   ChangeDetectionStrategy,
 } from '@angular/core';
-import { FinderFacadeService } from './finder-board/services/finder-facade.service';
+import { FinderFacadeService } from './services/finder-facade.service';
 import { constants } from './shared/constants';
 
 @Component({

@@ -3,15 +3,15 @@ import { DestinationWidgetComponent } from './destination-widget.component';
 import { TypeaheadComponent } from '../../presenterComponents/typeahead/typeahead.component';
 import { VehicleListComponent } from '../vehicle-list/vehicle-list.component';
 import { createSpyObj } from '../../../testingUtility';
-import { FinderFacadeService } from '../../services/finder-facade.service';
-import { PlanetsService } from '../../services/planets.service';
-import { VehiclesService } from '../../services/vehicles.service';
-import { FalconeTokenService } from '../../services/falcone-token.service';
+import { FinderFacadeService } from '../../../services/finder-facade.service';
+import { PlanetsService } from '../../../services/planets.service';
+import { VehiclesService } from '../../../services/vehicles.service';
+import { FalconeTokenService } from '../../../services/falcone-token.service';
 import { Router } from '@angular/router';
 import { NO_ERRORS_SCHEMA, Type, ChangeDetectorRef } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { of } from 'rxjs';
-import { IPlanet, IVehicle } from '../../models';
+import { IPlanet, IVehicle } from '../../../models';
 
 describe('DestinationWidgetComponent', () => {
   let component: DestinationWidgetComponent;

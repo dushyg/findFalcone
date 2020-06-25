@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { WelcomePageComponent } from './welcome-page.component';
 import { Router } from '@angular/router';
 import { createSpyObj } from '../testingUtility';
-import { FinderFacadeService } from '../finder-board/services';
+import { FinderFacadeService } from '../services';
 
 describe('Welcome Page Component', () => {
   let fixture: ComponentFixture<WelcomePageComponent>;

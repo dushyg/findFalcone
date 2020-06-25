@@ -5,12 +5,12 @@ import { By } from '@angular/platform-browser';
 import { RouterOutlet, Router } from '@angular/router';
 import { NO_ERRORS_SCHEMA, Type } from '@angular/core';
 
-import { FinderFacadeService } from './finder-board/services/finder-facade.service';
+import { FinderFacadeService } from './services/finder-facade.service';
 import { FalconHeaderComponent } from './shared/presenterComponents/falcon-header/falcon-header.component';
 import { FalconFooterComponent } from './shared/presenterComponents/falcon-footer/falcon-footer.component';
-import { PlanetsService } from './finder-board/services/planets.service';
-import { VehiclesService } from './finder-board/services/vehicles.service';
-import { FalconeTokenService } from './finder-board/services/falcone-token.service';
+import { PlanetsService } from './services/planets.service';
+import { VehiclesService } from './services/vehicles.service';
+import { FalconeTokenService } from './services/falcone-token.service';
 import { SharedModule } from './shared/shared.module';
 import { createSpyObj } from './testingUtility';
 import { WelcomePageComponent } from './welcome-page/welcome-page.component';

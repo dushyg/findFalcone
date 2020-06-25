@@ -1,7 +1,7 @@
-import { ISearchAttempt } from './models/searchAttempt';
-import { IPlanet } from './models/planet';
-import { IVehicle } from './models/vehicle';
-import { IFalconAppState } from './models/falconApp.state';
+import { ISearchAttempt } from '../models/searchAttempt';
+import { IPlanet } from '../models/planet';
+import { IVehicle } from '../models/vehicle';
+import { IFalconAppState } from '../models/falconApp.state';
 
 /**
  * Utility that calculates changes to state required after every planet / vehicle change

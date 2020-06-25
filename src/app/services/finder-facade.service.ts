@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, forkJoin, combineLatest, Subject } from 'rxjs';
 import { map, distinctUntilChanged } from 'rxjs/operators';
 import { Router } from '@angular/router';
-import * as selectors from '../selectors';
-import { ChangeUtils } from '../changeUtils';
+import * as selectors from '../finder-board/selectors';
+import { ChangeUtils } from '../finder-board/changeUtils';
 
 import {
   IFalconAppState,

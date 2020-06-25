@@ -7,7 +7,7 @@ import {
 import { TypeaheadComponent } from './typeahead.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { of, Subject } from 'rxjs';
-import { IPlanet } from '../../models';
+import { IPlanet } from '../../../models';
 import { By } from '@angular/platform-browser';
 
 describe('TypeAhead Component', () => {

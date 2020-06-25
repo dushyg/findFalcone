@@ -1,7 +1,7 @@
 // Encapsulating state field access via a getter function.
 // This will insulate other code from changes to state structure.
 
-import { IFalconAppState } from './models/falconApp.state';
+import { IFalconAppState } from '../models/falconApp.state';
 
 export const getErrorMsg = (state: IFalconAppState) => state.errorMsg;
 

@@ -20,19 +20,11 @@ import {
   DestinationWidgetListComponent,
   TypeaheadComponent,
 } from './finder-board/presenterComponents';
-import { AppData } from './finder-board/services/mockData/app.data';
+import { AppData } from './services/mockData/app.data';
 import { WelcomePageComponent } from './welcome-page/welcome-page.component';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    WelcomePageComponent,
-    FinderBoardComponent,
-    DestinationWidgetListComponent,
-    DestinationWidgetComponent,
-    VehicleListComponent,
-    TypeaheadComponent,
-  ],
+  declarations: [AppComponent, WelcomePageComponent],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),
     AppRoutingModule,

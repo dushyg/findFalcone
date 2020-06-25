@@ -6,9 +6,9 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
 } from '@angular/core';
-import { IVehicle } from 'src/app/finder-board/models/vehicle';
-import VehicleChange from 'src/app/finder-board/models/vehicleChange';
-import { FinderFacadeService } from 'src/app/finder-board/services/finder-facade.service';
+import { IVehicle } from 'src/app/models/vehicle';
+import VehicleChange from 'src/app/models/vehicleChange';
+import { FinderFacadeService } from 'src/app/services/finder-facade.service';
 import { takeWhile, withLatestFrom } from 'rxjs/operators';
 
 @Component({

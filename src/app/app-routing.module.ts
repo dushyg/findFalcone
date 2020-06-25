@@ -11,7 +11,10 @@ const routes: Routes = [
   },
   {
     path: 'finderboard',
-    component: FinderBoardComponent,
+    loadChildren: () =>
+      import('./finder-board/finder-board.module').then(
+        (m) => m.FinderBoardModule
+      ),
   },
   {
     path: 'result',
@@ -26,14 +29,16 @@ const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: 'finderboard',
+    redirectTo: '',
   },
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, {
-    initialNavigation: 'enabled'
-})],
+  imports: [
+    RouterModule.forRoot(routes, {
+      initialNavigation: 'enabled',
+    }),
+  ],
   exports: [RouterModule],
 })
 export class AppRoutingModule {}

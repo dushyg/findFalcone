@@ -1,11 +1,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FinderFacadeService } from 'src/app/finder-board/services/finder-facade.service';
+import { FinderFacadeService } from 'src/app/services/finder-facade.service';
 import { Observable } from 'rxjs';
 import { takeWhile } from 'rxjs/operators';
 import { IFindFalconeRequest } from 'src/app/finder-result/models/findFalconeRequest';
 import { IFindFalconeResponse } from 'src/app/finder-result/models/findFalconeResponse';
 import { FalconeFinderService } from 'src/app/finder-result/services/falcone-finder.service';
-import { ISearchAttempt } from 'src/app/finder-board/models/searchAttempt';
+import { ISearchAttempt } from 'src/app/models/searchAttempt';
 import { constants } from 'src/app/shared/constants';
 
 @Component({
