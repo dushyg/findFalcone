@@ -14,7 +14,7 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "preanalyze": "ng build --prod --stats-json",
-    "analyze": "webpack-bundle-analyzer dist/findingFalcone/stats-es2015.json",
+    "analyze": "webpack-bundle-analyzer dist/findingFalcone/browser/stats-es2015.json",
     "copy-files": "npm run surge-create-200html && npm run surge-copy-robots && npm run copy-ngsw-files",
     "surge-copy-robots": "npm run copy-file -s robots.txt -d dist/findingFalcone/browser/robots.txt",
     "surge-create-200html": "npm run copy-file -s dist/findingFalcone/browser/index.html -d dist/findingFalcone/browser/200.html",
