@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
-import { FinderBoardComponent } from './finder-board/smartComponents';
+import { Routes, RouterModule, PreloadAllModules } from '@angular/router';
 import { FalconeResetComponent } from './shared/presenterComponents';
 import { WelcomePageComponent } from './welcome-page/welcome-page.component';
 
@@ -37,6 +36,7 @@ const routes: Routes = [
   imports: [
     RouterModule.forRoot(routes, {
       initialNavigation: 'enabled',
+      preloadingStrategy: PreloadAllModules,
     }),
   ],
   exports: [RouterModule],
