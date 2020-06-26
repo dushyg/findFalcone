@@ -9,19 +9,21 @@ const glob = require('glob');
 const path = require('path');
 
 const launchChromeAndRunLighthouse = (url) => {
-  return chromeLauncher.launch().then((chrome) => {
-    const opts = {
-      port: chrome.port,
-    };
-    return lighthouse(url, opts).then((results) => {
-      return chrome.kill().then(() => {
-        return {
-          js: results.lhr,
-          json: results.report,
-        };
+  return chromeLauncher
+    .launch({ chromeFlags: ['--headless'] })
+    .then((chrome) => {
+      const opts = {
+        port: chrome.port,
+      };
+      return lighthouse(url, opts).then((results) => {
+        return chrome.kill().then(() => {
+          return {
+            js: results.lhr,
+            json: results.report,
+          };
+        });
       });
     });
-  });
 };
 
 const getContents = (pathStr) => {
@@ -80,11 +82,12 @@ if (argv.from && argv.to) {
   );
 } else if (argv.url) {
   const urlObj = new URL(argv.url);
-  let dirName = urlObj.host.replace('www.', '');
+  let dirName = urlObj.host.replace('www.', '').replace(':', '');
+
   if (urlObj.pathname !== '/') {
     dirName = dirName + urlObj.pathname.replace(/\//g, '_');
   }
-
+  dirName = path.join('dist', dirName);
   if (!fs.existsSync(dirName)) {
     fs.mkdirSync(dirName);
   }
