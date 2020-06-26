@@ -110,6 +110,12 @@ To improve initial page load times, this application makes use of angular lazy l
 
 Also all lazy loaded modules in the application have been preloaded using PreloadAllModules routing strategy so that these files are already downloaded before user access them.
 
+## Lighthouse integration
+
+The application build process is intergated with Google Lighthouse tool via script 'npm run lighthouse-report' and saves the Lighthouse report at location 'dist/findingFalcone/browser/lhreport.html'.
+
+Build process fails if the lighthouse performance score < 70.
+
 ## Webpack bundle analyzer
 
 This project uses webpack-bundle-analyzer to monitor size of various code modules / artifacts.

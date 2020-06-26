@@ -1,3 +1,4 @@
+// Referred from https://github.com/GoogleChrome/lighthouse/blob/master/docs/readme.md#using-programmatically
 const fs = require('fs');
 const lighthouse = require('lighthouse');
 const chromeLauncher = require('chrome-launcher');

@@ -1,3 +1,5 @@
+// Referred from https://css-tricks.com/build-a-node-js-tool-to-record-and-compare-google-lighthouse-reports/
+// Tools to monitor incremental performance scores afer code changes.
 const lighthouse = require('lighthouse');
 const chromeLauncher = require('chrome-launcher');
 const argv = require('yargs').argv;
