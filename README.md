@@ -30,12 +30,11 @@ As soon as user finishes setting up all planets to be searched and vehicles used
 4. Install all the npm packages required by the application by typing 'npm install'
 5. Build and start the application by typing 'npm start'
    This command will:
-   a. Check the code for any tslint errors
-   b. Build the app using angular cli and The build artifacts will be stored in the `dist/` directory.
-   c. Run unit / integration tests using Jest  
-   d. Create documentation for the application using compodoc library which can be accessed by clicking on the 'docs' link in application header.
-   e. Serve the contents of the 'dist' directory using http-server web server at port 4200.
-   f. A new tab will be opened in your default browser and application will be loaded in it.
+   a. Check the code for any tslint errors.
+   b. Run unit / integration tests using Jest Testing framework.
+   c. Build the app using angular cli and the build artifacts will be stored in the `dist/` directory.
+   d. Serve the contents of the 'dist/findingFalcone' directory.
+   e. Open a new tab in your browser and navigate to localhost://4000, the application will be loaded in it.
 
 ## Directly running unit test cases from command line
 
@@ -61,9 +60,26 @@ The application can be accessed at this url : http://findingfalcone-dushyg.surge
 'npm run build' script also runs the script 'npm run surge-create-200html'
 It creates a 200.html which is a copy of dist/index.html to allow Surge application server to handle urls not associated with any deployed resources and redirect such requests to application home page.
 
+Application is deployed on Surge from 'dist/findingFalcone/browser' directory.
+
 ## Responsive mobile first application design
 
 This project uses CSS Grid, Flexbox and css media queries to enable the app to be used on a wide range of devices.
+
+## Progressive Web Application
+
+This application is made as a PWA using @angular/pwa library. It uses service worker to cache static assets like css, js, html and image files. It also uses the service worker to cache http API GET requests. This enables application to have a faster subsequent load time and minimizes network requests.
+
+## Universal / Server Side Rendered application.
+
+This application makes use of @nguniversal/express-engine library to pre-render page content using express server. This facilitates faster page load times and Search engine optimizations.
+
+Also this application is built to pre-render all static routes using Angular universal's build time pre-rendering capabilities. This helps when the application is deployed on a static file server (like Surge.sh) or on a CDN to have quick page load times.
+
+There is a known issue with Angular pre-render build that it doest generate service worker files (ngsw-worker.js, ngsw.json) in the 'dist/findingFalcone/browser' directory.
+https://github.com/angular/universal/issues/1505
+
+To overcome that issue, I had to configure the 'npm run build' script to generate build 2 times, first with 'npm run generate-ngswfiles' that generates the service worker files in 'dist/ngswfiles' and then 'npm run prerender' which would pre-render static routes in 'dist/findingFalcone/browser' directory. Then I copied required files from 'dist/ngswfiles' to 'dist/findingFalcone/browser' directory using nodejs script.
 
 ## Mocking Http API calls
 
@@ -78,34 +94,34 @@ Default webpack config can be overridden in custom-webpack.config.js file.
 
 ## Documentation
 
-Various methods and classes from the code and its usage has been documented using compodoc tool. Documentation can be accessed using the docs link in application header in production mode.
-Documentation can also be served locally using the command 'npm run serve:doc' and opening up http://127.0.0.1:8080
+Various methods and classes from the code and their usage has been documented using compodoc tool.
+Documentation can be served locally using the command 'npm run serve:doc' and opening up http://127.0.0.1:8080
 
 ## Angular onPush Change Detection
 
-The application uses onPush change detection strategy for various components avoid unncessary re-renders.
+The application uses onPush change detection strategy for various components to avoid unncessary re-renders.
 
-## Lazy loading 'result module'
+## Lazy loading 'finder board' & 'result module'
 
-To improve initial page load times, this application makes use of angular lazy loading feature so that any code from a feature module is downloaded only when it is needed (that feature is used by the user for the first time)
+To improve initial page load times, this application makes use of angular lazy loading feature so that any code from a feature module is downloaded only after the initial application is downloaded and bootstrapped.
+
+Also all lazy loaded modules in the application have been preloaded using PreloadAllModules routing strategy so that these files are already downloaded before user access them.
 
 ## Webpack bundle analyzer
 
-This project uses webpack-bundle-analyzer to monitor size of various code modules / artifacts
+This project uses webpack-bundle-analyzer to monitor size of various code modules / artifacts.
 
 ## Development server
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
-
-In order to serve the documentation generated by compodocs library, the application will start http-server with 'npm start' command. This is because 'ng serve' command by default uses webpack-dev-server which serves the application from memory and does not serve the dist directory which contains documentation code.
+Run `npm run dev:ssr` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
 ## Code scaffolding
 
 Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
 
-## Building just the code using Angular CLI
+## Just building the code using Angular CLI
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+Run `build:ssr` to build the project. The build artifacts will be stored in the `dist/findingFalcone` directory.
 
 ## Further help with Angular CLI
 
