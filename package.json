@@ -5,7 +5,7 @@
     "ng": "ng",
     "start": "npm run lint && npm test && npm run build:ssr && npm run serve:ssr",
     "start:prerender-ngsw": "npm run lint && npm test && npm run generate-ngswfiles && npm run prerender && npm run recreate-ngsw-hash && npm run copy-files && npm run http-server",
-    "build": "npm run lint && npm test && npm run generate-ngswfiles && npm run prerender && npm run recreate-ngsw-hash && npm run list-files && npm run list-files-dist && npm run copy-files",
+    "build": "npm run lint && npm test && npm run generate-ngswfiles && npm run prerender && npm run recreate-ngsw-hash && npm run list-files && npm run list-files-dist && npm run copy-files && npm run lighthouse-report",
     "http-server": "npx http-server dist/findingFalcone/browser --proxy http://localhost:4200? -a localhost -p 4200 -c-1 -o -g",
     "serve:doc": "npm run build:doc -- -s",
     "build:doc": "./node_modules/.bin/compodoc -p tsconfig.app.json --theme Readthedocs --disableSourceCode --disableCoverage -d dist/findingFalcone/documentation/compodoc",
@@ -28,7 +28,9 @@
     "recreate-ngsw-hash": "node_modules/.bin/ngsw-config dist/findingFalcone/browser ngsw-config.json",
     "prerender": "ng run findingFalcone:prerender",
     "list-files": "node -e \"require('fs').readdir('.', (err, files) => {    files.forEach(file => {     console.log(file);    });    });\"",
-    "list-files-dist": "node -e \"require('fs').readdir('./dist/findingFalcone/browser', (err, files) => {    files.forEach(file => {     console.log(file);    });    });\""
+    "list-files-dist": "node -e \"require('fs').readdir('./dist/findingFalcone/browser', (err, files) => {    files.forEach(file => {     console.log(file);    });    });\"",
+    "lighthouse-report": "node ./lighthouse/lighthouse.js",
+    "lighthouse-comparison": "node ./lighthouse/lhComparison.js --url https://findingfalcone-dushyg.surge.sh"
   },
   "private": true,
   "dependencies": {
@@ -70,6 +72,7 @@
     "jasmine-spec-reporter": "~4.2.1",
     "jest": "^25.5.4",
     "jest-preset-angular": "^8.2.0",
+    "lighthouse": "^6.1.0",
     "protractor": "^5.4.4",
     "ts-node": "~7.0.0",
     "tslint": "~5.15.0",
