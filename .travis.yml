@@ -7,6 +7,7 @@ branches:
   only:
     - serviceWithSubjectResponsive # will only build for these branches
     - universal
+    - master
 
 before_script: # commands to run before the build step
   - npm install --silent
@@ -17,7 +18,6 @@ script: # the build step
 
 after_success:
   - surge --project ./dist/findingFalcone/browser --domain https://findingfalcone-dushyg.surge.sh
-  - npm run lighthouse-ci -- --perf=70 --pwa=70 https://findingfalcone-dushyg.surge.sh
 
 notifications:
   email: # only receive email when the build status changes (someone broke the build!)

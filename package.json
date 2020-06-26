@@ -30,7 +30,6 @@
     "prerender": "ng run findingFalcone:prerender",
     "list-files": "node -e \"require('fs').readdir('.', (err, files) => {    files.forEach(file => {     console.log(file);    });    });\"",
     "list-files-dist": "node -e \"require('fs').readdir('./dist/findingFalcone/browser', (err, files) => {    files.forEach(file => {     console.log(file);    });    });\"",
-    "lighthouse-ci": "lighthousebot",
     "lighthouse-report": "node ./lighthouse/lighthouse.js",
     "lighthouse-comparison": "node ./lighthouse/lhComparison.js --url http://localhost:4000"
   },
