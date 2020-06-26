@@ -104,7 +104,7 @@ Documentation can be served locally using the command 'npm run serve:doc' and op
 
 The application uses onPush change detection strategy for various components to avoid unncessary re-renders.
 
-## Lazy loading 'finder board' & 'result module'
+## Lazy loading 'finder board' & 'finder result' modules
 
 To improve initial page load times, this application makes use of angular lazy loading feature so that any code from a feature module is downloaded only after the initial application is downloaded and bootstrapped.
 
