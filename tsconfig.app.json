@@ -11,10 +11,11 @@
     "e2e/**/*.ts",
     "src/app/testingUtility.ts",
     "src/app/finder-board/services/index.ts",
-    "src/app/app-shell/app-shell.component.ts",
     "src/app/app.server.module.ts",
     "src/main.server.ts",
     "src/environments/environment.prod.ts",
-    "setupJest.ts"
+    "setupJest.ts",
+    "src/app/shared/mockData/planets.data.ts",
+    "src/app/shared/mockData/vehicles.data.ts"
   ]
 }
