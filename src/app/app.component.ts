@@ -13,7 +13,7 @@ import { constants } from './shared/constants';
   styleUrls: ['./app.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppComponent implements OnInit, AfterViewChecked {
+export class AppComponent implements OnInit {
   title = 'findingFalcone';
   constructor(public finderFacadeService: FinderFacadeService) {}
   ngOnInit() {}
@@ -22,9 +22,5 @@ export class AppComponent implements OnInit, AfterViewChecked {
     if (linkName === constants.resetLink) {
       this.finderFacadeService.resetApp();
     }
-  }
-
-  ngAfterViewChecked(): void {
-    // console.log('AppComponent ngAfterViewChecked');
   }
 }
