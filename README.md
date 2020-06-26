@@ -112,9 +112,11 @@ Also all lazy loaded modules in the application have been preloaded using Preloa
 
 ## Lighthouse integration
 
-The application build process is intergated with Google Lighthouse tool via script 'npm run lighthouse-report' and saves the Lighthouse report at location 'dist/findingFalcone/browser/lhreport.html'.
+The application is intergated with Google Lighthouse tool via script 'npm run lighthouse-report' whcic saves the Lighthouse report at location 'dist/findingFalcone/browser/lhreport.html'.
 
-Build process fails if the lighthouse performance score < 70.
+Allows developers to trak and fail the build process fails if the lighthouse performance score < 70.
+
+Not integrating it in CI build process as there are issues with running it on Travis CI servers.
 
 ## Webpack bundle analyzer
 
