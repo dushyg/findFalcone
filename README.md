@@ -44,7 +44,7 @@ As soon as user finishes setting up all planets to be searched and vehicles used
 4. Test cases will start executing using Jest testing framework in the terminal.
 5. Test report will also show code coverage for the application.
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.1.2.
+This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 9.1.11
 
 ## CI / CD using Travis
 
@@ -80,6 +80,9 @@ There is a known issue with Angular pre-render build that it doest generate serv
 https://github.com/angular/universal/issues/1505
 
 To overcome that issue, I had to configure the 'npm run build' script to generate build 2 times, first with 'npm run generate-ngswfiles' that generates the service worker files in 'dist/ngswfiles' and then 'npm run prerender' which would pre-render static routes in 'dist/findingFalcone/browser' directory. Then I copied required files from 'dist/ngswfiles' to 'dist/findingFalcone/browser' directory using nodejs script.
+
+Also since the ngsw.json file was created before pre-rendering static routes, its file hashes need to be updated after considering the pre-rendered static routes.
+This is done using 'npm run recreate-ngsw-hash' which is included in 'npm run build ' script.
 
 ## Mocking Http API calls
 
