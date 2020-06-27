@@ -24,17 +24,17 @@ As soon as user finishes setting up all planets to be searched and vehicles used
 
 ## Running the application
 
-1. Unzip the archive FEproblem1.zip
-2. Open a terminal
-3. Change into the unzipped directory FEproblem1 e.g cd FEproblem1
-4. Install all the npm packages required by the application by typing 'npm install'
-5. Build and start the application by typing 'npm start'
-   This command will:
-   a. Check the code for any tslint errors.
-   b. Run unit / integration tests using Jest Testing framework.
-   c. Build the app using angular cli and the build artifacts will be stored in the `dist/` directory.
+1. Unzip the archive FEproblem1.zip into a directory named FEproblem1.
+2. Open a terminal.
+3. Change into the unzipped directory FEproblem1 e.g cd FEproblem1. You should see a file named package.json in this directory.
+4. Install all the npm packages required by the application by typing 'npm install' in the terminal.
+5. Build and start the application by typing 'npm start'  
+   This command will:  
+   a. Check the code for any tslint errors.  
+   b. Run unit / integration tests using Jest Testing framework.  
+   c. Build the app using angular cli and the build artifacts will be stored in the `dist/` directory.  
    d. Serve the contents of the 'dist/findingFalcone' directory.
-   e. Open a new tab in your browser and navigate to localhost://4000, the application will be loaded in it.
+6. Open a new tab in your browser and navigate to http://localhost:4000, the application will be loaded in it.
 
 ## Directly running unit test cases from command line
 
@@ -50,7 +50,7 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 This project using Travis CI for continiuos integration and deployment.
 As soon as a new pull request is submitted on github, the code is checked for linting errors,
-build errors, unit test case success. The code is then deployed to Surge web servers.
+build errors, unit test case success. The code is then deployed to 'Surge' web servers.
 
 ## Application deployment on Surge
 
@@ -114,7 +114,7 @@ Also all lazy loaded modules in the application have been preloaded using Preloa
 
 The application is intergated with Google Lighthouse tool via script 'npm run lighthouse-report' whcic saves the Lighthouse report at location 'dist/findingFalcone/browser/lhreport.html'.
 
-Allows developers to trak and fail the build process fails if the lighthouse performance score < 70.
+Allows developers to trak and fail the build process if the lighthouse performance score < 70.
 
 Not integrating it in CI build process as there are issues with running it on Travis CI servers.
 

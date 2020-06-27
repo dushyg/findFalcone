@@ -31,7 +31,8 @@
     "list-files": "node -e \"require('fs').readdir('.', (err, files) => {    files.forEach(file => {     console.log(file);    });    });\"",
     "list-files-dist": "node -e \"require('fs').readdir('./dist/findingFalcone/browser', (err, files) => {    files.forEach(file => {     console.log(file);    });    });\"",
     "lighthouse-report": "node ./lighthouse/lighthouse.js",
-    "lighthouse-comparison": "node ./lighthouse/lhComparison.js --url http://localhost:4000"
+    "lighthouse-comparison": "node ./lighthouse/lhComparison.js --url http://localhost:4200",
+    "lighthouse-ci": "lighthousebot"
   },
   "private": true,
   "dependencies": {
